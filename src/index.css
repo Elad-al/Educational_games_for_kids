@@ -531,18 +531,29 @@ body {
 /* --- Sorting Game UI --- */
 .sorting-layout {
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 1fr; /* 1st Row: Grass (Tubs), 2nd Row: River (Draggables) */
     height: calc(100vh - 100px);
     width: 100%;
     position: relative;
     z-index: 10;
-    padding: 0 40px;
 }
 
 .spawning-area {
     position: relative;
     width: 100%;
     height: 100%;
+    background: #29b6f6; /* Bright river blue */
+    border-top: 8px solid #7ac143; /* Grass bank boundary line */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='20' viewBox='0 0 80 20'><path d='M 0 10 Q 20 0 40 10 T 80 10 L 80 20 L 0 20 Z' fill='%2300b0ff' opacity='0.25'/></svg>");
+    background-size: 120px 30px;
+    animation: riverFlow 8s linear infinite;
+    padding: 0 40px;
+    box-shadow: inset 0 10px 10px rgba(0,0,0,0.1);
+}
+
+@keyframes riverFlow {
+    0% { background-position-x: 0px; }
+    100% { background-position-x: 240px; }
 }
 
 .drop-zones-area {
@@ -552,6 +563,8 @@ body {
     gap: 30px;
     width: 100%;
     height: 100%;
+    background-image: linear-gradient(to top, #7ac143 0%, #9cd858 100%); /* Green grass field */
+    padding: 10px 40px;
 }
 
 .draggable-item {
@@ -560,12 +573,12 @@ body {
     height: 90px;
     background: #fff;
     border-radius: 50%;
-    border: 6px solid #8d6e63;
+    border: 6px solid #2d3748; /* cartoon thick border */
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 4rem;
-    box-shadow: var(--shadow-premium);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     cursor: grab;
     z-index: 100;
     touch-action: none;
@@ -578,19 +591,19 @@ body {
 
 .draggable-item.success {
     pointer-events: none;
-    transform: scale(0.85);
+    transform: scale(0.8);
     box-shadow: none;
-    border-color: #4caf50;
-    opacity: 0.9;
+    border-color: #2d3748;
+    opacity: 0.95;
 }
 
 .drop-basket {
-    width: 220px;
-    height: 220px;
-    border-radius: var(--border-radius-lg);
-    background: rgba(255,255,255,0.7);
-    border: 8px dashed rgba(255,255,255,0.9);
-    box-shadow: var(--shadow-premium);
+    width: 210px;
+    height: 140px; /* cartoon water tub proportions */
+    border-radius: 20px 20px 60px 60px; /* tapered shape */
+    border: 6px solid #2d3748; /* thick dark border */
+    background: #eceff1;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.15);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -599,34 +612,46 @@ body {
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.3);
 }
 
-.drop-basket.color-box {
-    border-style: solid;
-    border-color: rgba(255,255,255,0.4);
+.drop-basket::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    height: 32px;
+    background: #29b6f6; /* tub water surface */
+    border-radius: 12px 12px 0 0;
+    border-bottom: 3px solid #0288d1;
+    opacity: 0.85;
+    z-index: 0;
 }
 
 .basket-icon {
-    font-size: 5.5rem;
+    font-size: 5rem;
+    z-index: 1;
 }
 
 .basket-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    color: #fff;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    margin-top: 8px;
+    color: #37474f;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+    margin-top: 2px;
+    z-index: 1;
 }
 
 .basket-count-badge {
     position: absolute;
-    bottom: -15px;
+    bottom: -18px;
     background: #3f51b5;
     color: #fff;
-    padding: 6px 18px;
-    border-radius: 20px;
-    font-size: 1.3rem;
+    padding: 4px 14px;
+    border-radius: 15px;
+    font-size: 1.1rem;
     font-weight: 700;
-    border: 4px solid #fff;
+    border: 3px solid #fff;
     box-shadow: var(--shadow-premium);
+    z-index: 2;
 }
 
 .basket-count-badge.complete {

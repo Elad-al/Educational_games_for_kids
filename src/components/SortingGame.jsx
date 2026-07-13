@@ -352,13 +352,18 @@ export default function SortingGame({ level, onWin, onBack }) {
                             animate={item.sorted ? {
                                 x: item.x,
                                 y: item.y,
-                                scale: 0.8
+                                scale: 0.8,
+                                rotate: 0
                             } : {
                                 x: 0,
-                                y: 0,
-                                scale: 1
+                                y: [0, -6, 0],
+                                scale: 1,
+                                rotate: [0, -2, 2, 0]
                             }}
-                            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                            transition={item.sorted ? { type: 'spring', stiffness: 300, damping: 25 } : {
+                                y: { repeat: Infinity, duration: 2 + (item.id % 5) * 0.2, ease: 'easeInOut' },
+                                rotate: { repeat: Infinity, duration: 2.5 + (item.id % 5) * 0.3, ease: 'easeInOut' }
+                            }}
                             style={{
                                 touchAction: 'none',
                                 position: 'absolute',

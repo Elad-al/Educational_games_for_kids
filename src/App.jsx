@@ -81,6 +81,16 @@ export default function App() {
                     <div className="cloud cloud-2" />
                     <div className="cloud cloud-3" />
                 </div>
+                
+                {/* Drifting Leaves */}
+                <div className="leaf-particle leaf-1">🍃</div>
+                <div className="leaf-particle leaf-2">🍃</div>
+                <div className="leaf-particle leaf-3">🍂</div>
+
+                {/* Fluttering Butterflies */}
+                <div className="butterfly-particle bf-1">🦋</div>
+                <div className="butterfly-particle bf-2">🦋</div>
+
                 <div 
                     className="interactive-sun" 
                     onClick={() => playGiggle()}
