@@ -285,11 +285,18 @@
             
             dragLetter.classList.add('success');
             
-            // Play formal name
-            if (nameAudio) {
-                nameAudio.currentTime = 0;
-                nameAudio.play().catch(err => console.log('Name audio blocked', err));
-            }
+            // Play ding + voice praise
+            if (window.playSound) window.playSound('ding', 1000);
+            const praises = ['יפה', 'מצוין', 'נהדר', 'כל הכבוד'];
+            if (window.speak) window.speak(praises[Math.floor(Math.random() * praises.length)]);
+
+            // Play formal name after a short delay so praise is heard first
+            setTimeout(() => {
+                if (nameAudio) {
+                    nameAudio.currentTime = 0;
+                    nameAudio.play().catch(err => console.log('Name audio blocked', err));
+                }
+            }, 800);
             if (window.triggerConfetti) window.triggerConfetti();
 
             // Loop to next letter endlessly after delay
@@ -303,6 +310,7 @@
             dragLetter.style.left = dragLetter.dataset.originX || '50%';
             dragLetter.style.top = dragLetter.dataset.originY || '85%';
             if (window.playSound) window.playSound('boink', 300);
+            if (window.speak) window.speak('נסה שוב');
         }
     }
 
@@ -321,7 +329,8 @@
     }
 
     function handleDistractorTap(el) {
-        if (window.playSound) window.playSound('pop', 400); // Soft neutral sound
+        if (window.playSound) window.playSound('boink', 300);
+        if (window.speak) window.speak('נסה שוב');
         el.classList.remove('wiggle');
         // Trigger reflow
         void el.offsetWidth;
@@ -336,10 +345,15 @@
         seekLetter.classList.add('center-stage');
         if (window.playSound) window.playSound('ding', 1000);
         
-        if (nameAudio) {
-            nameAudio.currentTime = 0;
-            nameAudio.play().catch(err => console.log('Name audio blocked', err));
-        }
+        const praises = ['יפה', 'מצוין', 'נהדר', 'כל הכבוד'];
+        if (window.speak) window.speak(praises[Math.floor(Math.random() * praises.length)]);
+
+        setTimeout(() => {
+            if (nameAudio) {
+                nameAudio.currentTime = 0;
+                nameAudio.play().catch(err => console.log('Name audio blocked', err));
+            }
+        }, 800);
         if (window.triggerConfetti) window.triggerConfetti();
 
         setTimeout(() => {
@@ -404,10 +418,15 @@
                 window.playSound('ding', 1200);
                 setTimeout(() => window.playSound('ding', 1600), 200);
             }
-            if (nameAudio) {
-                nameAudio.currentTime = 0;
-                nameAudio.play().catch(err => console.log('Name audio blocked', err));
-            }
+            const praises = ['יפה', 'מצוין', 'נהדר', 'כל הכבוד'];
+            if (window.speak) window.speak(praises[Math.floor(Math.random() * praises.length)]);
+
+            setTimeout(() => {
+                if (nameAudio) {
+                    nameAudio.currentTime = 0;
+                    nameAudio.play().catch(err => console.log('Name audio blocked', err));
+                }
+            }, 800);
             if (window.triggerConfetti) window.triggerConfetti();
 
             setTimeout(() => {
@@ -426,6 +445,7 @@
 
     function triggerObjectWiggle(el) {
         if (window.playSound) window.playSound('boink', 250);
+        if (window.speak) window.speak('נסה שוב');
         el.classList.remove('wiggle');
         void el.offsetWidth;
         el.classList.add('wiggle');
