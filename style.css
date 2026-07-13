@@ -1,0 +1,893 @@
+/* =========================================
+   PREMIUM TODDLER GAME — STYLE SYSTEM
+   Font: Fredoka One (Google Fonts)
+   ========================================= */
+
+/* --- Reset & Base --- */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    font-family: 'Fredoka One', 'Nunito', 'Comic Sans MS', sans-serif;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#app {
+    width: 100%; height: 100%;
+    position: relative;
+}
+
+/* --- View Transitions --- */
+.view {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    overflow: hidden;
+}
+.view.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* =========================================
+   MAIN MENU — Sky Scene
+   ========================================= */
+#main-menu {
+    background: linear-gradient(180deg, #4fc3f7 0%, #81d4fa 40%, #b3e5fc 70%, #e3f2fd 100%);
+    justify-content: flex-end;
+    padding-bottom: 8%;
+}
+
+/* Animated clouds */
+.cloud {
+    position: absolute;
+    font-size: 3.5rem;
+    opacity: 0.85;
+    animation: driftCloud 18s linear infinite;
+}
+.c1 { top: 8%;  animation-duration: 20s; animation-delay: 0s;   font-size: 3rem; }
+.c2 { top: 20%; animation-duration: 14s; animation-delay: -5s;  font-size: 4rem; }
+.c3 { top: 12%; animation-duration: 24s; animation-delay: -10s; font-size: 2.5rem; }
+
+@keyframes driftCloud {
+    from { transform: translateX(-20vw); }
+    to   { transform: translateX(120vw); }
+}
+
+.sun {
+    position: absolute;
+    top: 4%;
+    right: 8%;
+    font-size: 4rem;
+    animation: spinSun 20s linear infinite;
+    filter: drop-shadow(0 0 16px #ffe57f);
+}
+@keyframes spinSun {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.ground {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 22%;
+    background: linear-gradient(180deg, #66bb6a 0%, #388e3c 100%);
+    border-radius: 40% 40% 0 0 / 20px 20px 0 0;
+}
+
+/* Hero content */
+.menu-hero {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.hero-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.title-word {
+    font-size: 4rem;
+    font-family: 'Fredoka One', sans-serif;
+    line-height: 1;
+    letter-spacing: 2px;
+}
+.t1 { color: #fff; text-shadow: 0 4px 0 rgba(0,0,0,0.15), 0 0 20px #4fc3f780; }
+.t2 { color: #fff700; text-shadow: 0 4px 0 rgba(0,0,0,0.2); }
+
+.title-emoji {
+    font-size: 3rem;
+    animation: wiggle 2s ease-in-out infinite;
+}
+@keyframes wiggle {
+    0%,100% { transform: rotate(-8deg); }
+    50%      { transform: rotate(8deg); }
+}
+
+/* Play Button */
+.play-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    background: linear-gradient(160deg, #ff6f61, #ff8e53);
+    border: none;
+    border-radius: 30px;
+    padding: 1rem 2.5rem;
+    box-shadow: 0 10px 0 #c0392b, 0 14px 25px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+.play-btn:active {
+    transform: translateY(5px);
+    box-shadow: 0 5px 0 #c0392b;
+}
+.literacy-btn {
+    background: linear-gradient(160deg, #ff4081, #f48fb1);
+    box-shadow: 0 10px 0 #ad1457, 0 14px 25px rgba(0,0,0,0.2);
+}
+.literacy-btn:active {
+    transform: translateY(5px);
+    box-shadow: 0 5px 0 #ad1457;
+}
+.play-btn-icon { font-size: 2.8rem; }
+.play-btn-text {
+    font-family: 'Fredoka One', sans-serif;
+    font-size: 1.5rem;
+    color: #fff;
+    text-shadow: 0 2px 0 rgba(0,0,0,0.2);
+    letter-spacing: 1px;
+}
+
+/* =========================================
+   LEVEL MAP — Treasure Map
+   ========================================= */
+#difficulty-menu {
+    background: linear-gradient(145deg, #ffecd2 0%, #fcb69f 50%, #a8edea 100%);
+    overflow: hidden;
+    padding: 0;
+}
+
+.level-map {
+    position: relative;
+    width: 100%; height: 100%;
+    overflow: hidden;
+}
+
+.map-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.level-node {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transform: translateX(-50%);
+    z-index: 100;
+    pointer-events: auto;
+}
+
+/* For nodes anchored by 'right' instead of 'left' */
+.level-node[style*="right"] {
+    transform: translateX(50%);
+}
+
+.node-bubble {
+    width: 85px; height: 85px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.6rem;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.2), 0 0 0 5px #fff,
+                0 0 0 8px rgba(255,255,255,0.4);
+    position: relative;
+    animation: nodeBounce 2.2s ease-in-out infinite;
+}
+.node-bubble:active { transform: scale(0.85) !important; }
+
+.level-node[data-level="1"] .node-bubble { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+.level-node[data-level="2"] .node-bubble { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); animation-delay: 0.4s; }
+.level-node[data-level="3"] .node-bubble { background: linear-gradient(135deg, #a8edea, #96fbc4); animation-delay: 0.8s; }
+.level-node[data-level="4"] .node-bubble { background: linear-gradient(135deg, #fbc2eb, #a6c1ee); animation-delay: 1.2s; }
+
+@keyframes nodeBounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+}
+
+.node-label {
+    font-size: 0.9rem;
+    font-family: 'Fredoka One', sans-serif;
+    color: #333;
+    margin-top: 0.4rem;
+    text-align: center;
+    text-shadow: 0 1px 3px #fff;
+    max-width: 95px;
+}
+
+.node-stars {
+    font-size: 1.1rem;
+    min-height: 1.3rem;
+    letter-spacing: 1px;
+}
+
+/* =========================================
+   BACK BUTTON (shared)
+   ========================================= */
+.back-btn {
+    position: absolute;
+    top: 1rem; left: 1rem;
+    font-size: 1.6rem;
+    padding: 0.4rem 0.9rem;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(4px);
+    border: 3px solid rgba(0,0,0,0.08);
+    border-radius: 50px;
+    z-index: 20;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+}
+.back-btn:active { transform: translateY(3px); box-shadow: none; }
+
+/* =========================================
+   GAME SCREEN
+   ========================================= */
+#game-sorting {
+    background: linear-gradient(180deg, #b3e5fc 0%, #e3f2fd 38%);
+    padding: 0;
+}
+
+.game-ground {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 22%;
+    background: linear-gradient(180deg, #aed581 0%, #7cb342 100%);
+    border-radius: 40% 40% 0 0 / 20px 20px 0 0;
+    pointer-events: none;
+    z-index: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    padding-top: 4px;
+}
+
+/* Tiny flower decorations on the grass */
+.grass-deco {
+    font-size: 1.6rem;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* Subtle slow drifting clouds in sky part of game */
+.game-cloud {
+    position: absolute;
+    font-size: 2.2rem;
+    opacity: 0.35;          /* very faint */
+    pointer-events: none;
+    top: 6%;
+    animation: driftCloud linear infinite;
+    z-index: 0;
+}
+.gc1 { animation-duration: 35s; animation-delay: 0s;    font-size: 2rem; top: 7%;  }
+.gc2 { animation-duration: 28s; animation-delay: -12s;  font-size: 2.8rem; top: 2%; }
+
+/* Single gentle butterfly that slowly flies across */
+.game-butterfly {
+    position: absolute;
+    font-size: 1.6rem;
+    opacity: 0.55;
+    pointer-events: none;
+    top: 38%;
+    animation: butterflyFly 40s linear infinite;
+    z-index: 0;
+}
+@keyframes butterflyFly {
+    0%   { transform: translateX(-10vw) translateY(0px); }
+    25%  { transform: translateX(40vw)  translateY(-15px); }
+    50%  { transform: translateX(80vw)  translateY(5px); }
+    75%  { transform: translateX(110vw) translateY(-10px); }
+    100% { transform: translateX(-10vw) translateY(0px); }
+}
+
+.game-container {
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+}
+
+/* Drop Zones — top half */
+.drop-zones-area {
+    flex: 1;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 0.5rem;
+}
+
+/* Spawning Area — bottom half (on ground) */
+.spawning-area {
+    flex: 1;
+    position: relative;
+    z-index: 2;
+}
+
+/* Drop Zones */
+.drop-zone {
+    min-width: 120px;
+    width: 28vmin;
+    height: 28vmin;
+    border: 5px dashed rgba(255,255,255,0.7);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08), inset 0 2px 0 rgba(255,255,255,0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+/* Solid colored box for color levels */
+.drop-zone.color-box {
+    border: 6px solid rgba(0,0,0,0.22);
+    border-radius: 20px;
+    backdrop-filter: none;
+    /* inset shine at top to look 3D */
+    background-image: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(0,0,0,0.08) 100%);
+    background-blend-mode: overlay;
+}
+
+.drop-zone.active-target {
+    transform: scale(1.06);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15), inset 0 2px 0 rgba(255,255,255,0.6);
+    border-color: #fff;
+}
+
+.basket {
+    font-size: 11vmin;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+
+.basket-color-circle {
+    font-size: 2rem;
+    margin-top: 0.15rem;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.basket-counter {
+    position: absolute;
+    bottom: -16px;
+    background: #fff;
+    border: 4px solid #555;
+    border-radius: 50%;
+    width: 44px; height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+    pointer-events: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+.basket-counter.hidden { display: none; }
+.basket-counter.complete {
+    background: #4caf50;
+    color: #fff;
+    border-color: #2e7d32;
+}
+
+/* Draggable Items */
+.draggable-item {
+    position: absolute;
+    width: 100px; height: 100px;
+    font-size: 11vmin;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translate(-50%, -100%);
+    z-index: 100;
+    filter: drop-shadow(0 6px 8px rgba(0,0,0,0.2));
+    transition: left 0.3s ease, top 0.3s ease;
+}
+.draggable-item.dragging {
+    transition: none;
+    transform: translate(-50%, -100%) scale(1.25);
+    filter: drop-shadow(0 12px 16px rgba(0,0,0,0.3));
+    z-index: 200;
+}
+
+@keyframes successPulse {
+    0%   { transform: translate(-50%, -50%) scale(1); }
+    40%  { transform: translate(-50%, -50%) scale(1.5) rotate(10deg); }
+    100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+}
+.draggable-item.success {
+    transform: translate(-50%, -50%);
+    animation: successPulse 0.45s ease forwards;
+}
+
+/* =========================================
+   WIN OVERLAY
+   ========================================= */
+#message-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeInOverlay 0.4s ease;
+}
+#message-overlay.hidden { display: none; }
+
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.win-card {
+    background: linear-gradient(145deg, #fff9f0, #fff);
+    border-radius: 36px;
+    padding: 2.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 0 0 6px #ffe082;
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popIn {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+
+.win-emoji {
+    font-size: 5rem;
+    animation: winEmojiBounce 0.8s ease;
+}
+@keyframes winEmojiBounce {
+    0%   { transform: scale(0) rotate(-30deg); }
+    70%  { transform: scale(1.3) rotate(10deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+.win-title {
+    font-family: 'Fredoka One', sans-serif;
+    font-size: 2.4rem;
+    color: #ff6f61;
+    text-shadow: 0 3px 0 rgba(0,0,0,0.1);
+    letter-spacing: 1px;
+}
+
+.play-again-btn {
+    font-family: 'Fredoka One', sans-serif;
+    font-size: 1.4rem;
+    color: #fff;
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    border: none;
+    border-radius: 50px;
+    padding: 0.8rem 2rem;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #00a36a, 0 10px 20px rgba(0,0,0,0.15);
+    letter-spacing: 1px;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+.play-again-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #00a36a;
+}
+
+/* =========================================
+   CONFETTI
+   ========================================= */
+.confetti-particle {
+    position: fixed;
+    width: 18px; height: 18px;
+    top: -20px;
+    z-index: 9999;
+    border-radius: 4px;
+    animation: fall linear forwards;
+    pointer-events: none;
+}
+
+@keyframes fall {
+    0%   { transform: translateY(-20px) rotate(0deg) scaleX(1);   opacity: 1; }
+    50%  { transform: translateY(50vh)  rotate(360deg) scaleX(-1); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg) scaleX(1);  opacity: 0; }
+}
+
+/* =========================================
+   LITERACY MODULE (Hebrew Letter 'מ')
+   ========================================= */
+
+.lit-map-bg {
+    background: linear-gradient(145deg, #fce4ec 0%, #f8bbd0 50%, #f48fb1 100%);
+}
+
+.lit-level-node {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transform: translateX(-50%);
+    z-index: 100;
+    pointer-events: auto;
+}
+.lit-level-node[style*="right"] {
+    transform: translateX(50%);
+}
+.lit-level-node .node-bubble {
+    background: linear-gradient(135deg, #f8bbd0, #fce4ec);
+}
+.lit-level-node.locked {
+    filter: grayscale(1) opacity(0.65);
+    pointer-events: none;
+}
+
+#game-literacy {
+    background: linear-gradient(180deg, 
+        #e8f5fd 0%,       /* Light sky blue top */
+        #d4ecfa 25%,      /* Soft blue */
+        #f3e5f5 50%,      /* Lavender middle */
+        #fce4ec 70%,      /* Blush pink */
+        #c8e6c9 90%,      /* Soft green hills */
+        #a5d6a7 100%      /* Grass green bottom */
+    );
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    position: absolute;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Animated floating clouds */
+.lit-cloud {
+    position: absolute;
+    font-size: 8vmin;
+    opacity: 0.5;
+    z-index: 0;
+    filter: blur(1px);
+    pointer-events: none;
+}
+.lit-cloud.lc1 {
+    top: 5%;
+    animation: litCloudDrift 25s linear infinite;
+}
+.lit-cloud.lc2 {
+    top: 12%;
+    font-size: 6vmin;
+    opacity: 0.35;
+    animation: litCloudDrift 35s linear infinite;
+    animation-delay: -10s;
+}
+.lit-cloud.lc3 {
+    top: 8%;
+    font-size: 10vmin;
+    opacity: 0.25;
+    animation: litCloudDrift 40s linear infinite;
+    animation-delay: -20s;
+}
+
+@keyframes litCloudDrift {
+    0%   { left: -15%; }
+    100% { left: 110%; }
+}
+
+/* Floating sparkles */
+.lit-sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    animation: litSparkleFloat 6s ease-in-out infinite;
+}
+.lit-sparkle:nth-child(1) {
+    background: #ffeb3b;
+    left: 15%; bottom: 30%;
+    animation-delay: 0s;
+}
+.lit-sparkle:nth-child(2) {
+    background: #f48fb1;
+    left: 75%; bottom: 45%;
+    animation-delay: 1.5s;
+    width: 5px; height: 5px;
+}
+.lit-sparkle:nth-child(3) {
+    background: #81d4fa;
+    left: 50%; bottom: 55%;
+    animation-delay: 3s;
+    width: 4px; height: 4px;
+}
+.lit-sparkle:nth-child(4) {
+    background: #ce93d8;
+    left: 85%; bottom: 25%;
+    animation-delay: 4.5s;
+    width: 7px; height: 7px;
+}
+.lit-sparkle:nth-child(5) {
+    background: #a5d6a7;
+    left: 30%; bottom: 60%;
+    animation-delay: 2s;
+}
+
+@keyframes litSparkleFloat {
+    0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+    25%  { opacity: 0.9; transform: translateY(-15px) scale(1); }
+    50%  { opacity: 0.6; transform: translateY(-30px) scale(0.8); }
+    75%  { opacity: 0.3; transform: translateY(-45px) scale(0.6); }
+    100% { opacity: 0; transform: translateY(-60px) scale(0.3); }
+}
+
+/* Rolling hills at the bottom */
+.lit-hills {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 18%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+.lit-hills::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -10%;
+    width: 120%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse 50% 80% at 20% 100%, #81c784 0%, transparent 70%),
+        radial-gradient(ellipse 60% 90% at 55% 100%, #a5d6a7 0%, transparent 70%),
+        radial-gradient(ellipse 45% 75% at 85% 100%, #66bb6a 0%, transparent 70%);
+    animation: litHillsSway 8s ease-in-out infinite alternate;
+}
+.lit-hills::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -5%;
+    width: 110%;
+    height: 60%;
+    background: 
+        radial-gradient(ellipse 40% 100% at 30% 100%, #4caf50 0%, transparent 60%),
+        radial-gradient(ellipse 50% 100% at 70% 100%, #66bb6a 0%, transparent 60%);
+    opacity: 0.6;
+}
+
+@keyframes litHillsSway {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(8px); }
+}
+
+/* Tiny flowers on the hills */
+.lit-flower {
+    position: absolute;
+    bottom: 2%;
+    font-size: 4vmin;
+    z-index: 1;
+    pointer-events: none;
+    animation: litFlowerSway 3s ease-in-out infinite alternate;
+}
+.lit-flower:nth-child(1) { left: 10%; animation-delay: 0s; }
+.lit-flower:nth-child(2) { left: 30%; animation-delay: 0.5s; font-size: 3.5vmin; bottom: 3%; }
+.lit-flower:nth-child(3) { left: 60%; animation-delay: 1s; font-size: 3vmin; bottom: 1%; }
+.lit-flower:nth-child(4) { left: 80%; animation-delay: 1.5s; bottom: 4%; }
+.lit-flower:nth-child(5) { left: 45%; animation-delay: 0.8s; font-size: 3.5vmin; bottom: 2%; }
+
+@keyframes litFlowerSway {
+    0%   { transform: rotate(-5deg); }
+    100% { transform: rotate(5deg); }
+}
+
+.lit-stage {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+.lit-stage.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.lit-stage.hidden {
+    display: none;
+}
+
+/* Stage 1: The Hook */
+.lit-target-silhouette {
+    font-size: 25vmin;
+    color: rgba(0,0,0,0.1);
+    font-weight: 900;
+    line-height: 1;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Hitbox expansion */
+    padding: 10vmin;
+    border-radius: 50%;
+}
+
+.lit-draggable-letter, .lit-target-letter, .lit-magic-wand {
+    font-size: 15vmin;
+    font-weight: 900;
+    color: #ff4081;
+    text-shadow: 0 5px 15px rgba(255,64,129,0.4), 0 2px 0 #c2185b;
+    position: absolute;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+    /* Hitbox expansion - 50% larger */
+    padding: 5vmin;
+    margin: -5vmin;
+}
+
+.lit-draggable-letter {
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.lit-draggable-letter.dragging, .lit-magic-wand.dragging {
+    transition: none !important;
+    transform: translate(-50%, -50%) scale(1.1) scaleY(0.9); /* Squash and Stretch */
+    filter: drop-shadow(0 15px 20px rgba(0,0,0,0.3));
+    z-index: 1000;
+}
+
+.lit-draggable-letter.success {
+    animation: bounceSuccess 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes bounceSuccess {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.3) rotate(5deg); text-shadow: 0 0 30px #ffeb3b; }
+    100% { transform: translate(-50%, -50%) scale(1.1) rotate(0deg); }
+}
+
+/* Stage 2: Hide and Seek */
+.lit-item-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.lit-distractor {
+    font-size: 15vmin;
+    position: absolute;
+    /* Hitbox expansion */
+    padding: 5vmin;
+    margin: -5vmin;
+    cursor: pointer;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));
+}
+.lit-distractor.wiggle {
+    animation: softWiggle 0.4s ease;
+}
+
+@keyframes softWiggle {
+    0% { transform: scale(1); }
+    25% { transform: scale(0.9) rotate(-10deg); }
+    50% { transform: scale(0.9) rotate(10deg); }
+    75% { transform: scale(0.9) rotate(-10deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+.lit-target-letter {
+    top: 40%;
+    left: 45%;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.lit-target-letter.center-stage {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(1.5);
+    z-index: 100;
+}
+
+#lit-dist-star { top: 20%; left: 20%; }
+#lit-dist-cloud { top: 60%; right: 20%; }
+
+/* Stage 3: Magic Wand */
+.lit-env-object {
+    font-size: 15vmin;
+    position: absolute;
+    padding: 5vmin;
+    margin: -5vmin;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+}
+
+.lit-env-object.wiggle {
+    animation: softWiggle 0.4s ease;
+}
+
+.lit-env-object.success-bounce {
+    animation: winEmojiBounce 0.8s ease forwards;
+    filter: drop-shadow(0 0 20px #ffeb3b);
+}
+
+.lit-magic-wand {
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 500;
+}
+
+/* Magic Dust Particles */
+.lit-magic-dust {
+    position: absolute;
+    width: 12px; height: 12px;
+    background: #ffeb3b;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: dustFade 0.6s linear forwards;
+    z-index: 400;
+    box-shadow: 0 0 8px #ffc107;
+}
+
+@keyframes dustFade {
+    0% { opacity: 1; transform: scale(1) translateY(0); }
+    100% { opacity: 0; transform: scale(0.2) translateY(20px); }
+}
+
+/* Map Node Level 5 Completion */
+.level-node[data-level="5"] .node-bubble {
+    background: linear-gradient(135deg, #f8bbd0, #fce4ec); 
+    animation-delay: 1.6s;
+}
+.level-node[data-level="5"].completed .node-bubble {
+    box-shadow: 0 8px 0 rgba(0,0,0,0.2), 0 0 0 5px #ffeb3b, 0 0 0 8px rgba(255,235,59,0.4);
+}
