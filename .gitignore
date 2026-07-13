@@ -1,20 +1,24 @@
-# Temporary testing / scratch files
-check_libs.py
-check_plot.py
-test_no_shva.py
-test_stretch.py
-test_tts.py
-test_d791.mp3
-test_d79e.mp3
-test_d7a9.mp3
-test_continuous_mem.mp3
-test_lamed_no_shva.mp3
-test_mem_no_shva.mp3
-test_shin_no_shva.mp3
-AAAAA
-python/
-scratch/
-.gemini/
-.idea/
-.vscode/
-node_modules/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
