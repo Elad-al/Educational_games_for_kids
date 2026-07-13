@@ -1,180 +1,205 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+/* 
+   ==========================================================================
+   MAGICAL & FUTURISTIC 2032 DESIGN SYSTEM
+   ==========================================================================
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600;700&display=swap');
 
 :root {
-    --font-primary: 'Fredoka', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    --bg-sky: linear-gradient(to bottom, #7cd1f9 0%, #bce6ff 70%, #dcf0ff 100%);
-    --color-grass-dark: #7ac143;
-    --color-grass-light: #9cd858;
-    --color-grass-bright: #aee76b;
-    --text-color: #333333;
-    --border-radius-lg: 24px;
-    --border-radius-md: 16px;
-    --shadow-premium: 0 12px 24px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.08);
-    --shadow-inset: inset 0 2px 5px rgba(255, 255, 255, 0.5), inset 0 -3px 6px rgba(0, 0, 0, 0.1);
+    --font-rounded: 'Fredoka', system-ui, -apple-system, sans-serif;
+    
+    /* Elegant 2032 Palette */
+    --bg-universe: radial-gradient(circle at 50% 50%, #201140 0%, #0c051a 100%);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-bg-hover: rgba(255, 255, 255, 0.18);
+    --glass-border: 1.5px solid rgba(255, 255, 255, 0.25);
+    --glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.08);
+    --border-radius-lg: 32px;
+    --border-radius-md: 20px;
+    --border-radius-sm: 12px;
+    
+    /* Neon Glow Glows */
+    --neon-pink: #ff4081;
+    --neon-purple: #ea80fc;
+    --neon-blue: #00e5ff;
+    --neon-gold: #ffd700;
+    --neon-green: #00e676;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    -webkit-user-select: none;
+    font-family: var(--font-rounded);
     user-select: none;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-user-drag: none;
 }
 
-body {
-    font-family: var(--font-primary);
-    background: var(--bg-sky);
-    color: var(--text-color);
+body, html {
+    width: 100%;
+    height: 100%;
     overflow: hidden;
-    width: 100vw;
-    height: 100vh;
-    direction: rtl; /* Set default RTL for Hebrew */
-    position: fixed;
-    touch-action: none;
+    background: #0c051a;
 }
 
 #root {
     width: 100%;
     height: 100%;
-    position: relative;
-    z-index: 10;
 }
 
-/* --- Dynamic Background --- */
+/* --- Global Backgrounds --- */
 .game-background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
+    background: var(--bg-universe);
+    z-index: 1;
     overflow: hidden;
-    pointer-events: auto;
 }
 
 .sky-gradient {
     position: absolute;
     width: 100%;
-    height: 60%;
-    background: var(--bg-sky);
-    top: 0;
+    height: 100%;
+    background: radial-gradient(circle at 80% 20%, rgba(234, 128, 252, 0.15) 0%, rgba(0, 229, 255, 0.08) 50%, transparent 100%);
+    pointer-events: none;
 }
 
+/* Parallax magical nebulae */
 .clouds-layer {
     position: absolute;
     width: 100%;
-    height: 50%;
-    top: 5%;
+    height: 100%;
     pointer-events: none;
 }
 
 .cloud {
     position: absolute;
-    background: rgba(255, 255, 255, 0.85);
-    border-radius: 100px;
-    filter: blur(2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.03);
-}
-
-.cloud::before, .cloud::after {
-    content: '';
-    position: absolute;
-    background: rgba(255, 255, 255, 0.85);
     border-radius: 50%;
+    background: radial-gradient(circle, rgba(234, 128, 252, 0.25) 0%, transparent 70%);
+    filter: blur(60px);
+}
+.cloud-1 { width: 400px; height: 400px; top: 10%; left: 10%; animation: driftNebula 40s linear infinite alternate; }
+.cloud-2 { width: 500px; height: 500px; bottom: 10%; right: 15%; animation: driftNebula 60s linear infinite alternate-reverse; }
+.cloud-3 { width: 300px; height: 300px; top: 40%; left: 60%; background: radial-gradient(circle, rgba(0, 229, 255, 0.2) 0%, transparent 70%); animation: driftNebula 50s linear infinite alternate; }
+
+@keyframes driftNebula {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(50px, 30px) scale(1.15); }
 }
 
-.cloud-1 {
-    width: 160px;
-    height: 60px;
-    top: 15%;
-    left: 10%;
-    animation: floatCloud 45s linear infinite;
-}
-.cloud-1::before { width: 80px; height: 80px; top: -40px; left: 20px; }
-.cloud-1::after { width: 60px; height: 60px; top: -30px; right: 20px; }
-
-.cloud-2 {
-    width: 220px;
-    height: 80px;
-    top: 30%;
-    left: 55%;
-    animation: floatCloud 65s linear infinite reverse;
-}
-.cloud-2::before { width: 100px; height: 100px; top: -50px; left: 30px; }
-.cloud-2::after { width: 80px; height: 80px; top: -35px; right: 30px; }
-
-.cloud-3 {
-    width: 140px;
-    height: 50px;
-    top: 10%;
-    left: 80%;
-    animation: floatCloud 35s linear infinite;
-}
-.cloud-3::before { width: 70px; height: 70px; top: -35px; left: 15px; }
-.cloud-3::after { width: 50px; height: 50px; top: -25px; right: 15px; }
-
-@keyframes floatCloud {
-    0% { transform: translateX(100vw); }
-    100% { transform: translateX(-300px); }
-}
-
+/* Ethereal Sun */
 .interactive-sun {
     position: absolute;
     top: 40px;
     right: 60px;
-    width: 100px;
-    height: 100px;
-    background: radial-gradient(circle, #ffea5c 30%, #ffa726 100%);
+    width: 110px;
+    height: 110px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 10%, #ffd700 50%, #ff4081 100%);
     border-radius: 50%;
-    box-shadow: 0 0 40px #ffa726;
+    box-shadow: 0 0 50px #ff4081, 0 0 20px #ffd700, inset 0 0 15px rgba(255,255,255,0.8);
     cursor: pointer;
     z-index: 5;
-    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
+.interactive-sun:hover {
+    transform: scale(1.15) rotate(15deg);
+}
 .interactive-sun:active {
     transform: scale(1.3) rotate(180deg);
 }
 
-/* Interactive hills */
+/* Celestial background layers */
 .hills-layer {
     position: absolute;
-    bottom: 0;
+    bottom: -5%;
     width: 100%;
-    height: 45%;
+    height: 35%;
     pointer-events: none;
 }
 
 .hill {
     position: absolute;
-    bottom: -10%;
+    bottom: 0;
     border-radius: 50%;
     pointer-events: auto;
-    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.4s ease;
 }
 
 .hill-back {
     width: 120%;
-    height: 80%;
+    height: 90%;
     left: -10%;
-    background: var(--color-grass-dark);
-    opacity: 0.85;
+    background: linear-gradient(to top, #11052c, #2c1a4d);
+    opacity: 0.8;
 }
 
 .hill-front {
     width: 110%;
-    height: 60%;
+    height: 70%;
     left: -5%;
-    background: var(--color-grass-light);
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+    background: linear-gradient(to top, #1c0c3a, #3b236e);
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.5), inset 0 4px 20px rgba(255, 255, 255, 0.05);
 }
-
+.hill-front:hover {
+    transform: translateY(-5px);
+}
 .hill-front:active {
-    transform: translateY(10px);
+    transform: translateY(4px);
 }
 
-/* --- View Layouts --- */
+/* --- Ambient Particles --- */
+.leaf-particle {
+    position: absolute;
+    font-size: 2.2rem;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.5));
+}
+.leaf-1 { animation: fallLeaf1 18s linear infinite; }
+.leaf-2 { animation: fallLeaf2 24s linear infinite; animation-delay: 4s; }
+.leaf-3 { animation: fallLeaf1 21s linear infinite; animation-delay: 8s; }
+
+@keyframes fallLeaf1 {
+    0% { transform: translate(105vw, -50px) rotate(0deg); }
+    50% { transform: translate(50vw, 40vh) rotate(180deg); }
+    100% { transform: translate(-100px, 95vh) rotate(360deg); }
+}
+@keyframes fallLeaf2 {
+    0% { transform: translate(80vw, -50px) rotate(0deg); }
+    50% { transform: translate(30vw, 50vh) rotate(240deg); }
+    100% { transform: translate(-100px, 95vh) rotate(480deg); }
+}
+
+.butterfly-particle {
+    position: absolute;
+    font-size: 2.5rem;
+    pointer-events: none;
+    z-index: 8;
+    filter: drop-shadow(0 0 12px rgba(234, 128, 252, 0.6));
+}
+.bf-1 { animation: flyBf1 26s linear infinite; }
+.bf-2 { animation: flyBf2 32s linear infinite; animation-delay: 6s; }
+
+@keyframes flyBf1 {
+    0% { transform: translate(-100px, 60vh) scaleX(1) rotate(0deg); }
+    25% { transform: translate(30vw, 25vh) scaleX(1) rotate(15deg); }
+    50% { transform: translate(60vw, 55vh) scaleX(-1) rotate(-15deg); }
+    75% { transform: translate(85vw, 15vh) scaleX(-1) rotate(20deg); }
+    100% { transform: translate(105vw, 45vh) scaleX(1) rotate(0deg); }
+}
+@keyframes flyBf2 {
+    0% { transform: translate(105vw, 30vh) scaleX(-1) rotate(0deg); }
+    30% { transform: translate(70vw, 60vh) scaleX(-1) rotate(-20deg); }
+    60% { transform: translate(35vw, 20vh) scaleX(1) rotate(15deg); }
+    100% { transform: translate(-100px, 50vh) scaleX(1) rotate(0deg); }
+}
+
+/* --- View Structure & Headers --- */
 .view-container {
     width: 100%;
     height: 100%;
@@ -186,7 +211,7 @@ body {
 
 .header-bar {
     width: 100%;
-    padding: 16px 24px;
+    padding: 24px 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -194,47 +219,52 @@ body {
 }
 
 .header-title {
-    font-size: 2.2rem;
+    font-size: 2.8rem;
     font-weight: 700;
     color: #fff;
-    text-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    text-shadow: 0 0 20px rgba(234, 128, 252, 0.5), 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .btn-round {
-    background: #fff;
-    border: none;
-    width: 64px;
-    height: 64px;
+    background: var(--glass-bg);
+    border: var(--glass-border);
+    backdrop-filter: var(--glass-blur);
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
-    box-shadow: var(--shadow-premium);
+    box-shadow: var(--glass-shadow);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2rem;
+    font-size: 2.4rem;
     cursor: pointer;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5), background-color 0.2s;
+    color: #fff;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5), background-color 0.2s, box-shadow 0.2s;
 }
-
+.btn-round:hover {
+    background: var(--glass-bg-hover);
+    box-shadow: 0 0 15px rgba(255,255,255,0.4), var(--glass-shadow);
+    transform: scale(1.1);
+}
 .btn-round:active {
     transform: scale(0.9) translateY(4px);
-    background-color: #f0f0f0;
 }
 
-/* --- Dobi the Bear Narrator --- */
+/* --- Holographic Narrator --- */
 .narrator-container {
     position: absolute;
-    bottom: 24px;
-    left: 24px;
+    bottom: 30px;
+    left: 40px;
     display: flex;
     align-items: flex-end;
-    gap: 16px;
-    z-index: 20;
+    gap: 20px;
+    z-index: 150;
     pointer-events: auto;
 }
 
 .dobi-avatar {
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
     position: relative;
     cursor: pointer;
     animation: dobiBreathe 3s ease-in-out infinite;
@@ -243,59 +273,58 @@ body {
 .dobi-bear {
     width: 100%;
     height: 100%;
-    background-color: #8d6e63;
+    background: linear-gradient(135deg, #ab47bc, #8e24aa); /* Holographic purple forest spirit */
     border-radius: 50% 50% 45% 45%;
-    border: 6px solid #5d4037;
+    border: 4px solid #ea80fc;
     position: relative;
-    box-shadow: var(--shadow-premium);
+    box-shadow: 0 0 25px rgba(234, 128, 252, 0.6), inset 0 0 15px rgba(255,255,255,0.4);
 }
 
 .dobi-ear-l, .dobi-ear-r {
     position: absolute;
-    width: 36px;
-    height: 36px;
-    background-color: #8d6e63;
-    border: 5px solid #5d4037;
+    width: 38px;
+    height: 38px;
+    background: #ab47bc;
+    border: 4px solid #ea80fc;
     border-radius: 50%;
-    top: -10px;
+    top: -8px;
 }
-
 .dobi-ear-l { left: -5px; }
 .dobi-ear-r { right: -5px; }
 
 .dobi-ear-l::before, .dobi-ear-r::before {
     content: '';
     position: absolute;
-    width: 16px;
-    height: 16px;
-    background-color: #ff8a80;
+    width: 18px;
+    height: 18px;
+    background-color: #ff80ab;
     border-radius: 50%;
-    top: 5px;
-    left: 5px;
+    top: 6px;
+    left: 6px;
 }
 
 .dobi-eye-l, .dobi-eye-r {
     position: absolute;
     width: 16px;
     height: 16px;
-    background-color: #212121;
+    background-color: #00e5ff; /* glowing blue eyes */
     border-radius: 50%;
-    top: 35px;
+    top: 38px;
+    box-shadow: 0 0 8px #00e5ff;
     animation: dobiBlink 4s infinite;
 }
-
-.dobi-eye-l { left: 30px; }
-.dobi-eye-r { right: 30px; }
+.dobi-eye-l { left: 32px; }
+.dobi-eye-r { right: 32px; }
 
 .dobi-snout {
     position: absolute;
     width: 44px;
     height: 32px;
-    background-color: #d7ccc8;
-    border: 4px solid #5d4037;
+    background-color: #f3e5f5;
+    border: 3px solid #ea80fc;
     border-radius: 50%;
     bottom: 25px;
-    left: 32px;
+    left: 39px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -304,7 +333,7 @@ body {
 .dobi-nose {
     width: 14px;
     height: 10px;
-    background-color: #212121;
+    background-color: #4a148c;
     border-radius: 50%;
     position: absolute;
     top: 4px;
@@ -312,124 +341,138 @@ body {
 
 .dobi-blush-l, .dobi-blush-r {
     position: absolute;
-    width: 14px;
-    height: 8px;
-    background-color: rgba(255, 64, 129, 0.4);
+    width: 16px;
+    height: 10px;
+    background-color: rgba(255, 64, 129, 0.6);
     border-radius: 50%;
-    top: 50px;
+    top: 54px;
 }
-
 .dobi-blush-l { left: 16px; }
 .dobi-blush-r { right: 16px; }
 
 .dobi-bubble {
-    background: #fff;
-    border: 4px solid #5d4037;
+    background: rgba(12, 5, 26, 0.75);
+    border: 3.5px solid #ea80fc;
+    backdrop-filter: blur(20px);
     border-radius: var(--border-radius-md);
-    padding: 12px 18px;
-    font-size: 1.3rem;
+    padding: 16px 22px;
+    font-size: 1.4rem;
     font-weight: 600;
-    max-width: 250px;
+    color: #fff;
+    max-width: 280px;
     position: relative;
-    box-shadow: var(--shadow-premium);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(234, 128, 252, 0.3);
     animation: bubblePopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    direction: rtl;
 }
-
 .dobi-bubble::after {
     content: '';
     position: absolute;
-    left: -16px;
+    left: -14px;
     bottom: 20px;
-    border-width: 8px 16px 8px 0;
+    border-width: 8px 14px 8px 0;
     border-style: solid;
-    border-color: transparent #fff transparent transparent;
+    border-color: transparent rgba(12, 5, 26, 0.75) transparent transparent;
     z-index: 10;
 }
-
 .dobi-bubble::before {
     content: '';
     position: absolute;
-    left: -22px;
+    left: -19px;
     bottom: 18px;
-    border-width: 10px 20px 10px 0;
+    border-width: 10px 16px 10px 0;
     border-style: solid;
-    border-color: transparent #5d4037 transparent transparent;
+    border-color: transparent #ea80fc transparent transparent;
     z-index: 5;
 }
 
 @keyframes dobiBreathe {
     0%, 100% { transform: scale(1) translateY(0); }
-    50% { transform: scale(1.03) translateY(-4px); }
+    50% { transform: scale(1.04) translateY(-5px); }
 }
-
 @keyframes dobiBlink {
     0%, 90%, 100% { transform: scaleY(1); }
     95% { transform: scaleY(0.1); }
 }
-
 @keyframes bubblePopIn {
     0% { transform: scale(0) translateY(20px); opacity: 0; }
     100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
-/* --- Menu Screens --- */
+/* --- Main Menu --- */
 .main-menu {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 40px;
+    gap: 50px;
     height: 100%;
 }
 
 .menu-title {
-    font-size: 4rem;
+    font-size: 4.8rem;
     font-weight: 700;
     color: #fff;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    text-shadow: 0 0 30px rgba(234, 128, 252, 0.6), 0 0 15px rgba(0, 229, 255, 0.4);
     text-align: center;
-    margin-bottom: 20px;
+    letter-spacing: 2px;
 }
 
 .menu-buttons {
     display: flex;
-    gap: 30px;
+    gap: 40px;
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .menu-btn {
-    border: none;
+    border: var(--glass-border);
     border-radius: var(--border-radius-lg);
-    padding: 24px 48px;
-    font-size: 2rem;
+    padding: 30px 50px;
+    font-size: 2.2rem;
     font-weight: 700;
     color: #fff;
     cursor: pointer;
-    box-shadow: 0 16px 0px rgba(0,0,0,0.15), 0 20px 30px rgba(0,0,0,0.2);
+    backdrop-filter: var(--glass-blur);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.5);
-    min-width: 280px;
+    gap: 16px;
+    min-width: 320px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5), box-shadow 0.2s;
 }
 
 .menu-btn .icon {
-    font-size: 4.5rem;
+    font-size: 5rem;
+    filter: drop-shadow(0 0 15px currentColor);
+    transition: transform 0.3s ease;
+}
+
+.menu-btn:hover {
+    transform: scale(1.08) translateY(-5px);
 }
 
 .menu-btn:active {
-    transform: translateY(12px);
-    box-shadow: 0 4px 0px rgba(0,0,0,0.15), 0 8px 15px rgba(0,0,0,0.2);
+    transform: scale(0.95) translateY(5px);
 }
 
 .btn-sorting {
-    background: linear-gradient(135deg, #ff8a00, #e52d27);
+    background: linear-gradient(135deg, rgba(234, 128, 252, 0.2), rgba(245, 0, 87, 0.2));
+    box-shadow: 0 0 30px rgba(245, 0, 87, 0.25), var(--glass-shadow);
+}
+.btn-sorting:hover {
+    box-shadow: 0 0 45px rgba(245, 0, 87, 0.45), var(--glass-shadow);
 }
 
 .btn-literacy {
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(124, 77, 255, 0.2));
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.25), var(--glass-shadow);
+}
+.btn-literacy:hover {
+    box-shadow: 0 0 45px rgba(0, 229, 255, 0.45), var(--glass-shadow);
 }
 
 /* --- Level Map Navigation --- */
@@ -444,13 +487,9 @@ body {
 }
 
 .map-path {
+    width: 100%;
+    height: 100%;
     position: relative;
-    width: 90%;
-    max-width: 900px;
-    height: 450px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='450' viewBox='0 0 900 450'><path d='M 100 225 Q 250 50 450 225 T 800 225' fill='none' stroke='%23ffffff' stroke-width='12' stroke-dasharray='16, 16' stroke-linecap='round' opacity='0.75'/></svg>");
-    background-position: center;
-    background-repeat: no-repeat;
 }
 
 .map-node {
@@ -463,11 +502,11 @@ body {
 }
 
 .node-bubble {
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     border-radius: 50%;
-    border: 8px solid #fff;
-    box-shadow: var(--shadow-premium);
+    border: 4px solid rgba(255,255,255,0.7);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3), inset 0 0 15px rgba(255,255,255,0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -477,85 +516,66 @@ body {
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5);
 }
 
+/* Magic Revolving Halos */
+.node-bubble::after {
+    content: '';
+    position: absolute;
+    width: 130%;
+    height: 130%;
+    border: 3.5px dashed rgba(255, 215, 0, 0.6);
+    border-radius: 50%;
+    animation: rotateRing 15s linear infinite;
+}
+
+@keyframes rotateRing {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.node-bubble:hover {
+    transform: scale(1.1);
+}
 .node-bubble:active {
-    transform: scale(0.9);
+    transform: scale(0.95);
 }
 
 .node-label {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: #fff;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    background: rgba(0, 0, 0, 0.25);
-    padding: 4px 16px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    background: rgba(12, 5, 26, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 6px 18px;
     border-radius: 20px;
 }
 
 .node-stars {
     position: absolute;
-    top: -20px;
+    top: -24px;
     font-size: 1.8rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 0 0 10px rgba(255,215,0,0.8);
     letter-spacing: 2px;
 }
 
-.map-node.locked {
-    filter: grayscale(0.85);
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-.map-node.locked .node-bubble {
-    background: #9e9e9e !important;
-}
-
-.node-lock-icon {
-    position: absolute;
-    font-size: 2rem;
-    background: rgba(0,0,0,0.6);
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    border: 3px solid #fff;
-}
-
 /* Node Gradient Skins */
-.node-1 .node-bubble { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
-.node-2 .node-bubble { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
-.node-3 .node-bubble { background: linear-gradient(135deg, #fbc2eb, #a6c1ee); }
-.node-4 .node-bubble { background: linear-gradient(135deg, #abecd6, #fbed96); }
+.node-1 .node-bubble { background: radial-gradient(circle, #ff80ab 20%, #e040fb 100%); }
+.node-2 .node-bubble { background: radial-gradient(circle, #00e5ff 20%, #2979ff 100%); }
+.node-3 .node-bubble { background: radial-gradient(circle, #ffd700 20%, #ff6d00 100%); }
+.node-4 .node-bubble { background: radial-gradient(circle, #00e676 20%, #00b0ff 100%); }
 
 /* --- Sorting Game UI --- */
 .sorting-layout {
     display: grid;
-    grid-template-rows: 1fr 1fr; /* 1st Row: Grass (Tubs), 2nd Row: River (Draggables) */
+    grid-template-rows: 1fr 1fr;
     height: calc(100vh - 100px);
     width: 100%;
     position: relative;
     z-index: 10;
 }
 
-.spawning-area {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background: #29b6f6; /* Bright river blue */
-    border-top: 8px solid #7ac143; /* Grass bank boundary line */
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='20' viewBox='0 0 80 20'><path d='M 0 10 Q 20 0 40 10 T 80 10 L 80 20 L 0 20 Z' fill='%2300b0ff' opacity='0.25'/></svg>");
-    background-size: 120px 30px;
-    animation: riverFlow 8s linear infinite;
-    padding: 0 40px;
-    box-shadow: inset 0 10px 10px rgba(0,0,0,0.1);
-}
-
-@keyframes riverFlow {
-    0% { background-position-x: 0px; }
-    100% { background-position-x: 240px; }
-}
-
+/* Top Grassy Bank */
 .drop-zones-area {
     display: flex;
     justify-content: space-around;
@@ -563,53 +583,77 @@ body {
     gap: 30px;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(to top, #7ac143 0%, #9cd858 100%); /* Green grass field */
+    background: linear-gradient(to top, #14052e 0%, #2c164d 100%);
     padding: 10px 40px;
+    position: relative;
 }
 
+/* Bottom Liquid River Spawning Area */
+.spawning-area {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #0d1b3e; /* Deep flowing river */
+    border-top: 8px solid rgba(0, 229, 255, 0.4); /* Glowing blue neon bank separator */
+    box-shadow: inset 0 10px 20px rgba(0, 229, 255, 0.15), 0 0 25px rgba(0, 229, 255, 0.25);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='20' viewBox='0 0 80 20'><path d='M 0 10 Q 20 0 40 10 T 80 10 L 80 20 L 0 20 Z' fill='%2300e5ff' opacity='0.08'/></svg>");
+    background-size: 140px 35px;
+    animation: riverFlow 6s linear infinite;
+    padding: 0 40px;
+}
+
+@keyframes riverFlow {
+    0% { background-position-x: 0px; }
+    100% { background-position-x: 280px; }
+}
+
+/* Floating Glass bubble capsules holding items */
 .draggable-item {
     position: absolute;
-    width: 90px;
-    height: 90px;
-    background: #fff;
+    width: 96px;
+    height: 96px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(255,255,255,0.3);
     border-radius: 50%;
-    border: 6px solid #2d3748; /* cartoon thick border */
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 4rem;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    font-size: 4.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.4), 0 0 15px rgba(0, 229, 255, 0.15);
     cursor: grab;
     z-index: 100;
     touch-action: none;
 }
-
 .draggable-item.dragging {
     cursor: grabbing;
     z-index: 200;
+    box-shadow: 0 15px 40px rgba(0, 229, 255, 0.5), inset 0 0 20px rgba(255,255,255,0.6);
 }
 
 .draggable-item.success {
     pointer-events: none;
-    transform: scale(0.8);
+    transform: scale(0.75);
     box-shadow: none;
-    border-color: #2d3748;
-    opacity: 0.95;
+    border-color: rgba(255,255,255,0.1);
+    opacity: 0.85;
 }
 
+/* Glowing magical portal bowls for sorting */
 .drop-basket {
-    width: 210px;
-    height: 140px; /* cartoon water tub proportions */
-    border-radius: 20px 20px 60px 60px; /* tapered shape */
-    border: 6px solid #2d3748; /* thick dark border */
-    background: #eceff1;
-    box-shadow: 0 8px 0 rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.15);
+    width: 200px;
+    height: 130px;
+    border-radius: 20px 20px 60px 60px;
+    border: 4px solid rgba(255,255,255,0.4);
+    background: rgba(12, 5, 26, 0.5);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 15px rgba(234, 128, 252, 0.3), inset 0 0 15px rgba(255,255,255,0.05);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     position: relative;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.3);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.3), box-shadow 0.2s;
 }
 
 .drop-basket::before {
@@ -618,44 +662,47 @@ body {
     top: 4px;
     left: 4px;
     right: 4px;
-    height: 32px;
-    background: #29b6f6; /* tub water surface */
-    border-radius: 12px 12px 0 0;
-    border-bottom: 3px solid #0288d1;
+    height: 30px;
+    background: linear-gradient(180deg, rgba(0, 229, 255, 0.4) 0%, rgba(124, 77, 255, 0.1) 100%);
+    border-radius: 14px 14px 0 0;
+    border-bottom: 2.5px solid rgba(0, 229, 255, 0.6);
     opacity: 0.85;
     z-index: 0;
 }
 
 .basket-icon {
-    font-size: 5rem;
+    font-size: 4.8rem;
     z-index: 1;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.6));
 }
 
 .basket-title {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: #37474f;
-    text-shadow: 0 1px 2px rgba(255,255,255,0.8);
-    margin-top: 2px;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255,255,255,0.4);
+    margin-top: 1px;
     z-index: 1;
 }
 
 .basket-count-badge {
     position: absolute;
     bottom: -18px;
-    background: #3f51b5;
+    background: var(--glass-bg);
+    border: var(--glass-border);
     color: #fff;
     padding: 4px 14px;
     border-radius: 15px;
     font-size: 1.1rem;
     font-weight: 700;
-    border: 3px solid #fff;
-    box-shadow: var(--shadow-premium);
+    box-shadow: var(--glass-shadow);
     z-index: 2;
 }
 
 .basket-count-badge.complete {
-    background: #4caf50;
+    background: #00e676;
+    border-color: #00e676;
+    box-shadow: 0 0 15px #00e676;
 }
 
 /* --- Literacy Game UI --- */
@@ -669,27 +716,28 @@ body {
     z-index: 10;
 }
 
-/* Stage 1: Letter Drag to Silhouette */
+/* Stage 1: Glowing letter silhouettes */
 .silhouette-container {
     width: 240px;
     height: 240px;
     border-radius: var(--border-radius-lg);
-    background: rgba(0, 0, 0, 0.15);
-    border: 8px dashed rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.05);
+    border: 4px dashed rgba(234, 128, 252, 0.5);
+    box-shadow: inset 0 0 30px rgba(234, 128, 252, 0.15), 0 0 15px rgba(234, 128, 252, 0.1);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 10rem;
-    color: rgba(255,255,255,0.25);
-    text-shadow: none;
+    font-size: 11rem;
+    color: rgba(255, 255, 255, 0.15);
+    text-shadow: 0 0 20px rgba(234, 128, 252, 0.3);
 }
 
 .draggable-letter {
     position: absolute;
     width: 140px;
     height: 140px;
-    background: linear-gradient(135deg, #ffd54f, #ffb300);
-    border: 8px solid #ff8f00;
+    background: radial-gradient(circle, #ffd54f 20%, #ff8f00 100%);
+    border: 4px solid #fff;
     border-radius: var(--border-radius-lg);
     display: flex;
     justify-content: center;
@@ -697,26 +745,27 @@ body {
     font-size: 7rem;
     font-weight: 700;
     color: #fff;
-    box-shadow: var(--shadow-premium);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 20px rgba(255, 143, 0, 0.5);
     cursor: grab;
     z-index: 100;
     touch-action: none;
 }
-
 .draggable-letter.dragging {
     cursor: grabbing;
     z-index: 200;
+    box-shadow: 0 20px 45px rgba(255, 143, 0, 0.8);
 }
 
 .draggable-letter.success {
     pointer-events: none;
-    background: linear-gradient(135deg, #81c784, #4caf50);
-    border-color: #2e7d32;
+    background: radial-gradient(circle, #00e676 20%, #00c853 100%);
+    border-color: #fff;
     transform: scale(0.9) rotate(360deg);
+    box-shadow: 0 0 40px #00e676;
     transition: transform 0.6s ease;
 }
 
-/* Stage 2: Seek & Find */
+/* Stage 2: Seek & Find glass cards */
 .seek-container {
     display: flex;
     gap: 40px;
@@ -726,21 +775,26 @@ body {
 }
 
 .seek-item {
-    width: 150px;
-    height: 150px;
-    background: #fff;
-    border: 8px solid #4fc3f7;
+    width: 160px;
+    height: 160px;
+    background: var(--glass-bg);
+    border: var(--glass-border);
+    backdrop-filter: var(--glass-blur);
     border-radius: var(--border-radius-lg);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 7rem;
+    font-size: 8rem;
     font-weight: 700;
+    color: #fff;
     cursor: pointer;
-    box-shadow: var(--shadow-premium);
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5), background-color 0.2s, box-shadow 0.2s;
 }
-
+.seek-item:hover {
+    background: var(--glass-bg-hover);
+    box-shadow: 0 0 25px rgba(255,255,255,0.3), var(--glass-shadow);
+}
 .seek-item:active {
     transform: scale(0.9);
 }
@@ -752,13 +806,14 @@ body {
 .seek-item.center-stage {
     pointer-events: none;
     transform: scale(1.4);
-    background: #81c784;
+    background: radial-gradient(circle, #00e676 20%, #00c853 100%);
     color: #fff;
-    border-color: #4caf50;
+    border-color: #fff;
+    box-shadow: 0 0 40px #00e676;
     z-index: 200;
 }
 
-/* Stage 3: Magic Wand & Objects */
+/* Stage 3: Glowing magic wands */
 .magic-stage {
     display: flex;
     flex-direction: column;
@@ -770,7 +825,7 @@ body {
 }
 
 .wand-spawner {
-    height: 120px;
+    height: 140px;
     position: relative;
     width: 100%;
 }
@@ -784,24 +839,29 @@ body {
 }
 
 .magic-object {
-    width: 180px;
-    height: 180px;
-    background: #fff;
-    border: 6px solid #8d6e63;
+    width: 190px;
+    height: 190px;
+    background: var(--glass-bg);
+    border: var(--glass-border);
+    backdrop-filter: var(--glass-blur);
     border-radius: var(--border-radius-lg);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    box-shadow: var(--shadow-premium);
+    box-shadow: var(--glass-shadow);
     position: relative;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5), background-color 0.2s;
+}
+.magic-object:hover {
+    background: var(--glass-bg-hover);
 }
 
 .magic-object.success-bounce {
     animation: bounceSuccess 1.5s ease infinite alternate;
-    border-color: #4caf50;
+    border-color: #00e676;
+    box-shadow: 0 0 35px #00e676, var(--glass-shadow);
 }
 
 .magic-object.wiggle {
@@ -809,47 +869,15 @@ body {
 }
 
 .object-emoji {
-    font-size: 5rem;
+    font-size: 5.5rem;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.4));
 }
 
 .object-label {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    margin-top: 8px;
-}
-
-.magic-wand-letter {
-    position: absolute;
-    width: 110px;
-    height: 110px;
-    background: radial-gradient(circle, #ff4081 20%, #ec407a 100%);
-    border: 6px solid #c2185b;
     color: #fff;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 5rem;
-    font-weight: 700;
-    cursor: grab;
-    z-index: 100;
-    box-shadow: 0 0 20px #ff4081;
-    touch-action: none;
-}
-
-.magic-dust-particle {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    background: #ffd54f;
-    border-radius: 50%;
-    pointer-events: none;
-    animation: dustFade 0.6s forwards;
-}
-
-@keyframes dustFade {
-    0% { transform: scale(1) translateY(0); opacity: 1; }
-    100% { transform: scale(0.2) translateY(-20px); opacity: 0; }
+    margin-top: 8px;
 }
 
 @keyframes wrongWiggle {
@@ -860,7 +888,7 @@ body {
 
 @keyframes bounceSuccess {
     0% { transform: translateY(0); }
-    100% { transform: translateY(-30px); }
+    100% { transform: translateY(-25px); }
 }
 
 /* --- Sticker Reward Board --- */
@@ -870,7 +898,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.6);
+    background: rgba(12, 5, 26, 0.85);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -880,24 +908,25 @@ body {
 
 .sticker-container {
     width: 100%;
-    max-width: 900px;
+    max-width: 950px;
     height: 85vh;
-    background: #fff;
+    background: rgba(25, 12, 51, 0.95);
+    border: 6px solid #ea80fc;
     border-radius: var(--border-radius-lg);
-    border: 8px solid #ffa726;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 30px rgba(234, 128, 252, 0.4);
     overflow: hidden;
 }
 
 .sticker-header {
-    background: #ffa726;
+    background: rgba(12, 5, 26, 0.5);
     color: #fff;
-    padding: 16px;
-    text-align: center;
-    font-size: 2rem;
+    padding: 20px;
+    font-size: 2.2rem;
     font-weight: 700;
+    text-align: center;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
 }
 
 .sticker-content-split {
@@ -907,27 +936,33 @@ body {
 }
 
 .sticker-scene-canvas {
-    flex: 1.7;
+    flex: 1.8;
     position: relative;
     overflow: hidden;
-    border-left: 6px solid #e0e0e0;
+    border-left: 4px solid rgba(255,255,255,0.1);
 }
 
 .sticker-placed {
     position: absolute;
-    font-size: 4rem;
+    font-size: 5rem;
     cursor: move;
     transform: translate(-50%, -50%);
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
 }
 
 .sticker-drawer {
     flex: 1;
-    background: #fcf8f2;
-    padding: 16px;
+    background: rgba(12, 5, 26, 0.4);
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
     overflow-y: auto;
+}
+.sticker-drawer h3 {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
 .sticker-list {
@@ -937,20 +972,20 @@ body {
 }
 
 .sticker-item {
-    font-size: 3.5rem;
-    background: #fff;
-    border: 4px solid #e0e0e0;
+    font-size: 4rem;
+    background: rgba(255,255,255,0.06);
+    border: 2px solid rgba(255,255,255,0.15);
     border-radius: var(--border-radius-md);
     aspect-ratio: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5), background-color 0.2s;
 }
-
 .sticker-item:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
+    background: rgba(255,255,255,0.12);
 }
 
 .scene-select-row {
@@ -961,52 +996,56 @@ body {
 }
 
 .scene-select-btn {
-    padding: 8px 16px;
-    background: #fff;
-    border: 3px solid #ffa726;
+    padding: 10px 20px;
+    background: var(--glass-bg);
+    border: var(--glass-border);
+    color: #fff;
     border-radius: 20px;
     font-size: 1.1rem;
     font-weight: 600;
     white-space: nowrap;
     cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
 }
-
 .scene-select-btn.active {
-    background: #ffa726;
-    color: #fff;
+    background: #ea80fc;
+    border-color: #ea80fc;
+    box-shadow: 0 0 15px #ea80fc;
 }
 
 .sticker-footer {
-    padding: 16px;
-    background: #f5f5f5;
+    padding: 20px;
+    background: rgba(12, 5, 26, 0.6);
+    border-top: 2px solid rgba(255,255,255,0.1);
     display: flex;
     justify-content: flex-end;
+    gap: 20px;
 }
 
 .btn-primary {
-    background: #4caf50;
+    background: radial-gradient(circle, #00e676 0%, #00c853 100%);
     color: #fff;
     border: none;
-    padding: 12px 36px;
-    font-size: 1.5rem;
+    padding: 14px 40px;
+    font-size: 1.6rem;
     font-weight: 700;
     border-radius: 30px;
     cursor: pointer;
-    box-shadow: var(--shadow-premium);
+    box-shadow: 0 8px 20px rgba(0, 230, 118, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .btn-primary:active {
     transform: scale(0.95);
 }
 
-/* --- Victory/Overlays --- */
+/* --- Overlays & Win Popups --- */
 .overlay-full {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.7);
+    background: rgba(12, 5, 26, 0.85);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1014,8 +1053,8 @@ body {
 }
 
 .win-card {
-    background: linear-gradient(135deg, #ffffff, #fffdfa);
-    border: 8px solid #4caf50;
+    background: rgba(25, 12, 51, 0.95);
+    border: 4px solid #00e676;
     border-radius: var(--border-radius-lg);
     padding: 40px;
     max-width: 500px;
@@ -1024,21 +1063,23 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 24px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 30px rgba(0, 230, 118, 0.4);
     text-align: center;
     position: relative;
     animation: winCardPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .win-title {
-    font-size: 2.8rem;
+    font-size: 3.2rem;
     font-weight: 700;
-    color: #2e7d32;
+    color: #fff;
+    text-shadow: 0 0 20px #00e676;
 }
 
 .win-stars {
-    font-size: 3.5rem;
+    font-size: 4rem;
     letter-spacing: 6px;
+    filter: drop-shadow(0 0 15px #ffd700);
 }
 
 @keyframes winCardPop {
@@ -1046,7 +1087,6 @@ body {
     100% { transform: scale(1) rotate(0); opacity: 1; }
 }
 
-/* Balloon Popper Game Overlay */
 .balloon-layer {
     position: absolute;
     top: 0;
@@ -1068,8 +1108,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25), inset 0 12px 15px rgba(255,255,255,0.4);
 }
-
 .balloon-clickable::after {
     content: '';
     position: absolute;
@@ -1078,351 +1118,3 @@ body {
     border-right: 6px solid transparent;
     border-bottom: 8px solid currentColor;
 }
-
-/* --- Fairytale Map details & Twinkles --- */
-.map-detail {
-    position: absolute;
-    font-size: 3rem;
-    pointer-events: none;
-    z-index: 20;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
-}
-.castle-end {
-    left: 90%;
-    top: 15%;
-    font-size: 5rem;
-    animation: castleBounce 3s ease-in-out infinite alternate;
-}
-.tree-1 { left: 30%; top: 60%; }
-.tree-2 { left: 70%; top: 10%; }
-.star-glow-1 { left: 25%; top: 25%; font-size: 2rem; animation: starTwinkle 1.5s infinite alternate; }
-.star-glow-2 { left: 65%; top: 45%; font-size: 2.2rem; animation: starTwinkle 2s infinite alternate-reverse; }
-
-@keyframes castleBounce {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-12px) scale(1.05); }
-}
-@keyframes starTwinkle {
-    0% { opacity: 0.3; transform: scale(0.8); }
-    100% { opacity: 1; transform: scale(1.2); }
-}
-
-/* --- Magic Wand design in Stage 3 --- */
-.magic-wand-letter {
-    position: absolute;
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle, #ffeb3b 10%, #ff007f 70%, #9c27b0 100%);
-    border: 6px solid #ffeb3b;
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 5.5rem;
-    font-weight: 700;
-    cursor: grab;
-    z-index: 100;
-    box-shadow: 0 0 30px #ff007f, inset 0 0 15px #fff;
-    touch-action: none;
-    animation: wandGlow 1.5s ease-in-out infinite alternate;
-}
-
-/* Wooden stick handle of the wand */
-.magic-wand-letter::after {
-    content: '';
-    position: absolute;
-    bottom: -70px;
-    left: calc(50% - 10px);
-    width: 20px;
-    height: 80px;
-    background: linear-gradient(to right, #8d6e63, #5d4037);
-    border-radius: 10px;
-    border: 3px solid #3e2723;
-    z-index: -1;
-}
-
-@keyframes wandGlow {
-    0% { box-shadow: 0 0 20px #ff007f, inset 0 0 10px #fff; }
-    100% { box-shadow: 0 0 45px #ff007f, 0 0 15px #ab47bc, inset 0 0 25px #fff; }
-}
-
-/* Literacy game progress bar styling */
-.lit-progress-bar {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: rgba(255,255,255,0.95);
-    background: rgba(0,0,0,0.2);
-    padding: 2px 14px;
-    border-radius: 15px;
-    margin-top: 4px;
-}
-
-/* --- Map Themes & Svg Road --- */
-.road-path-svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-    pointer-events: none;
-}
-
-.map-container {
-    position: relative;
-    width: 95%;
-    max-width: 900px;
-    height: 480px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 8px solid rgba(255, 255, 255, 0.35);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-premium);
-    overflow: hidden;
-}
-
-/* Princess Map View Theme */
-.princess-map-view {
-    background: linear-gradient(to bottom, #f3e5f5 0%, #e1bee7 50%, #f8bbd0 100%) !important;
-}
-
-.princess-map-view .map-container {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: #f8bbd0;
-}
-
-/* Adventure Map View Theme */
-.adventure-map-view {
-    background: linear-gradient(to bottom, #80d8ff 0%, #a7ffeb 60%, #b9f6ca 100%) !important;
-}
-
-.adventure-map-view .map-container {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: #a7ffeb;
-}
-
-/* --- Themed Map Detail Elements --- */
-.princess-castle {
-    position: absolute;
-    right: 5%;
-    top: 15%;
-    font-size: 5rem;
-    pointer-events: none;
-    z-index: 20;
-    animation: castleBounce 3s ease-in-out infinite alternate;
-}
-
-.princess-rainbow {
-    position: absolute;
-    left: 5%;
-    top: 5%;
-    font-size: 5.5rem;
-    pointer-events: none;
-    z-index: 5;
-    opacity: 0.85;
-}
-
-.adventure-mole {
-    position: absolute;
-    left: 45%;
-    top: 50%;
-    font-size: 3.5rem;
-    pointer-events: none;
-    z-index: 20;
-    animation: molePop 3.5s ease-in-out infinite;
-}
-
-.adventure-chest {
-    position: absolute;
-    right: 5%;
-    top: 15%;
-    font-size: 4.5rem;
-    pointer-events: none;
-    z-index: 20;
-    animation: castleBounce 2.5s ease-in-out infinite alternate;
-}
-
-@keyframes molePop {
-    0%, 100% { transform: translateY(20px) scaleY(0.1); opacity: 0; }
-    20%, 80% { transform: translateY(0) scaleY(1); opacity: 1; }
-}
-
-/* --- CSS Princess Unicorn Character --- */
-.unicorn-character {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    transform: translate(-50%, -50%);
-    z-index: 100;
-    pointer-events: none;
-    transition: left 1.2s ease-in-out, top 1.2s ease-in-out;
-}
-
-.unicorn-body-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-/* Body / Torso */
-.uni-torso {
-    position: absolute;
-    width: 48px;
-    height: 30px;
-    background: linear-gradient(135deg, #ff80ab, #f50057); /* pink/purple */
-    border-radius: 15px;
-    top: 32px;
-    left: 16px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-    border: 2.5px solid #c2185b;
-}
-
-/* Neck & Head */
-.uni-neck {
-    position: absolute;
-    width: 15px;
-    height: 25px;
-    background: linear-gradient(to top, #ff80ab, #ff4081);
-    top: 15px;
-    left: 44px;
-    transform: rotate(-15deg);
-    border-left: 2.5px solid #c2185b;
-    border-right: 2.5px solid #c2185b;
-    z-index: 10;
-}
-
-.uni-head {
-    position: absolute;
-    width: 32px;
-    height: 22px;
-    background: linear-gradient(135deg, #ff80ab, #ff4081);
-    border-radius: 10px 16px 10px 10px;
-    top: 4px;
-    left: 41px;
-    border: 2.5px solid #c2185b;
-    z-index: 20;
-}
-
-/* Golden Horn */
-.uni-horn {
-    position: absolute;
-    width: 8px;
-    height: 22px;
-    background: linear-gradient(to top, #ffee58, #ffb300);
-    border-radius: 4px;
-    top: -14px;
-    left: 55px;
-    transform: rotate(20deg);
-    border: 1.5px solid #e65100;
-    box-shadow: 0 0 10px #ffee58;
-    z-index: 15;
-}
-
-/* Purple Mane / Hair */
-.uni-mane {
-    position: absolute;
-    width: 16px;
-    height: 26px;
-    background: linear-gradient(to bottom, #ea80fc, #d500f9, #7c4dff);
-    border-radius: 8px;
-    top: 10px;
-    left: 34px;
-    border: 1.5px solid #4a148c;
-    z-index: 5;
-    animation: hairWave 2s ease-in-out infinite alternate;
-}
-
-/* Purple Tail */
-.uni-tail {
-    position: absolute;
-    width: 14px;
-    height: 24px;
-    background: linear-gradient(to bottom, #ea80fc, #d500f9, #7c4dff);
-    border-radius: 7px;
-    top: 34px;
-    left: 7px;
-    transform-origin: top center;
-    border: 1.5px solid #4a148c;
-    z-index: 2;
-    animation: tailWiggle 1.5s ease-in-out infinite alternate;
-}
-
-/* Eye */
-.uni-eye {
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    background: #212121;
-    border-radius: 50%;
-    top: 7px;
-    left: 53px;
-}
-
-/* Legs */
-.uni-leg {
-    position: absolute;
-    width: 8px;
-    height: 22px;
-    background: linear-gradient(to bottom, #ff80ab, #f50057);
-    border-radius: 4px;
-    border: 1.5px solid #c2185b;
-    transform-origin: top center;
-    z-index: 5;
-}
-
-.uni-leg-fl { left: 47px; top: 58px; }
-.uni-leg-fr { left: 41px; top: 58px; z-index: -1; opacity: 0.85; }
-.uni-leg-bl { left: 24px; top: 58px; }
-.uni-leg-br { left: 18px; top: 58px; z-index: -1; opacity: 0.85; }
-
-/* --- Unicorn Animations --- */
-
-/* Idle floating */
-.unicorn-character.idle .unicorn-body-wrapper {
-    animation: uniIdle 2s ease-in-out infinite alternate;
-}
-
-@keyframes uniIdle {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-4px); }
-}
-
-@keyframes hairWave {
-    0% { transform: skewX(-5deg); }
-    100% { transform: skewX(5deg); }
-}
-
-@keyframes tailWiggle {
-    0% { transform: rotate(-8deg); }
-    100% { transform: rotate(12deg); }
-}
-
-/* Galloping Action (rotating legs, bobbing body) */
-.unicorn-character.galloping .unicorn-body-wrapper {
-    animation: uniGallopBody 0.3s ease-in-out infinite alternate;
-}
-
-.unicorn-character.galloping .uni-leg-fl { animation: legRunF 0.3s linear infinite alternate; }
-.unicorn-character.galloping .uni-leg-fr { animation: legRunB 0.3s linear infinite alternate; }
-.unicorn-character.galloping .uni-leg-bl { animation: legRunB 0.3s linear infinite alternate; }
-.unicorn-character.galloping .uni-leg-br { animation: legRunF 0.3s linear infinite alternate; }
-
-.unicorn-character.galloping .uni-mane { animation: hairWave 0.15s ease-in-out infinite alternate; }
-.unicorn-character.galloping .uni-tail { animation: tailWiggle 0.15s ease-in-out infinite alternate; }
-
-@keyframes uniGallopBody {
-    0% { transform: translateY(0) rotate(0deg); }
-    100% { transform: translateY(-8px) rotate(-6deg); }
-}
-
-@keyframes legRunF {
-    0% { transform: rotate(-35deg); }
-    100% { transform: rotate(35deg); }
-}
-
-@keyframes legRunB {
-    0% { transform: rotate(35deg); }
-    100% { transform: rotate(-35deg); }
-}
-
-

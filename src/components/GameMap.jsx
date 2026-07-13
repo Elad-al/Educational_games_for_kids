@@ -57,6 +57,11 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
 
     const isPrincessMode = type === 'literacy';
 
+    // Calculate mathematically precise curves passing through node coordinates
+    const roadD = type === 'sorting'
+        ? "M 162 225 C 220 120, 300 81, 342 81 C 420 81, 480 261, 540 261 C 600 261, 680 150, 738 112"
+        : "M 162 216 Q 450 -20 720 216";
+
     return (
         <div className={`view-container ${isPrincessMode ? 'princess-map-view' : 'adventure-map-view'}`}>
             {/* Header */}
@@ -95,7 +100,7 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
                     {/* Winding Adventure path road */}
                     <svg className="road-path-svg" width="100%" height="100%" viewBox="0 0 900 450" preserveAspectRatio="none">
                         <path 
-                            d="M 160 225 Q 340 70 540 260 T 800 225" 
+                            d={roadD}
                             fill="none" 
                             stroke={isPrincessMode ? "url(#goldGradient)" : "url(#sandGradient)"} 
                             strokeWidth="20" 
@@ -103,7 +108,7 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
                             filter="drop-shadow(0 4px 6px rgba(0,0,0,0.15))"
                         />
                         <path 
-                            d="M 160 225 Q 340 70 540 260 T 800 225" 
+                            d={roadD}
                             fill="none" 
                             stroke="#fff" 
                             strokeWidth="4" 
