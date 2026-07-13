@@ -1103,12 +1103,12 @@ body, html {
 }
 
 .unicorn-character.idle .uni-tail-path {
-    transform-origin: 22px 55px;
+    transform-origin: 28px 65px;
     animation: tailWiggle 1.8s ease-in-out infinite alternate;
 }
 
 .unicorn-character.idle .uni-mane-path {
-    transform-origin: 60px 30px;
+    transform-origin: 66px 32px;
     animation: hairWave 2.2s ease-in-out infinite alternate;
 }
 
@@ -1118,32 +1118,32 @@ body, html {
 }
 
 .unicorn-character.galloping .uni-leg-fl-path {
-    transform-origin: 63px 60px;
+    transform-origin: 70px 68px;
     animation: legRunF 0.3s linear infinite alternate;
 }
 
 .unicorn-character.galloping .uni-leg-bl-path {
-    transform-origin: 33px 60px;
+    transform-origin: 38px 68px;
     animation: legRunB 0.3s linear infinite alternate;
 }
 
 .unicorn-character.galloping .uni-leg-fr-path {
-    transform-origin: 68px 60px;
+    transform-origin: 64px 68px;
     animation: legRunB 0.3s linear infinite alternate;
 }
 
 .unicorn-character.galloping .uni-leg-br-path {
-    transform-origin: 28px 60px;
+    transform-origin: 32px 68px;
     animation: legRunF 0.3s linear infinite alternate;
 }
 
 .unicorn-character.galloping .uni-tail-path {
-    transform-origin: 22px 55px;
+    transform-origin: 28px 65px;
     animation: tailWiggle 0.15s ease-in-out infinite alternate;
 }
 
 .unicorn-character.galloping .uni-mane-path {
-    transform-origin: 60px 30px;
+    transform-origin: 66px 32px;
     animation: hairWave 0.15s ease-in-out infinite alternate;
 }
 

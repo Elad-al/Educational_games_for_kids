@@ -274,109 +274,126 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
                                         <stop offset="0%" stopColor="#ffee58" />
                                         <stop offset="100%" stopColor="#ffb300" />
                                     </linearGradient>
+                                    <linearGradient id="maneYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#fff59d" /><stop offset="100%" stopColor="#fbc02d" />
+                                    </linearGradient>
+                                    <linearGradient id="maneGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#a5d6a7" /><stop offset="100%" stopColor="#388e3c" />
+                                    </linearGradient>
+                                    <linearGradient id="maneBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#80deea" /><stop offset="100%" stopColor="#00acc1" />
+                                    </linearGradient>
+                                    <linearGradient id="manePink" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#ff8a80" /><stop offset="100%" stopColor="#d32f2f" />
+                                    </linearGradient>
+                                    <linearGradient id="manePurple" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#b39ddb" /><stop offset="100%" stopColor="#5e35b1" />
+                                    </linearGradient>
                                 </defs>
 
-                                {/* Tail */}
-                                <path 
-                                    className="uni-tail-path" 
-                                    d="M 22 55 Q 5 60 10 75 Q 18 78 24 63 Z" 
-                                    fill="url(#uniHairGrad)" 
-                                    stroke="#4a148c" 
-                                    strokeWidth="1.5" 
-                                />
-                                
-                                {/* Right Back Leg */}
-                                <path 
-                                    className="uni-leg-br-path" 
-                                    d="M 28 60 C 26 75, 23 85, 25 90 C 28 90, 31 82, 33 60 Z" 
-                                    fill="#fce4ec" 
-                                    stroke="#c2185b" 
-                                    strokeWidth="1.5" 
-                                />
-                                
-                                {/* Right Front Leg */}
-                                <path 
-                                    className="uni-leg-fr-path" 
-                                    d="M 68 60 C 69 75, 71 85, 73 90 C 76 90, 75 82, 72 60 Z" 
-                                    fill="#fce4ec" 
-                                    stroke="#c2185b" 
-                                    strokeWidth="1.5" 
-                                />
-                                
+                                {/* Tail - Sweeping lock of rainbow hair */}
+                                <g className="uni-tail-group">
+                                    <path className="uni-tail-path" d="M 28 65 Q 10 60 5 75 Q 12 95 24 95 Q 26 80 28 65 Z" fill="url(#manePurple)" stroke="#311b92" strokeWidth="1.5" />
+                                    <path className="uni-tail-path" d="M 26 68 Q 12 68 8 82 Q 15 92 23 88 Q 24 78 26 68 Z" fill="url(#maneBlue)" stroke="#006064" strokeWidth="1.5" />
+                                    <path className="uni-tail-path" d="M 24 72 Q 14 74 12 85 Q 18 90 22 84 Q 22 78 24 72 Z" fill="url(#maneGreen)" stroke="#1b5e20" strokeWidth="1.5" />
+                                    <path className="uni-tail-path" d="M 22 75 Q 16 78 15 82 Q 18 85 20 82 Q 20 78 22 75 Z" fill="url(#maneYellow)" stroke="#f57f17" strokeWidth="1.5" />
+                                </g>
+
+                                {/* Back legs (drawn behind body) */}
+                                <g className="uni-legs-back">
+                                    {/* Back leg right */}
+                                    <g className="uni-leg-br-path">
+                                        <path d="M 32 68 L 26 95 A 4 4 0 0 0 32 99 L 38 99 L 38 68 Z" fill="url(#uniBodyGrad)" opacity="0.85" stroke="#ad1457" strokeWidth="1.5" />
+                                        <path d="M 26 95 L 38 95 L 38 99 L 32 99 Z" fill="#ff4081" /> {/* hoof */}
+                                    </g>
+                                    {/* Front leg right */}
+                                    <g className="uni-leg-fr-path">
+                                        <path d="M 64 68 L 58 95 A 4 4 0 0 0 64 99 L 70 99 L 70 68 Z" fill="url(#uniBodyGrad)" opacity="0.85" stroke="#ad1457" strokeWidth="1.5" />
+                                        <path d="M 58 95 L 70 95 L 70 99 L 64 99 Z" fill="#ff4081" /> {/* hoof */}
+                                    </g>
+                                </g>
+
                                 {/* Torso Body */}
                                 <path 
-                                    d="M 26 44 C 18 44, 16 56, 22 66 C 26 72, 68 72, 72 64 C 77 54, 71 44, 65 44 Z" 
+                                    d="M 28 50 C 22 50, 18 62, 24 72 C 30 78, 66 78, 70 70 C 76 60, 72 50, 64 50 Z" 
                                     fill="url(#uniBodyGrad)" 
                                     stroke="#c2185b" 
-                                    strokeWidth="1.8" 
+                                    strokeWidth="2" 
                                 />
-                                
-                                {/* Left Back Leg */}
-                                <path 
-                                    className="uni-leg-bl-path" 
-                                    d="M 33 60 C 33 75, 31 85, 33 90 C 36 90, 38 82, 38 60 Z" 
-                                    fill="#f8bbd0" 
-                                    stroke="#c2185b" 
-                                    strokeWidth="1.5" 
-                                />
-                                
-                                {/* Left Front Leg */}
-                                <path 
-                                    className="uni-leg-fl-path" 
-                                    d="M 63 60 C 62 75, 59 85, 61 90 C 64 90, 67 82, 67 60 Z" 
-                                    fill="#f8bbd0" 
-                                    stroke="#c2185b" 
-                                    strokeWidth="1.5" 
-                                />
+
+                                {/* Front legs (drawn in front of body) */}
+                                <g className="uni-legs-front">
+                                    {/* Back leg left */}
+                                    <g className="uni-leg-bl-path">
+                                        <path d="M 38 68 L 34 95 A 4 4 0 0 0 40 99 L 46 99 L 44 68 Z" fill="url(#uniBodyGrad)" stroke="#c2185b" strokeWidth="2" />
+                                        <path d="M 34 95 L 46 95 L 46 99 L 40 99 Z" fill="#f50057" /> {/* hoof */}
+                                    </g>
+                                    {/* Front leg left */}
+                                    <g className="uni-leg-fl-path">
+                                        <path d="M 70 68 L 66 95 A 4 4 0 0 0 72 99 L 78 99 L 76 68 Z" fill="url(#uniBodyGrad)" stroke="#c2185b" strokeWidth="2" />
+                                        <path d="M 66 95 L 78 95 L 78 99 L 72 99 Z" fill="#f50057" /> {/* hoof */}
+                                    </g>
+                                </g>
 
                                 {/* Neck */}
                                 <path 
-                                    d="M 62 48 C 65 40, 71 28, 73 22 C 76 25, 74 38, 70 48 Z" 
+                                    d="M 64 52 C 67 44, 72 32, 75 24 C 80 27, 78 40, 72 52 Z" 
                                     fill="url(#uniBodyGrad)" 
                                     stroke="#c2185b" 
-                                    strokeWidth="1.8" 
+                                    strokeWidth="2" 
                                 />
-                                
-                                {/* Head Group (for look-around and smile animations) */}
+
+                                {/* Head Group (for look-around and breathing) */}
                                 <g className="uni-head-group">
-                                    {/* Head base */}
+                                    {/* Head shape with muzzle */}
                                     <path 
-                                        d="M 68 22 C 64 20, 68 8, 76 8 C 84 8, 86 16, 82 26 C 78 30, 72 28, 68 22 Z" 
+                                        d="M 70 24 C 65 22, 64 12, 74 10 C 84 10, 88 18, 83 28 C 78 33, 72 30, 70 24 Z" 
                                         fill="url(#uniBodyGrad)" 
                                         stroke="#c2185b" 
-                                        strokeWidth="1.8" 
+                                        strokeWidth="2" 
                                     />
                                     
-                                    {/* Eye with Shiny Highlight */}
-                                    <circle cx="76" cy="14" r="2.5" fill="#2d3748" />
-                                    <circle cx="75.2" cy="13" r="0.9" fill="#fff" />
+                                    {/* Muzzle curve */}
+                                    <path d="M 80 26 Q 84 28 85 24" fill="none" stroke="#c2185b" strokeWidth="1.5" />
+                                    {/* Nostril */}
+                                    <circle cx="82" cy="24" r="1" fill="#c2185b" />
                                     
-                                    {/* Cute smiling mouth */}
-                                    <path d="M 79 21 Q 81 23 83 20" fill="none" stroke="#c2185b" strokeWidth="1.2" strokeLinecap="round" />
-                                    
+                                    {/* Eye - Big and Cute with dual catchlights & eyelashes */}
+                                    <g className="uni-eye-group">
+                                        <path d="M 70 12 C 73 10, 77 11, 79 13" fill="none" stroke="#2d3748" strokeWidth="2.5" strokeLinecap="round" />
+                                        <path d="M 78 11 L 81 9" stroke="#2d3748" strokeWidth="1.5" strokeLinecap="round" />
+                                        <path d="M 75 10 L 76 7" stroke="#2d3748" strokeWidth="1.5" strokeLinecap="round" />
+                                        
+                                        <ellipse cx="75" cy="17" rx="5" ry="6" fill="#2d3748" />
+                                        <ellipse cx="74" cy="15" rx="2" ry="2.5" fill="#fff" />
+                                        <circle cx="76.5" cy="19" r="1" fill="#fff" />
+                                        
+                                        <path d="M 68 9 Q 73 7 77 9" fill="none" stroke="#c2185b" strokeWidth="2.2" strokeLinecap="round" />
+                                    </g>
+
                                     {/* Blush cheek */}
-                                    <circle cx="73" cy="18" r="3" fill="#ff4081" opacity="0.5" />
-                                    
-                                    {/* Golden horn */}
-                                    <path 
-                                        className="uni-horn-path" 
-                                        d="M 72 6 L 68 -10 L 76 4 Z" 
-                                        fill="url(#uniHornGrad)" 
-                                        stroke="#e65100" 
-                                        strokeWidth="1.2" 
-                                    />
-                                    
-                                    {/* Mane (Hair) */}
-                                    <path 
-                                        className="uni-mane-path" 
-                                        d="M 60 30 Q 52 20 62 12 Q 54 8 68 6 Q 66 18 60 30 Z" 
-                                        fill="url(#uniHairGrad)" 
-                                        stroke="#4a148c" 
-                                        strokeWidth="1.2" 
-                                    />
-                                    
-                                    {/* Ear */}
-                                    <path d="M 66 10 Q 62 0 68 4 Z" fill="#ff80ab" stroke="#c2185b" strokeWidth="1.2" />
+                                    <ellipse cx="72" cy="22" rx="4" ry="2.5" fill="#ff4081" opacity="0.5" />
+
+                                    {/* Golden spiral horn */}
+                                    <g className="uni-horn">
+                                        <path className="uni-horn-path" d="M 73 8 L 52 -10 L 77 2 Z" fill="url(#hornGrad)" stroke="#f57f17" strokeWidth="1.5" />
+                                        <path d="M 70 4 Q 66 1 62 -2" fill="none" stroke="#e65100" strokeWidth="1.5" />
+                                        <path d="M 64 -3 Q 60 -6 56 -8" fill="none" stroke="#e65100" strokeWidth="1.5" />
+                                    </g>
+
+                                    {/* Rainbow Mane locks */}
+                                    <g className="uni-mane-group">
+                                        <path className="uni-mane-path" d="M 66 32 Q 52 20 62 10 Q 56 6 68 4 Q 66 18 66 32 Z" fill="url(#maneYellow)" stroke="#f57f17" strokeWidth="1.2" />
+                                        <path className="uni-mane-path" d="M 64 35 Q 50 25 59 15 Q 53 11 65 9 Q 63 21 64 35 Z" fill="url(#maneGreen)" stroke="#1b5e20" strokeWidth="1.2" />
+                                        <path className="uni-mane-path" d="M 62 38 Q 48 30 56 20 Q 50 16 62 14 Q 60 24 62 38 Z" fill="url(#maneBlue)" stroke="#006064" strokeWidth="1.2" />
+                                        <path className="uni-mane-path" d="M 60 41 Q 46 35 53 25 Q 47 21 59 19 Q 57 27 60 41 Z" fill="url(#manePink)" stroke="#b71c1c" strokeWidth="1.2" />
+                                    </g>
+
+                                    {/* Ears */}
+                                    <g className="uni-ears">
+                                        <path d="M 66 10 Q 60 0 66 4 Z" fill="url(#uniBodyGrad)" stroke="#c2185b" strokeWidth="1.5" />
+                                        <path d="M 65 8 Q 61 2 64 5 Z" fill="#ff80ab" />
+                                    </g>
                                 </g>
                             </svg>
                         </div>
