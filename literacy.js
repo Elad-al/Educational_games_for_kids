@@ -285,24 +285,46 @@
             
             dragLetter.classList.add('success');
             
-            // Play ding + voice praise
-            if (window.playSound) window.playSound('ding', 1000);
-            const praises = ['יפה', 'מצוין', 'נהדר', 'כל הכבוד'];
-            if (window.speak) window.speak(praises[Math.floor(Math.random() * praises.length)]);
+            // Play name audio first, then praise feedback
+            function triggerFeedback() {
+                if (window.playSound) window.playSound('ding', 1000);
+                const praises = ['יפה', 'מצוין', 'נהדר', 'כל הכבוד'];
+                if (window.speak) window.speak(praises[Math.floor(Math.random() * praises.length)]);
+                if (window.triggerConfetti) window.triggerConfetti();
 
-            // Play formal name after a short delay so praise is heard first
-            setTimeout(() => {
-                if (nameAudio) {
-                    nameAudio.currentTime = 0;
-                    nameAudio.play().catch(err => console.log('Name audio blocked', err));
-                }
-            }, 800);
-            if (window.triggerConfetti) window.triggerConfetti();
+                // Loop to next letter endlessly after delay
+                setTimeout(() => {
+                    resetStage1();
+                }, 2000);
+            }
 
-            // Loop to next letter endlessly after delay
-            setTimeout(() => {
-                resetStage1();
-            }, 2500);
+            let namePlayed = false;
+            if (nameAudio) {
+                nameAudio.currentTime = 0;
+                nameAudio.onended = () => {
+                    if (!namePlayed) {
+                        namePlayed = true;
+                        triggerFeedback();
+                    }
+                };
+                nameAudio.play().catch(err => {
+                    console.log('Name audio blocked', err);
+                    if (!namePlayed) {
+                        namePlayed = true;
+                        triggerFeedback();
+                    }
+                });
+                
+                // Fallback timeout in case onended doesn't fire
+                setTimeout(() => {
+                    if (!namePlayed) {
+                        namePlayed = true;
+                        triggerFeedback();
+                    }
+                }, 1500);
+            } else {
+                triggerFeedback();
+            }
 
         } else {
             // Miss: Return with soft spring
