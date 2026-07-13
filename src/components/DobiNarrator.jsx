@@ -1,8 +1,18 @@
-import React, { useState } from 'react';
-import { playSfx } from '../hooks/useAudio';
+import React, { useState, useEffect } from 'react';
+import { playSfx, registerSpeakingListener } from '../hooks/useAudio';
 
 export default function DobiNarrator({ bubbleText, onNarratorClick }) {
     const [tapCount, setTapCount] = useState(0);
+    const [isSpeaking, setIsSpeaking] = useState(false);
+
+    useEffect(() => {
+        registerSpeakingListener((speaking) => {
+            setIsSpeaking(speaking);
+        });
+        return () => {
+            registerSpeakingListener(null);
+        };
+    }, []);
 
     const handleDobiTap = () => {
         playSfx('pop', 700 + Math.random() * 300);
@@ -34,10 +44,6 @@ export default function DobiNarrator({ bubbleText, onNarratorClick }) {
                             <stop offset="0%" stopColor="#fff8e1" />
                             <stop offset="100%" stopColor="#ffecb3" />
                         </linearGradient>
-                        <filter id="bearGlow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feGaussianBlur stdDeviation="6" result="blur" />
-                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                        </filter>
                     </defs>
 
                     {/* Ears */}
@@ -48,7 +54,7 @@ export default function DobiNarrator({ bubbleText, onNarratorClick }) {
                         <circle cx="92" cy="28" r="10" fill="#ff8a80" stroke="#c62828" strokeWidth="1.5" />
                     </g>
                     
-                    {/* Head */}
+                    {/* Head Group */}
                     <g className="bear-head-group">
                         <ellipse cx="60" cy="65" rx="42" ry="38" fill="url(#bearBodyGrad)" stroke="#5d3b25" strokeWidth="3.5" />
                         
@@ -59,10 +65,19 @@ export default function DobiNarrator({ bubbleText, onNarratorClick }) {
                         <ellipse cx="32" cy="74" rx="9" ry="5.5" fill="#ff4081" opacity="0.55" />
                         <ellipse cx="88" cy="74" rx="9" ry="5.5" fill="#ff4081" opacity="0.55" />
                         
-                        {/* Snout */}
+                        {/* Snout & Mouth */}
                         <ellipse cx="60" cy="76" rx="18" ry="12" fill="url(#bearSnoutGrad)" stroke="#5d3b25" strokeWidth="2.5" />
                         <path d="M 60 70 L 60 77" stroke="#5d3b25" strokeWidth="2.5" strokeLinecap="round" />
-                        <path d="M 54 77 Q 60 82 66 77" fill="none" stroke="#5d3b25" strokeWidth="2.5" strokeLinecap="round" />
+                        
+                        {/* Talking Mouth Path */}
+                        <path 
+                            className={`bear-mouth ${isSpeaking ? 'speaking' : ''}`}
+                            d="M 54 77 Q 60 82 66 77" 
+                            fill="none" 
+                            stroke="#5d3b25" 
+                            strokeWidth="2.5" 
+                            strokeLinecap="round" 
+                        />
                         <polygon points="52,69 68,69 60,76" fill="#3e2723" stroke="#5d3b25" strokeWidth="1.5" />
                         
                         {/* Eyes with Shiny Highlights */}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { playSfx, playSparkle } from '../hooks/useAudio';
 
@@ -17,6 +17,11 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
     const [animatingNodeId, setAnimatingNodeId] = useState(null);
     const [unicornPos, setUnicornPos] = useState({ x: levels[0].position.x, y: levels[0].position.y });
     const [isUnicornMoving, setIsUnicornMoving] = useState(false);
+    const [sparks, setSparks] = useState([]);
+
+    const prevPosRef = useRef({ x: levels[0].position.x, y: levels[0].position.y });
+    const targetPosRef = useRef({ x: levels[0].position.x, y: levels[0].position.y });
+    const startTimeRef = useRef(0);
 
     const getStars = (levelId) => {
         const progressKey = type === 'sorting' ? 'sortingProgress' : 'literacyProgress';
@@ -33,10 +38,52 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
         return '';
     };
 
+    // Stardust trail emitter interval
+    useEffect(() => {
+        if (!isUnicornMoving) return;
+
+        const interval = setInterval(() => {
+            const elapsed = Date.now() - startTimeRef.current;
+            const progress = Math.min(elapsed / 1200, 1);
+            
+            const currentX = prevPosRef.current.x + (targetPosRef.current.x - prevPosRef.current.x) * progress;
+            const currentY = prevPosRef.current.y + (targetPosRef.current.y - prevPosRef.current.y) * progress;
+
+            // Spawn 2 sparkles per tick for rich visual volume
+            setSparks(prev => [
+                ...prev.filter(s => Date.now() - s.time < 1200),
+                {
+                    id: Math.random(),
+                    time: Date.now(),
+                    x: currentX + (Math.random() - 0.5) * 5,
+                    y: currentY + (Math.random() - 0.5) * 5,
+                    size: `${0.8 + Math.random() * 1.4}rem`,
+                    floatX: (Math.random() - 0.5) * 35,
+                    floatY: -20 - Math.random() * 30
+                },
+                {
+                    id: Math.random() + 1,
+                    time: Date.now(),
+                    x: currentX + (Math.random() - 0.5) * 5,
+                    y: currentY + (Math.random() - 0.5) * 5,
+                    size: `${0.6 + Math.random() * 1}rem`,
+                    floatX: (Math.random() - 0.5) * 20,
+                    floatY: -10 - Math.random() * 20
+                }
+            ]);
+        }, 50);
+
+        return () => clearInterval(interval);
+    }, [isUnicornMoving]);
+
     const handleNodeClick = (lvl) => {
         if (isUnicornMoving || animatingNodeId) return;
 
-        // Start running unicorn
+        // Configure motion coordinates
+        prevPosRef.current = { x: unicornPos.x, y: unicornPos.y };
+        targetPosRef.current = { x: lvl.position.x, y: lvl.position.y };
+        startTimeRef.current = Date.now();
+
         setIsUnicornMoving(true);
         setUnicornPos({ x: lvl.position.x, y: lvl.position.y });
         playSfx('pop', 700);
@@ -47,7 +94,7 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
             setAnimatingNodeId(lvl.id);
             playSparkle();
 
-            // Magical node spin takes 800ms
+            // Node selection spin takes 800ms
             setTimeout(() => {
                 onSelectLevel(lvl.id);
                 setAnimatingNodeId(null);
@@ -57,7 +104,7 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
 
     const isPrincessMode = type === 'literacy';
 
-    // Calculate mathematically precise curves passing through node coordinates
+    // Mathematically aligned Bezier curves
     const roadD = type === 'sorting'
         ? "M 162 225 C 220 120, 300 81, 342 81 C 420 81, 480 261, 540 261 C 600 261, 680 150, 738 112"
         : "M 162 216 Q 450 -20 720 216";
@@ -175,6 +222,32 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
                         );
                     })}
 
+                    {/* Magic stardust trail sparks */}
+                    {sparks.map(s => (
+                        <motion.div
+                            key={s.id}
+                            initial={{ left: `${s.x}%`, top: `${s.y}%`, scale: 1.6, opacity: 1 }}
+                            animate={{ 
+                                x: s.floatX, 
+                                y: s.floatY, 
+                                scale: 0.2, 
+                                opacity: 0,
+                                rotate: 360 
+                            }}
+                            transition={{ duration: 1.1, ease: 'easeOut' }}
+                            style={{
+                                position: 'absolute',
+                                fontSize: s.size,
+                                pointerEvents: 'none',
+                                zIndex: 85,
+                                transform: 'translate(-50%, -50%)',
+                                filter: 'drop-shadow(0 0 8px #ffd700)'
+                            }}
+                        >
+                            ✨
+                        </motion.div>
+                    ))}
+
                     {/* CSS Animated Riding Unicorn Avatar */}
                     <motion.div
                         className={`unicorn-character ${isUnicornMoving ? 'galloping' : 'idle'}`}
@@ -264,44 +337,47 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
                                     strokeWidth="1.8" 
                                 />
                                 
-                                {/* Head */}
-                                <path 
-                                    d="M 68 22 C 64 20, 68 8, 76 8 C 84 8, 86 16, 82 26 C 78 30, 72 28, 68 22 Z" 
-                                    fill="url(#uniBodyGrad)" 
-                                    stroke="#c2185b" 
-                                    strokeWidth="1.8" 
-                                />
-                                
-                                {/* Eye with Shiny Highlight */}
-                                <circle cx="76" cy="14" r="2.5" fill="#2d3748" />
-                                <circle cx="75.2" cy="13" r="0.9" fill="#fff" />
-                                
-                                {/* Cute smiling mouth */}
-                                <path d="M 79 21 Q 81 23 83 20" fill="none" stroke="#c2185b" strokeWidth="1.2" strokeLinecap="round" />
-                                
-                                {/* Blush cheek */}
-                                <circle cx="73" cy="18" r="3" fill="#ff4081" opacity="0.5" />
-                                
-                                {/* Golden horn */}
-                                <path 
-                                    className="uni-horn-path" 
-                                    d="M 72 6 L 68 -10 L 76 4 Z" 
-                                    fill="url(#uniHornGrad)" 
-                                    stroke="#e65100" 
-                                    strokeWidth="1.2" 
-                                />
-                                
-                                {/* Mane (Hair) */}
-                                <path 
-                                    className="uni-mane-path" 
-                                    d="M 60 30 Q 52 20 62 12 Q 54 8 68 6 Q 66 18 60 30 Z" 
-                                    fill="url(#uniHairGrad)" 
-                                    stroke="#4a148c" 
-                                    strokeWidth="1.2" 
-                                />
-                                
-                                {/* Ear */}
-                                <path d="M 66 10 Q 62 0 68 4 Z" fill="#ff80ab" stroke="#c2185b" strokeWidth="1.2" />
+                                {/* Head Group (for look-around and smile animations) */}
+                                <g className="uni-head-group">
+                                    {/* Head base */}
+                                    <path 
+                                        d="M 68 22 C 64 20, 68 8, 76 8 C 84 8, 86 16, 82 26 C 78 30, 72 28, 68 22 Z" 
+                                        fill="url(#uniBodyGrad)" 
+                                        stroke="#c2185b" 
+                                        strokeWidth="1.8" 
+                                    />
+                                    
+                                    {/* Eye with Shiny Highlight */}
+                                    <circle cx="76" cy="14" r="2.5" fill="#2d3748" />
+                                    <circle cx="75.2" cy="13" r="0.9" fill="#fff" />
+                                    
+                                    {/* Cute smiling mouth */}
+                                    <path d="M 79 21 Q 81 23 83 20" fill="none" stroke="#c2185b" strokeWidth="1.2" strokeLinecap="round" />
+                                    
+                                    {/* Blush cheek */}
+                                    <circle cx="73" cy="18" r="3" fill="#ff4081" opacity="0.5" />
+                                    
+                                    {/* Golden horn */}
+                                    <path 
+                                        className="uni-horn-path" 
+                                        d="M 72 6 L 68 -10 L 76 4 Z" 
+                                        fill="url(#uniHornGrad)" 
+                                        stroke="#e65100" 
+                                        strokeWidth="1.2" 
+                                    />
+                                    
+                                    {/* Mane (Hair) */}
+                                    <path 
+                                        className="uni-mane-path" 
+                                        d="M 60 30 Q 52 20 62 12 Q 54 8 68 6 Q 66 18 60 30 Z" 
+                                        fill="url(#uniHairGrad)" 
+                                        stroke="#4a148c" 
+                                        strokeWidth="1.2" 
+                                    />
+                                    
+                                    {/* Ear */}
+                                    <path d="M 66 10 Q 62 0 68 4 Z" fill="#ff80ab" stroke="#c2185b" strokeWidth="1.2" />
+                                </g>
                             </svg>
                         </div>
                     </motion.div>

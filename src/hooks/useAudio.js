@@ -5,6 +5,7 @@ let currentVoiceAudio = null;
 let currentPhoneticAudio = null;
 let musicInterval = null;
 let noteIndex = 0;
+let isSpeakingCallback = null;
 
 // Simple C-major arpeggio melody for gentle music-box background music
 const melody = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63]; // C4 - E4 - G4 - C5 - G4 - E4
@@ -198,6 +199,7 @@ export function stopVoice() {
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
     }
+    if (isSpeakingCallback) isSpeakingCallback(false);
 }
 
 export function stopPhonetic() {
@@ -220,15 +222,30 @@ export function speak(text) {
         }
         audio.currentTime = 0;
         currentVoiceAudio = audio;
-        audio.play().catch(e => console.log('Speech playback blocked', e));
+        if (isSpeakingCallback) isSpeakingCallback(true);
+        audio.onended = () => {
+            if (isSpeakingCallback) isSpeakingCallback(false);
+        };
+        audio.play().catch(e => {
+            console.log('Speech playback blocked', e);
+            if (isSpeakingCallback) isSpeakingCallback(false);
+        });
     } else {
         // TTS Fallback
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'he-IL';
-            // Set rate slightly slower for clearer kid comprehension
             utterance.rate = 0.85; 
+            utterance.onstart = () => {
+                if (isSpeakingCallback) isSpeakingCallback(true);
+            };
+            utterance.onend = () => {
+                if (isSpeakingCallback) isSpeakingCallback(false);
+            };
+            utterance.onerror = () => {
+                if (isSpeakingCallback) isSpeakingCallback(false);
+            };
             window.speechSynthesis.speak(utterance);
         } else {
             console.log('Speech synthesis fallback failed:', text);
@@ -243,12 +260,20 @@ export function playLetterName(char) {
     currentVoiceAudio = audio;
     
     return new Promise((resolve) => {
-        audio.onended = () => resolve();
+        audio.onended = () => {
+            if (isSpeakingCallback) isSpeakingCallback(false);
+            resolve();
+        };
+        if (isSpeakingCallback) isSpeakingCallback(true);
         audio.play().catch(err => {
             console.log('Letter name audio blocked', err);
+            if (isSpeakingCallback) isSpeakingCallback(false);
             resolve();
         });
-        setTimeout(resolve, 1500);
+        setTimeout(() => {
+            if (isSpeakingCallback) isSpeakingCallback(false);
+            resolve();
+        }, 1500);
     });
 }
 
@@ -260,6 +285,10 @@ export function playLetterPhonetic(char) {
     audio.loop = true;
     audio.play().catch(e => console.log('Letter phonetic blocked', e));
     return audio;
+}
+
+export function registerSpeakingListener(callback) {
+    isSpeakingCallback = callback;
 }
 
 export function useAudio() {
@@ -274,6 +303,7 @@ export function useAudio() {
         stopVoice,
         stopPhonetic,
         startBackgroundMusic,
-        stopBackgroundMusic
+        stopBackgroundMusic,
+        registerSpeakingListener
     };
 }
