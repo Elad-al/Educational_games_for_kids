@@ -1158,3 +1158,271 @@ body {
     margin-top: 4px;
 }
 
+/* --- Map Themes & Svg Road --- */
+.road-path-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.map-container {
+    position: relative;
+    width: 95%;
+    max-width: 900px;
+    height: 480px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 8px solid rgba(255, 255, 255, 0.35);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-premium);
+    overflow: hidden;
+}
+
+/* Princess Map View Theme */
+.princess-map-view {
+    background: linear-gradient(to bottom, #f3e5f5 0%, #e1bee7 50%, #f8bbd0 100%) !important;
+}
+
+.princess-map-view .map-container {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: #f8bbd0;
+}
+
+/* Adventure Map View Theme */
+.adventure-map-view {
+    background: linear-gradient(to bottom, #80d8ff 0%, #a7ffeb 60%, #b9f6ca 100%) !important;
+}
+
+.adventure-map-view .map-container {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #a7ffeb;
+}
+
+/* --- Themed Map Detail Elements --- */
+.princess-castle {
+    position: absolute;
+    right: 5%;
+    top: 15%;
+    font-size: 5rem;
+    pointer-events: none;
+    z-index: 20;
+    animation: castleBounce 3s ease-in-out infinite alternate;
+}
+
+.princess-rainbow {
+    position: absolute;
+    left: 5%;
+    top: 5%;
+    font-size: 5.5rem;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.85;
+}
+
+.adventure-mole {
+    position: absolute;
+    left: 45%;
+    top: 50%;
+    font-size: 3.5rem;
+    pointer-events: none;
+    z-index: 20;
+    animation: molePop 3.5s ease-in-out infinite;
+}
+
+.adventure-chest {
+    position: absolute;
+    right: 5%;
+    top: 15%;
+    font-size: 4.5rem;
+    pointer-events: none;
+    z-index: 20;
+    animation: castleBounce 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes molePop {
+    0%, 100% { transform: translateY(20px) scaleY(0.1); opacity: 0; }
+    20%, 80% { transform: translateY(0) scaleY(1); opacity: 1; }
+}
+
+/* --- CSS Princess Unicorn Character --- */
+.unicorn-character {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    pointer-events: none;
+    transition: left 1.2s ease-in-out, top 1.2s ease-in-out;
+}
+
+.unicorn-body-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Body / Torso */
+.uni-torso {
+    position: absolute;
+    width: 48px;
+    height: 30px;
+    background: linear-gradient(135deg, #ff80ab, #f50057); /* pink/purple */
+    border-radius: 15px;
+    top: 32px;
+    left: 16px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    border: 2.5px solid #c2185b;
+}
+
+/* Neck & Head */
+.uni-neck {
+    position: absolute;
+    width: 15px;
+    height: 25px;
+    background: linear-gradient(to top, #ff80ab, #ff4081);
+    top: 15px;
+    left: 44px;
+    transform: rotate(-15deg);
+    border-left: 2.5px solid #c2185b;
+    border-right: 2.5px solid #c2185b;
+    z-index: 10;
+}
+
+.uni-head {
+    position: absolute;
+    width: 32px;
+    height: 22px;
+    background: linear-gradient(135deg, #ff80ab, #ff4081);
+    border-radius: 10px 16px 10px 10px;
+    top: 4px;
+    left: 41px;
+    border: 2.5px solid #c2185b;
+    z-index: 20;
+}
+
+/* Golden Horn */
+.uni-horn {
+    position: absolute;
+    width: 8px;
+    height: 22px;
+    background: linear-gradient(to top, #ffee58, #ffb300);
+    border-radius: 4px;
+    top: -14px;
+    left: 55px;
+    transform: rotate(20deg);
+    border: 1.5px solid #e65100;
+    box-shadow: 0 0 10px #ffee58;
+    z-index: 15;
+}
+
+/* Purple Mane / Hair */
+.uni-mane {
+    position: absolute;
+    width: 16px;
+    height: 26px;
+    background: linear-gradient(to bottom, #ea80fc, #d500f9, #7c4dff);
+    border-radius: 8px;
+    top: 10px;
+    left: 34px;
+    border: 1.5px solid #4a148c;
+    z-index: 5;
+    animation: hairWave 2s ease-in-out infinite alternate;
+}
+
+/* Purple Tail */
+.uni-tail {
+    position: absolute;
+    width: 14px;
+    height: 24px;
+    background: linear-gradient(to bottom, #ea80fc, #d500f9, #7c4dff);
+    border-radius: 7px;
+    top: 34px;
+    left: 7px;
+    transform-origin: top center;
+    border: 1.5px solid #4a148c;
+    z-index: 2;
+    animation: tailWiggle 1.5s ease-in-out infinite alternate;
+}
+
+/* Eye */
+.uni-eye {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #212121;
+    border-radius: 50%;
+    top: 7px;
+    left: 53px;
+}
+
+/* Legs */
+.uni-leg {
+    position: absolute;
+    width: 8px;
+    height: 22px;
+    background: linear-gradient(to bottom, #ff80ab, #f50057);
+    border-radius: 4px;
+    border: 1.5px solid #c2185b;
+    transform-origin: top center;
+    z-index: 5;
+}
+
+.uni-leg-fl { left: 47px; top: 58px; }
+.uni-leg-fr { left: 41px; top: 58px; z-index: -1; opacity: 0.85; }
+.uni-leg-bl { left: 24px; top: 58px; }
+.uni-leg-br { left: 18px; top: 58px; z-index: -1; opacity: 0.85; }
+
+/* --- Unicorn Animations --- */
+
+/* Idle floating */
+.unicorn-character.idle .unicorn-body-wrapper {
+    animation: uniIdle 2s ease-in-out infinite alternate;
+}
+
+@keyframes uniIdle {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-4px); }
+}
+
+@keyframes hairWave {
+    0% { transform: skewX(-5deg); }
+    100% { transform: skewX(5deg); }
+}
+
+@keyframes tailWiggle {
+    0% { transform: rotate(-8deg); }
+    100% { transform: rotate(12deg); }
+}
+
+/* Galloping Action (rotating legs, bobbing body) */
+.unicorn-character.galloping .unicorn-body-wrapper {
+    animation: uniGallopBody 0.3s ease-in-out infinite alternate;
+}
+
+.unicorn-character.galloping .uni-leg-fl { animation: legRunF 0.3s linear infinite alternate; }
+.unicorn-character.galloping .uni-leg-fr { animation: legRunB 0.3s linear infinite alternate; }
+.unicorn-character.galloping .uni-leg-bl { animation: legRunB 0.3s linear infinite alternate; }
+.unicorn-character.galloping .uni-leg-br { animation: legRunF 0.3s linear infinite alternate; }
+
+.unicorn-character.galloping .uni-mane { animation: hairWave 0.15s ease-in-out infinite alternate; }
+.unicorn-character.galloping .uni-tail { animation: tailWiggle 0.15s ease-in-out infinite alternate; }
+
+@keyframes uniGallopBody {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-8px) rotate(-6deg); }
+}
+
+@keyframes legRunF {
+    0% { transform: rotate(-35deg); }
+    100% { transform: rotate(35deg); }
+}
+
+@keyframes legRunB {
+    0% { transform: rotate(35deg); }
+    100% { transform: rotate(-35deg); }
+}
+
+

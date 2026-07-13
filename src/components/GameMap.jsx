@@ -16,8 +16,8 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
 
     const [animatingNodeId, setAnimatingNodeId] = useState(null);
     const [unicornPos, setUnicornPos] = useState({ x: levels[0].position.x, y: levels[0].position.y });
+    const [isUnicornMoving, setIsUnicornMoving] = useState(false);
 
-    // Get progress stars for a level
     const getStars = (levelId) => {
         const progressKey = type === 'sorting' ? 'sortingProgress' : 'literacyProgress';
         try {
@@ -34,56 +34,93 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
     };
 
     const handleNodeClick = (lvl) => {
-        if (animatingNodeId) return; // Prevent double clicks
-        
-        // 1. Move the unicorn to clicked node
+        if (isUnicornMoving || animatingNodeId) return;
+
+        // Start running unicorn
+        setIsUnicornMoving(true);
         setUnicornPos({ x: lvl.position.x, y: lvl.position.y });
         playSfx('pop', 700);
 
-        // 2. Wait for unicorn to arrive (800ms)
+        // Slide animation takes 1200ms
         setTimeout(() => {
+            setIsUnicornMoving(false);
             setAnimatingNodeId(lvl.id);
             playSparkle();
 
-            // 3. Wait for magical selection spin (800ms)
+            // Magical node spin takes 800ms
             setTimeout(() => {
                 onSelectLevel(lvl.id);
                 setAnimatingNodeId(null);
             }, 800);
-        }, 800);
+        }, 1200);
     };
 
+    const isPrincessMode = type === 'literacy';
+
     return (
-        <div className="view-container">
+        <div className={`view-container ${isPrincessMode ? 'princess-map-view' : 'adventure-map-view'}`}>
+            {/* Header */}
             <div className="header-bar">
                 <button className="btn-round" onClick={onBack}>
                     🏠
                 </button>
                 <h1 className="header-title">
-                    {type === 'sorting' ? 'מפת משחקי מיון' : 'מפת לימוד אותיות'}
+                    {isPrincessMode ? 'עולם האותיות הקסום' : 'מפת הרפתקאות המיון'}
                 </h1>
-                <div style={{ width: 64 }}></div> {/* spacer */}
+                <div style={{ width: 64 }}></div>
             </div>
 
             <div className="map-container">
                 <div className="map-path">
-                    {/* Fairytale backgrounds details */}
-                    <div className="map-detail castle-end">🏰</div>
-                    <div className="map-detail tree-1">🌳</div>
-                    <div className="map-detail tree-2">🌳</div>
-                    <div className="map-detail star-glow-1">✨</div>
-                    <div className="map-detail star-glow-2">✨</div>
+                    
+                    {/* Themed background details */}
+                    {!isPrincessMode ? (
+                        <>
+                            {/* Adventure World Details */}
+                            <div className="adventure-mole">🐹</div>
+                            <div className="adventure-chest">📦</div>
+                            <div className="map-detail tree-1">🌳</div>
+                            <div className="map-detail tree-2">🌳</div>
+                        </>
+                    ) : (
+                        <>
+                            {/* Princess World Details */}
+                            <div className="princess-castle">🏰</div>
+                            <div className="princess-rainbow">🌈</div>
+                            <div className="map-detail star-glow-1">✨</div>
+                            <div className="map-detail star-glow-2">✨</div>
+                        </>
+                    )}
 
-                    {/* Dotted curve representing the road path */}
+                    {/* Winding Adventure path road */}
                     <svg className="road-path-svg" width="100%" height="100%" viewBox="0 0 900 450" preserveAspectRatio="none">
                         <path 
                             d="M 160 225 Q 340 70 540 260 T 800 225" 
                             fill="none" 
-                            stroke="rgba(255,255,255,0.7)" 
-                            strokeWidth="14" 
-                            strokeDasharray="20, 20" 
+                            stroke={isPrincessMode ? "url(#goldGradient)" : "url(#sandGradient)"} 
+                            strokeWidth="20" 
+                            strokeLinecap="round"
+                            filter="drop-shadow(0 4px 6px rgba(0,0,0,0.15))"
+                        />
+                        <path 
+                            d="M 160 225 Q 340 70 540 260 T 800 225" 
+                            fill="none" 
+                            stroke="#fff" 
+                            strokeWidth="4" 
+                            strokeDasharray="16, 16"
                             strokeLinecap="round"
                         />
+                        <defs>
+                            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#ffee58" />
+                                <stop offset="50%" stopColor="#fdd835" />
+                                <stop offset="100%" stopColor="#f57f17" />
+                            </linearGradient>
+                            <linearGradient id="sandGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#ffe082" />
+                                <stop offset="100%" stopColor="#ffb300" />
+                            </linearGradient>
+                        </defs>
                     </svg>
 
                     {/* Level nodes */}
@@ -114,9 +151,8 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
                                 } : { scale: 1, rotate: 0 }}
                                 transition={{ duration: 0.8, ease: 'easeInOut' }}
                             >
-                                {/* Independent dynamic bobbing animation wrapper */}
                                 <motion.div
-                                    animate={{ y: [0, -10, 0] }}
+                                    animate={{ y: [0, -8, 0] }}
                                     transition={{ 
                                         duration: 2 + (lvl.id * 0.4), 
                                         repeat: Infinity, 
@@ -134,33 +170,38 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
                         );
                     })}
 
-                    {/* Unicorn Avatar riding to selected stage */}
+                    {/* CSS Animated Riding Unicorn Avatar */}
                     <motion.div
-                        className="unicorn-avatar"
+                        className={`unicorn-character ${isUnicornMoving ? 'galloping' : 'idle'}`}
                         animate={{
                             left: `${unicornPos.x}%`,
                             top: `${unicornPos.y}%`
                         }}
-                        transition={{ duration: 0.8, ease: 'easeInOut' }}
-                        style={{
-                            position: 'absolute',
-                            width: '75px',
-                            height: '75px',
-                            background: 'linear-gradient(135deg, #f3e5f5, #e1bee7)', // pink-purple gradient
-                            border: '4px solid #ab47bc',
-                            borderRadius: '50%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            fontSize: '2.8rem',
-                            boxShadow: '0 0 20px rgba(171, 71, 188, 0.8), inset 0 0 10px #fff',
-                            transform: 'translate(-50%, -50%)',
-                            zIndex: 100,
-                            pointerEvents: 'none'
-                        }}
+                        transition={{ duration: 1.2, ease: 'easeInOut' }}
                     >
-                        🦄
+                        <div className="unicorn-body-wrapper">
+                            {/* Torso */}
+                            <div className="uni-torso" />
+                            {/* Neck */}
+                            <div className="uni-neck" />
+                            {/* Head */}
+                            <div className="uni-head">
+                                <div className="uni-eye" />
+                            </div>
+                            {/* Horn */}
+                            <div className="uni-horn" />
+                            {/* Mane */}
+                            <div className="uni-mane" />
+                            {/* Tail */}
+                            <div className="uni-tail" />
+                            {/* Legs */}
+                            <div className="uni-leg uni-leg-fl" />
+                            <div className="uni-leg uni-leg-fr" />
+                            <div className="uni-leg uni-leg-bl" />
+                            <div className="uni-leg uni-leg-br" />
+                        </div>
                     </motion.div>
+
                 </div>
             </div>
         </div>
