@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { playSfx, playSparkle } from '../hooks/useAudio';
 
 export default function GameMap({ type, onSelectLevel, onBack }) {
+    const levels = type === 'sorting' ? [
+        { id: 1, label: 'צבעים', emoji: '🎨', position: { x: 18, y: 50 } },
+        { id: 2, label: 'מספרים', emoji: '🔢', position: { x: 38, y: 18 } },
+        { id: 3, label: 'צורות', emoji: '📐', position: { x: 60, y: 58 } },
+        { id: 4, label: 'קטגוריות', emoji: '🦁', position: { x: 82, y: 25 } }
+    ] : [
+        { id: 1, label: 'הכרת האותיות', emoji: 'א', position: { x: 18, y: 48 } },
+        { id: 2, label: 'חיפוש אותיות', emoji: '🔍', position: { x: 50, y: 18 } },
+        { id: 3, label: 'שרביט קסמים', emoji: '🪄', position: { x: 80, y: 48 } }
+    ];
+
     const [animatingNodeId, setAnimatingNodeId] = useState(null);
+    const [unicornPos, setUnicornPos] = useState({ x: levels[0].position.x, y: levels[0].position.y });
 
     // Get progress stars for a level
     const getStars = (levelId) => {
@@ -21,35 +33,24 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
         return '';
     };
 
-    // User requested to keep all stages open (unlocked)
-    const isLocked = (levelIndex) => {
-        return false; // Always unlocked
-    };
-
-    const levels = type === 'sorting' ? [
-        { id: 1, label: 'צבעים', emoji: '🎨', position: { left: '15%', top: '50%' } },
-        { id: 2, label: 'מספרים וצבעים', emoji: '🔢', position: { left: '38%', top: '18%' } },
-        { id: 3, label: 'צורות', emoji: '📐', position: { left: '60%', top: '58%' } },
-        { id: 4, label: 'קטגוריות', emoji: '🦁', position: { left: '82%', top: '25%' } }
-    ] : [
-        { id: 1, label: 'הכרת האותיות', emoji: 'א', position: { left: '18%', top: '48%' } },
-        { id: 2, label: 'חיפוש אותיות', emoji: '🔍', position: { left: '50%', top: '18%' } },
-        { id: 3, label: 'שרביט קסמים', emoji: '🪄', position: { left: '80%', top: '48%' } }
-    ];
-
     const handleNodeClick = (lvl) => {
         if (animatingNodeId) return; // Prevent double clicks
         
-        setAnimatingNodeId(lvl.id);
-        
-        // Play sparkly magic arpeggio sound effect
-        playSparkle();
+        // 1. Move the unicorn to clicked node
+        setUnicornPos({ x: lvl.position.x, y: lvl.position.y });
+        playSfx('pop', 700);
 
-        // Delay opening the level so the child can see the magic animation
+        // 2. Wait for unicorn to arrive (800ms)
         setTimeout(() => {
-            onSelectLevel(lvl.id);
-            setAnimatingNodeId(null);
-        }, 900);
+            setAnimatingNodeId(lvl.id);
+            playSparkle();
+
+            // 3. Wait for magical selection spin (800ms)
+            setTimeout(() => {
+                onSelectLevel(lvl.id);
+                setAnimatingNodeId(null);
+            }, 800);
+        }, 800);
     };
 
     return (
@@ -66,6 +67,26 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
 
             <div className="map-container">
                 <div className="map-path">
+                    {/* Fairytale backgrounds details */}
+                    <div className="map-detail castle-end">🏰</div>
+                    <div className="map-detail tree-1">🌳</div>
+                    <div className="map-detail tree-2">🌳</div>
+                    <div className="map-detail star-glow-1">✨</div>
+                    <div className="map-detail star-glow-2">✨</div>
+
+                    {/* Dotted curve representing the road path */}
+                    <svg className="road-path-svg" width="100%" height="100%" viewBox="0 0 900 450" preserveAspectRatio="none">
+                        <path 
+                            d="M 160 225 Q 340 70 540 260 T 800 225" 
+                            fill="none" 
+                            stroke="rgba(255,255,255,0.7)" 
+                            strokeWidth="14" 
+                            strokeDasharray="20, 20" 
+                            strokeLinecap="round"
+                        />
+                    </svg>
+
+                    {/* Level nodes */}
                     {levels.map((lvl) => {
                         const stars = getStars(lvl.id);
                         const isAnimating = animatingNodeId === lvl.id;
@@ -76,8 +97,8 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
                                 className={`map-node node-${lvl.id}`}
                                 style={{
                                     position: 'absolute',
-                                    left: lvl.position.left,
-                                    top: lvl.position.top,
+                                    left: `${lvl.position.x}%`,
+                                    top: `${lvl.position.y}%`,
                                     transform: 'translate(-50%, -50%)',
                                     zIndex: isAnimating ? 300 : 50
                                 }}
@@ -85,18 +106,61 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
                                 animate={isAnimating ? {
                                     scale: [1, 1.4, 1.25],
                                     rotate: [0, 180, 360],
-                                    filter: ['drop-shadow(0px 0px 0px rgba(255,215,0,0))', 'drop-shadow(0px 0px 30px rgba(255,215,0,0.85))', 'drop-shadow(0px 0px 10px rgba(255,215,0,0.4))']
+                                    filter: [
+                                        'drop-shadow(0px 0px 0px rgba(255,215,0,0))', 
+                                        'drop-shadow(0px 0px 30px rgba(255,215,0,0.85))', 
+                                        'drop-shadow(0px 0px 10px rgba(255,215,0,0.4))'
+                                    ]
                                 } : { scale: 1, rotate: 0 }}
                                 transition={{ duration: 0.8, ease: 'easeInOut' }}
                             >
-                                <div className="node-stars">{stars}</div>
-                                <div className="node-bubble">
-                                    {lvl.emoji}
-                                </div>
-                                <div className="node-label">{lvl.label}</div>
+                                {/* Independent dynamic bobbing animation wrapper */}
+                                <motion.div
+                                    animate={{ y: [0, -10, 0] }}
+                                    transition={{ 
+                                        duration: 2 + (lvl.id * 0.4), 
+                                        repeat: Infinity, 
+                                        ease: 'easeInOut' 
+                                    }}
+                                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}
+                                >
+                                    <div className="node-stars">{stars}</div>
+                                    <div className="node-bubble">
+                                        {lvl.emoji}
+                                    </div>
+                                    <div className="node-label">{lvl.label}</div>
+                                </motion.div>
                             </motion.div>
                         );
                     })}
+
+                    {/* Unicorn Avatar riding to selected stage */}
+                    <motion.div
+                        className="unicorn-avatar"
+                        animate={{
+                            left: `${unicornPos.x}%`,
+                            top: `${unicornPos.y}%`
+                        }}
+                        transition={{ duration: 0.8, ease: 'easeInOut' }}
+                        style={{
+                            position: 'absolute',
+                            width: '75px',
+                            height: '75px',
+                            background: 'linear-gradient(135deg, #f3e5f5, #e1bee7)', // pink-purple gradient
+                            border: '4px solid #ab47bc',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            fontSize: '2.8rem',
+                            boxShadow: '0 0 20px rgba(171, 71, 188, 0.8), inset 0 0 10px #fff',
+                            transform: 'translate(-50%, -50%)',
+                            zIndex: 100,
+                            pointerEvents: 'none'
+                        }}
+                    >
+                        🦄
+                    </motion.div>
                 </div>
             </div>
         </div>

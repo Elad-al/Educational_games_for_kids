@@ -35,7 +35,7 @@ export default function StickerBoard({ onBack }) {
                     {/* Active Canvas Scene */}
                     <div 
                         className="sticker-scene-canvas" 
-                        style={{ background: selectedScene.background }}
+                        style={{ backgroundImage: selectedScene.background }}
                     >
                         {placedStickers.map(st => (
                             <motion.div

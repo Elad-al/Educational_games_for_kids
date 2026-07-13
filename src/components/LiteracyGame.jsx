@@ -17,6 +17,7 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
     const [currentLetter, setCurrentLetter] = useState(null);
     const [bubbleText, setBubbleText] = useState('');
     const [isWon, setIsWon] = useState(false);
+    const [correctCount, setCorrectCount] = useState(0); // Track progress (0/5)
     
     // Stage 1 State
     const [letterPos, setLetterPos] = useState({ x: 0, y: 0, startX: '50%', startY: '75%' });
@@ -40,35 +41,40 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
 
     const containerRef = useRef(null);
 
+    // Initialize game and reset count when stage changes
     useEffect(() => {
-        setupGame();
+        setCorrectCount(0);
+        setupGame(true);
         return () => {
             stopPhonetic();
             stopVoice();
         };
     }, [stage]);
 
-    const setupGame = () => {
+    // setupGame takes a flag to know if it should reset progress
+    const setupGame = (isFirstLoad = false) => {
         setIsWon(false);
+        setIsCorrectTapped(false);
         stopPhonetic();
         stopVoice();
+
+        if (isFirstLoad) {
+            setCorrectCount(0);
+        }
         
         const randomLetter = hebrewLetters[Math.floor(Math.random() * hebrewLetters.length)];
         setCurrentLetter(randomLetter);
 
         if (stage === 1) {
-            // Pick a random percentage placement in the bottom region
             const startX = Math.floor(20 + Math.random() * 60) + '%';
             const startY = Math.floor(70 + Math.random() * 15) + '%';
             setLetterPos({ x: 0, y: 0, startX, startY });
             stage1StartPos.current = { x: 0, y: 0 };
 
-            const instr = `גרור את האות ${randomLetter.char} אל הצללית שלה! לחץ על הצללית להסבר`;
+            const instr = `גרור את האות ${randomLetter.char} אל הצללית שלה!`;
             setBubbleText(instr);
             speak(instr);
         } else if (stage === 2) {
-            setIsCorrectTapped(false);
-            
             const distractors = [...hebrewLetters]
                 .filter(l => l.char !== randomLetter.char)
                 .sort(() => 0.5 - Math.random())
@@ -111,19 +117,18 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
             setWandPos({ x: 0, y: 0, startX: '50%', startY: '85%' });
             stage3StartPos.current = { x: 0, y: 0 };
 
-            const instr = `גרור את השרביט אל החפץ שמתחיל באות ${activeLetter.char}! לחץ על החפצים להסבר`;
+            const instr = `גרור את השרביט אל החפץ שמתחיל באות ${activeLetter.char}!`;
             setBubbleText(instr);
             speak(instr);
         }
     };
 
-    // Stage 1 handlers
+    // Stage 1 Drag Start
     const handleStage1DragStart = () => {
         if (currentLetter) {
             playLetterPhonetic(currentLetter.char);
         }
 
-        // Record starting center point relative to container
         if (letterRef.current && containerRef.current) {
             const rect = letterRef.current.getBoundingClientRect();
             const containerRect = containerRef.current.getBoundingClientRect();
@@ -134,6 +139,7 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
         }
     };
 
+    // Stage 1 Drag End
     const handleStage1DragEnd = (event, info) => {
         stopPhonetic();
         const dropX = info.point.x;
@@ -150,7 +156,6 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
             const snapX = (targetRect.left + targetRect.width / 2) - containerRect.left;
             const snapY = (targetRect.top + targetRect.height / 2) - containerRect.top;
 
-            // Translation delta
             const dx = snapX - stage1StartPos.current.x;
             const dy = snapY - stage1StartPos.current.y;
 
@@ -160,7 +165,8 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                 y: dy
             }));
 
-            setIsWon(true);
+            const nextCount = correctCount + 1;
+            setCorrectCount(nextCount);
 
             playLetterName(currentLetter.char).then(() => {
                 playSfx('ding', 1000);
@@ -168,11 +174,17 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                 const praise = praises[Math.floor(Math.random() * praises.length)];
                 speak(praise);
                 setBubbleText(praise);
-                onWin(1);
 
-                setTimeout(() => {
-                    setupGame();
-                }, 2000);
+                if (nextCount >= 5) {
+                    setIsWon(true);
+                    setTimeout(() => {
+                        onWin(1);
+                    }, 1500);
+                } else {
+                    setTimeout(() => {
+                        setupGame(false);
+                    }, 2200);
+                }
             });
         } else {
             playSfx('boink');
@@ -181,7 +193,6 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
         }
     };
 
-    // Stage 1 silhouette tapped
     const handleSilhouetteClick = () => {
         if (isWon) return;
         playSfx('pop', 700);
@@ -190,23 +201,31 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
         speak(msg);
     };
 
-    // Stage 2 handler
+    // Stage 2 Click Handler
     const handleStage2Tap = (opt) => {
         if (isCorrectTapped || isWon) return;
 
         if (opt.isTarget) {
             setIsCorrectTapped(true);
-            setIsWon(true);
+            const nextCount = correctCount + 1;
+            setCorrectCount(nextCount);
+
             playSfx('ding', 1000);
             const praises = ['יפה', 'מצוין', 'נהדר', 'כל הכבוד'];
             const praise = praises[Math.floor(Math.random() * praises.length)];
             speak(praise);
             setBubbleText(praise);
-            onWin(2);
 
-            setTimeout(() => {
-                setupGame();
-            }, 2500);
+            if (nextCount >= 5) {
+                setIsWon(true);
+                setTimeout(() => {
+                    onWin(2);
+                }, 1500);
+            } else {
+                setTimeout(() => {
+                    setupGame(false);
+                }, 2200);
+            }
         } else {
             setWiggleId(opt.char);
             playSfx('boink');
@@ -216,11 +235,10 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
         }
     };
 
-    // Stage 3 handlers
+    // Stage 3 Drag Start
     const handleStage3DragStart = () => {
         playSfx('pop', 450);
 
-        // Record starting center point relative to container
         if (wandRef.current && containerRef.current) {
             const rect = wandRef.current.getBoundingClientRect();
             const containerRect = containerRef.current.getBoundingClientRect();
@@ -245,6 +263,7 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
         setMagicDust(prev => [...prev.slice(-20), newDust]);
     };
 
+    // Stage 3 Drag End
     const handleStage3DragEnd = (event, info) => {
         const dropX = info.point.x;
         const dropY = info.point.y;
@@ -265,7 +284,6 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
 
         if (hitObject) {
             if (hitObject.isTarget) {
-                setIsWon(true);
                 playSfx('ding', 1000);
                 
                 // Snap coordinates
@@ -284,22 +302,30 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                     y: dy
                 }));
 
+                const nextCount = correctCount + 1;
+                setCorrectCount(nextCount);
+
                 const praises = ['יפה', 'מצוין', 'נהדר', 'כל הכבוד'];
                 const praise = praises[Math.floor(Math.random() * praises.length)];
                 speak(praise);
                 setBubbleText(praise);
-                onWin(3);
 
-                setTimeout(() => {
-                    setupGame();
-                }, 3000);
+                if (nextCount >= 5) {
+                    setIsWon(true);
+                    setTimeout(() => {
+                        onWin(3);
+                    }, 1500);
+                } else {
+                    setTimeout(() => {
+                        setupGame(false);
+                    }, 2500);
+                }
             } else {
                 setWiggleId(hitObject.label);
                 playSfx('boink');
                 speak('נסה שוב');
                 setBubbleText('אוי, החפץ הזה מתחיל באות אחרת!');
                 
-                // Animates back to 0,0 (percentage starting slot)
                 setWandPos(prev => ({
                     ...prev,
                     x: 0,
@@ -309,7 +335,6 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                 setTimeout(() => setWiggleId(null), 500);
             }
         } else {
-            // Snap back to starting slot
             setWandPos(prev => ({
                 ...prev,
                 x: 0,
@@ -318,7 +343,6 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
         }
     };
 
-    // Stage 3 object click explanations
     const handleObjectClick = (obj) => {
         if (isWon) return;
         playSfx('pop', 700);
@@ -328,6 +352,20 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
         speak(msg);
     };
 
+    // Generate progress dots visual helper (e.g. 🦊🦊🦊🐨🐨)
+    const renderProgressTracker = () => {
+        const total = 5;
+        let visual = '';
+        for (let i = 0; i < total; i++) {
+            visual += i < correctCount ? '⭐' : '☆';
+        }
+        return (
+            <div className="lit-progress-bar">
+                התקדמות: <span style={{ letterSpacing: '4px', fontSize: '1.8rem' }}>{visual}</span>
+            </div>
+        );
+    };
+
     return (
         <div className="view-container" ref={containerRef} id="literacy-stage-container">
             {/* Header */}
@@ -335,8 +373,11 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                 <button className="btn-round" onClick={onBack}>
                     🏠
                 </button>
-                <h1 className="header-title">לימוד אותיות - שלב {stage}</h1>
-                <button className="btn-round" onClick={setupGame}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <h1 className="header-title">לימוד אותיות - שלב {stage}</h1>
+                    {renderProgressTracker()}
+                </div>
+                <button className="btn-round" onClick={() => setupGame(true)}>
                     🔄
                 </button>
             </div>
