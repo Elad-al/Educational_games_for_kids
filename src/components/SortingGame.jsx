@@ -12,6 +12,8 @@ export default function SortingGame({ level, onWin, onBack }) {
     
     const spawningAreaRef = useRef(null);
     const basketRefs = useRef({});
+    const itemRefs = useRef({});
+    const startPositions = useRef({});
 
     // Pick random items and setup baskets
     useEffect(() => {
@@ -21,13 +23,13 @@ export default function SortingGame({ level, onWin, onBack }) {
     const setupGame = () => {
         setIsWon(false);
         stopVoice();
+        startPositions.current = {};
 
         let activeBaskets = [];
         let itemsToSpawn = [];
         let instructionText = '';
 
         if (level === 1) {
-            // Level 1: 2 random colors, 2 items per color = 4 items
             const chosenColors = [...colorPool].sort(() => 0.5 - Math.random()).slice(0, 2);
             activeBaskets = chosenColors.map(c => ({
                 id: c.id,
@@ -48,15 +50,12 @@ export default function SortingGame({ level, onWin, onBack }) {
                         matchValue: colorDef.id,
                         sorted: false,
                         x: 0,
-                        y: 0,
-                        startX: 0,
-                        startY: 0
+                        y: 0
                     });
                 });
             });
-            instructionText = 'גרור כל צעצוע לסל בצבע המתאים!';
+            instructionText = 'גרור כל צעצוע לסל בצבע המתאים! לחץ על הסל להסבר';
         } else if (level === 2) {
-            // Level 2: 2 random colors, exact count (2 to 4)
             const chosenColors = [...colorPool].sort(() => 0.5 - Math.random()).slice(0, 2);
             activeBaskets = chosenColors.map(c => {
                 const target = Math.floor(Math.random() * 3) + 2; // 2 to 4
@@ -73,7 +72,6 @@ export default function SortingGame({ level, onWin, onBack }) {
 
             activeBaskets.forEach(basket => {
                 const colorDef = colorPool.find(c => c.id === basket.id);
-                // Spawn exact count of items
                 for (let i = 0; i < basket.targetCount; i++) {
                     const randomItem = colorDef.items[Math.floor(Math.random() * colorDef.items.length)];
                     itemsToSpawn.push({
@@ -82,15 +80,12 @@ export default function SortingGame({ level, onWin, onBack }) {
                         matchValue: basket.id,
                         sorted: false,
                         x: 0,
-                        y: 0,
-                        startX: 0,
-                        startY: 0
+                        y: 0
                     });
                 }
             });
-            instructionText = 'מיין את הצעצועים לפי מספרים וצבעים!';
+            instructionText = 'מיין את הצעצועים לפי מספרים וצבעים! לחץ על הסל להסבר';
         } else if (level === 3) {
-            // Level 3: shapes (circle, square, triangle), 2 items each
             const shapes = ['circle', 'square', 'triangle'];
             activeBaskets = shapes.map(sh => ({
                 id: sh,
@@ -111,15 +106,12 @@ export default function SortingGame({ level, onWin, onBack }) {
                         matchValue: shape,
                         sorted: false,
                         x: 0,
-                        y: 0,
-                        startX: 0,
-                        startY: 0
+                        y: 0
                     });
                 });
             });
-            instructionText = 'מיין את הצורות לסלים המתאימים!';
+            instructionText = 'מיין את הצורות לסלים המתאימים! לחץ על הסל להסבר';
         } else if (level === 4) {
-            // Level 4: Categories + 2 distractors
             const chosenCats = [...categoryPool].sort(() => 0.5 - Math.random()).slice(0, 2);
             activeBaskets = chosenCats.map(cat => ({
                 id: cat.id,
@@ -139,14 +131,12 @@ export default function SortingGame({ level, onWin, onBack }) {
                         matchValue: cat.id,
                         sorted: false,
                         x: 0,
-                        y: 0,
-                        startX: 0,
-                        startY: 0
+                        y: 0
                     });
                 });
             });
 
-            // Add 2 distractors
+            // Add distractors
             const chosenDistractors = [...distractors].sort(() => 0.5 - Math.random()).slice(0, 2);
             chosenDistractors.forEach(d => {
                 itemsToSpawn.push({
@@ -155,9 +145,7 @@ export default function SortingGame({ level, onWin, onBack }) {
                     matchValue: 'distractor',
                     sorted: false,
                     x: 0,
-                    y: 0,
-                    startX: 0,
-                    startY: 0
+                    y: 0
                 });
             });
             instructionText = 'מיין את הצעצועים! שים לב, חלק מהפריטים לא שייכים!';
@@ -167,40 +155,44 @@ export default function SortingGame({ level, onWin, onBack }) {
         setBubbleText(instructionText);
         speak(instructionText);
 
-        // Compute starting positions in spawning area after rendering
-        setTimeout(() => {
-            if (!spawningAreaRef.current) return;
-            const container = spawningAreaRef.current.getBoundingClientRect();
-            
-            const positionedItems = itemsToSpawn.map((item, index) => {
-                const pad = 50;
-                const maxX = Math.max(container.width - pad * 2, 100);
-                const maxY = Math.max(container.height - pad * 2, 80);
-
-                const startX = pad + Math.random() * maxX;
-                const startY = pad + Math.random() * maxY;
-
-                return {
-                    ...item,
-                    x: startX,
-                    y: startY,
-                    startX,
-                    startY
-                };
-            });
-            setItems(positionedItems);
-        }, 100);
+        // Position items dynamically using percentage-bounds (so they always land inside spawning area)
+        const positionedItems = itemsToSpawn.map((item, index) => {
+            const startX = Math.floor(10 + Math.random() * 80) + '%'; // 10% to 90%
+            const startY = Math.floor(10 + Math.random() * 70) + '%'; // 10% to 80%
+            return {
+                ...item,
+                startX,
+                startY,
+                x: 0,
+                y: 0
+            };
+        });
+        setItems(positionedItems);
     };
 
-    const handleDragStart = () => {
+    const handleDragStart = (itemId) => {
         playSfx('pop', 400);
+
+        // Record the starting center of the item relative to the spawning area
+        if (!startPositions.current[itemId]) {
+            const el = itemRefs.current[itemId];
+            const spawnEl = spawningAreaRef.current;
+            if (el && spawnEl) {
+                const rect = el.getBoundingClientRect();
+                const spawnRect = spawnEl.getBoundingClientRect();
+                startPositions.current[itemId] = {
+                    x: rect.left + rect.width / 2 - spawnRect.left,
+                    y: rect.top + rect.height / 2 - spawnRect.top
+                };
+            }
+        }
     };
 
     const handleDragEnd = (itemId, event, info) => {
         const dropX = info.point.x;
         const dropY = info.point.y;
 
-        // Find which basket bounds contain (dropX, dropY)
+        // Find overlapping basket drop zone
         let matchedBasket = null;
         for (let b of baskets) {
             const el = basketRefs.current[b.id];
@@ -217,13 +209,12 @@ export default function SortingGame({ level, onWin, onBack }) {
         if (!item) return;
 
         if (matchedBasket) {
-            // 1. Distractor logic
             if (item.matchValue === 'distractor') {
                 playSfx('boink');
                 speak("זה לא שייך לפה!");
                 setBubbleText("זה לא שייך לפה!");
                 
-                // Red flash feedback on basket
+                // Red flash feedback
                 const originalBg = basketRefs.current[matchedBasket.id].style.backgroundColor;
                 basketRefs.current[matchedBasket.id].style.backgroundColor = '#ffcdd2';
                 setTimeout(() => {
@@ -234,9 +225,7 @@ export default function SortingGame({ level, onWin, onBack }) {
                 return;
             }
 
-            // 2. Correct match check
             if (matchedBasket.id === item.matchValue) {
-                // Check level 2 capacity limit
                 if (level === 2 && matchedBasket.currentCount >= matchedBasket.targetCount) {
                     playSfx('boink');
                     speak("הסל מלא");
@@ -244,17 +233,21 @@ export default function SortingGame({ level, onWin, onBack }) {
                     return;
                 }
 
-                // Snap to basket center
+                // Snap calculation
                 const spawnRect = spawningAreaRef.current.getBoundingClientRect();
                 const basketRect = basketRefs.current[matchedBasket.id].getBoundingClientRect();
                 
-                // Add a small dispersion offset so items stack naturally
                 const dispersion = 24;
                 const offsetX = (Math.random() - 0.5) * dispersion;
                 const offsetY = (Math.random() - 0.5) * dispersion;
 
+                // Center of target basket relative to spawn container
                 const targetX = (basketRect.left + basketRect.width / 2) - spawnRect.left + offsetX;
                 const targetY = (basketRect.top + basketRect.height / 2) - spawnRect.top + offsetY;
+
+                // Calculate exact translation offset from item's percentage start position
+                const dx = targetX - startPositions.current[itemId].x;
+                const dy = targetY - startPositions.current[itemId].y;
 
                 // Update basket count
                 const updatedBaskets = baskets.map(b => {
@@ -268,7 +261,7 @@ export default function SortingGame({ level, onWin, onBack }) {
                 // Update item status
                 const updatedItems = items.map(i => {
                     if (i.id === itemId) {
-                        return { ...i, sorted: true, x: targetX, y: targetY };
+                        return { ...i, sorted: true, x: dx, y: dy };
                     }
                     return i;
                 });
@@ -279,7 +272,6 @@ export default function SortingGame({ level, onWin, onBack }) {
                 // Determine voice praises
                 const remaining = updatedItems.filter(i => !i.sorted && i.matchValue !== 'distractor').length;
                 if (remaining <= 0) {
-                    // Win game!
                     setIsWon(true);
                     playSfx('ding', 1200);
                     setTimeout(() => playSfx('ding', 1600), 200);
@@ -300,18 +292,34 @@ export default function SortingGame({ level, onWin, onBack }) {
                     }
                 }
             } else {
-                // Wrong basket drop
                 playSfx('boink');
                 speak("אוי, נסה שוב");
                 setBubbleText("אוי, נסה לגרור למקום אחר!");
             }
         } else {
-            // Dropped outside any basket (in the top half)
             if (dropY < window.innerHeight / 2) {
                 playSfx('boink');
                 speak("אוי, נסה שוב");
             }
         }
+    };
+
+    // Speaks instruction when user taps a target basket
+    const handleBasketClick = (b) => {
+        if (isWon) return;
+        playSfx('pop', 700);
+
+        let msg = '';
+        if (b.type === 'color') {
+            msg = `גרור לכאן את כל הצעצועים בצבע ${b.label}!`;
+        } else if (b.type === 'shape') {
+            msg = `גרור לכאן את כל ה${b.label}!`;
+        } else if (b.type === 'category') {
+            msg = `גרור לכאן את כל ה${b.label}!`;
+        }
+
+        setBubbleText(msg);
+        speak(msg);
     };
 
     return (
@@ -334,21 +342,29 @@ export default function SortingGame({ level, onWin, onBack }) {
                     {items.map(item => (
                         <motion.div
                             key={item.id}
+                            ref={el => itemRefs.current[item.id] = el}
                             className={`draggable-item ${item.sorted ? 'success' : ''}`}
                             drag={!item.sorted && !isWon}
                             dragMomentum={false}
                             dragElastic={0.5}
-                            onDragStart={handleDragStart}
+                            onDragStart={() => handleDragStart(item.id)}
                             onDragEnd={(e, info) => handleDragEnd(item.id, e, info)}
-                            animate={{
+                            animate={item.sorted ? {
                                 x: item.x,
                                 y: item.y,
-                                scale: item.sorted ? 0.8 : 1
+                                scale: 0.8
+                            } : {
+                                x: 0,
+                                y: 0,
+                                scale: 1
                             }}
                             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                             style={{
                                 touchAction: 'none',
-                                position: 'absolute'
+                                position: 'absolute',
+                                left: item.startX,
+                                top: item.startY,
+                                transform: 'translate(-50%, -50%)'
                             }}
                         >
                             {item.emoji}
@@ -365,8 +381,10 @@ export default function SortingGame({ level, onWin, onBack }) {
                             className={`drop-basket ${b.type === 'color' ? 'color-box' : ''}`}
                             style={{
                                 background: b.colorHex || undefined,
-                                borderColor: b.colorHex ? 'rgba(255,255,255,0.4)' : undefined
+                                borderColor: b.colorHex ? 'rgba(255,255,255,0.4)' : undefined,
+                                cursor: 'pointer'
                             }}
+                            onClick={() => handleBasketClick(b)}
                         >
                             <div className="basket-icon">{b.emoji}</div>
                             <div className="basket-title">{b.label}</div>

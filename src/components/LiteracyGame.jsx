@@ -4,7 +4,6 @@ import { hebrewLetters } from '../constants';
 import { playSfx, speak, playLetterName, playLetterPhonetic, stopPhonetic, stopVoice } from '../hooks/useAudio';
 import DobiNarrator from './DobiNarrator';
 
-// Custom stage 3 associations
 const stage3Associations = [
     { char: 'מ', label: 'מיטה', emoji: '🛏️' },
     { char: 'כ', label: 'כדור', emoji: '⚽' },
@@ -20,9 +19,10 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
     const [isWon, setIsWon] = useState(false);
     
     // Stage 1 State
-    const [letterPos, setLetterPos] = useState({ x: 0, y: 0, startX: 0, startY: 0 });
+    const [letterPos, setLetterPos] = useState({ x: 0, y: 0, startX: '50%', startY: '75%' });
     const silhouetteRef = useRef(null);
     const letterRef = useRef(null);
+    const stage1StartPos = useRef({ x: 0, y: 0 });
 
     // Stage 2 State
     const [options, setOptions] = useState([]);
@@ -30,12 +30,15 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
     const [wiggleId, setWiggleId] = useState(null);
 
     // Stage 3 State
-    const [wandPos, setWandPos] = useState({ x: 0, y: 0, startX: 0, startY: 0 });
+    const [wandPos, setWandPos] = useState({ x: 0, y: 0, startX: '50%', startY: '85%' });
     const [magicObjects, setMagicObjects] = useState([]);
     const [targetObject, setTargetObject] = useState(null);
     const [magicDust, setMagicDust] = useState([]);
     const objectRefs = useRef({});
     const wandRef = useRef(null);
+    const stage3StartPos = useRef({ x: 0, y: 0 });
+
+    const containerRef = useRef(null);
 
     useEffect(() => {
         setupGame();
@@ -54,21 +57,18 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
         setCurrentLetter(randomLetter);
 
         if (stage === 1) {
-            // Setup position for Letter Drag
-            // Randomly position in the bottom half of screen
-            setTimeout(() => {
-                const startX = Math.floor(window.innerWidth * (0.2 + Math.random() * 0.6));
-                const startY = Math.floor(window.innerHeight * (0.65 + Math.random() * 0.15));
-                setLetterPos({ x: startX, y: startY, startX, startY });
-            }, 100);
+            // Pick a random percentage placement in the bottom region
+            const startX = Math.floor(20 + Math.random() * 60) + '%';
+            const startY = Math.floor(70 + Math.random() * 15) + '%';
+            setLetterPos({ x: 0, y: 0, startX, startY });
+            stage1StartPos.current = { x: 0, y: 0 };
 
-            const instr = `גרור את האות ${randomLetter.char} אל הצללית שלה!`;
+            const instr = `גרור את האות ${randomLetter.char} אל הצללית שלה! לחץ על הצללית להסבר`;
             setBubbleText(instr);
             speak(instr);
         } else if (stage === 2) {
             setIsCorrectTapped(false);
             
-            // Spawn 3 options: target + 2 distractors
             const distractors = [...hebrewLetters]
                 .filter(l => l.char !== randomLetter.char)
                 .sort(() => 0.5 - Math.random())
@@ -85,18 +85,15 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
             const instr = `איפה האות ${randomLetter.char}?`;
             setBubbleText(instr);
             speak(instr);
-            // Play target letter name voiceover
             setTimeout(() => {
                 playLetterName(randomLetter.char);
             }, 1500);
         } else if (stage === 3) {
-            // Pick a random association for target letter
             const assoc = stage3Associations[Math.floor(Math.random() * stage3Associations.length)];
             const activeLetter = hebrewLetters.find(l => l.char === assoc.char);
             setCurrentLetter(activeLetter);
             setTargetObject(assoc);
 
-            // Spawns 3 objects: target object + 2 distractors
             const otherAssocs = stage3Associations
                 .filter(a => a.char !== assoc.char)
                 .sort(() => 0.5 - Math.random())
@@ -111,24 +108,29 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
             setMagicObjects(list);
             setMagicDust([]);
 
-            setTimeout(() => {
-                const startX = window.innerWidth / 2;
-                const startY = window.innerHeight * 0.8;
-                setWandPos({ x: startX, y: startY, startX, startY });
-            }, 100);
+            setWandPos({ x: 0, y: 0, startX: '50%', startY: '85%' });
+            stage3StartPos.current = { x: 0, y: 0 };
 
-            const instr = `גרור את השרביט אל החפץ שמתחיל באות ${activeLetter.char}!`;
+            const instr = `גרור את השרביט אל החפץ שמתחיל באות ${activeLetter.char}! לחץ על החפצים להסבר`;
             setBubbleText(instr);
             speak(instr);
         }
     };
 
     // Stage 1 handlers
-    const handleDragStart = () => {
-        if (stage === 1 && currentLetter) {
+    const handleStage1DragStart = () => {
+        if (currentLetter) {
             playLetterPhonetic(currentLetter.char);
-        } else {
-            playSfx('pop', 450);
+        }
+
+        // Record starting center point relative to container
+        if (letterRef.current && containerRef.current) {
+            const rect = letterRef.current.getBoundingClientRect();
+            const containerRect = containerRef.current.getBoundingClientRect();
+            stage1StartPos.current = {
+                x: rect.left + rect.width / 2 - containerRect.left,
+                y: rect.top + rect.height / 2 - containerRect.top
+            };
         }
     };
 
@@ -143,21 +145,23 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
         if (dropX > targetRect.left - hitPadding && dropX < targetRect.right + hitPadding &&
             dropY > targetRect.top - hitPadding && dropY < targetRect.bottom + hitPadding) {
             
-            // Correct drop
-            const stageRect = document.getElementById('literacy-stage-container').getBoundingClientRect();
-            const snapX = (targetRect.left + targetRect.width / 2) - stageRect.left;
-            const snapY = (targetRect.top + targetRect.height / 2) - stageRect.top;
+            // Success snap
+            const containerRect = containerRef.current.getBoundingClientRect();
+            const snapX = (targetRect.left + targetRect.width / 2) - containerRect.left;
+            const snapY = (targetRect.top + targetRect.height / 2) - containerRect.top;
 
-            setLetterPos({
-                x: snapX,
-                y: snapY,
-                startX: snapX,
-                startY: snapY
-            });
+            // Translation delta
+            const dx = snapX - stage1StartPos.current.x;
+            const dy = snapY - stage1StartPos.current.y;
+
+            setLetterPos(prev => ({
+                ...prev,
+                x: dx,
+                y: dy
+            }));
 
             setIsWon(true);
 
-            // First speak letter name, then praise
             playLetterName(currentLetter.char).then(() => {
                 playSfx('ding', 1000);
                 const praises = ['יפה', 'מצוין', 'נהדר', 'כל הכבוד'];
@@ -171,11 +175,19 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                 }, 2000);
             });
         } else {
-            // Wrong drop
             playSfx('boink');
             speak('נסה שוב');
-            setBubbleText('נסה לגרור אל הצללית!');
+            setBubbleText('אוי, נסה לגרור אל צללית האות!');
         }
+    };
+
+    // Stage 1 silhouette tapped
+    const handleSilhouetteClick = () => {
+        if (isWon) return;
+        playSfx('pop', 700);
+        const msg = `גרור לכאן את האות ${currentLetter.char}!`;
+        setBubbleText(msg);
+        speak(msg);
     };
 
     // Stage 2 handler
@@ -205,19 +217,32 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
     };
 
     // Stage 3 handlers
+    const handleStage3DragStart = () => {
+        playSfx('pop', 450);
+
+        // Record starting center point relative to container
+        if (wandRef.current && containerRef.current) {
+            const rect = wandRef.current.getBoundingClientRect();
+            const containerRect = containerRef.current.getBoundingClientRect();
+            stage3StartPos.current = {
+                x: rect.left + rect.width / 2 - containerRect.left,
+                y: rect.top + rect.height / 2 - containerRect.top
+            };
+        }
+    };
+
     const handleWandDrag = (event, info) => {
-        // Spawn magic dust particles at pointer location relative to stage
         if (Math.random() > 0.4) return;
-        const stageRect = document.getElementById('literacy-stage-container').getBoundingClientRect();
-        const x = info.point.x - stageRect.left;
-        const y = info.point.y - stageRect.top;
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const x = info.point.x - containerRect.left;
+        const y = info.point.y - containerRect.top;
 
         const newDust = {
             id: Date.now() + Math.random(),
             x: x - 6,
             y: y - 6
         };
-        setMagicDust(prev => [...prev.slice(-20), newDust]); // Keep max 20 particles
+        setMagicDust(prev => [...prev.slice(-20), newDust]);
     };
 
     const handleStage3DragEnd = (event, info) => {
@@ -240,22 +265,24 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
 
         if (hitObject) {
             if (hitObject.isTarget) {
-                // Correct match
                 setIsWon(true);
                 playSfx('ding', 1000);
                 
-                // Snap wand to hover slightly above target object
-                const stageRect = document.getElementById('literacy-stage-container').getBoundingClientRect();
+                // Snap coordinates
+                const containerRect = containerRef.current.getBoundingClientRect();
                 const objRect = objectRefs.current[hitObject.label].getBoundingClientRect();
-                const snapX = (objRect.left + objRect.width / 2) - stageRect.left;
-                const snapY = objRect.top - stageRect.top - 20;
+                
+                const snapX = (objRect.left + objRect.width / 2) - containerRect.left;
+                const snapY = objRect.top - containerRect.top - 20;
 
-                setWandPos({
-                    x: snapX,
-                    y: snapY,
-                    startX: snapX,
-                    startY: snapY
-                });
+                const dx = snapX - stage3StartPos.current.x;
+                const dy = snapY - stage3StartPos.current.y;
+
+                setWandPos(prev => ({
+                    ...prev,
+                    x: dx,
+                    y: dy
+                }));
 
                 const praises = ['יפה', 'מצוין', 'נהדר', 'כל הכבוד'];
                 const praise = praises[Math.floor(Math.random() * praises.length)];
@@ -267,33 +294,42 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                     setupGame();
                 }, 3000);
             } else {
-                // Wrong object
                 setWiggleId(hitObject.label);
                 playSfx('boink');
                 speak('נסה שוב');
                 setBubbleText('אוי, החפץ הזה מתחיל באות אחרת!');
                 
-                // Bounce wand back
+                // Animates back to 0,0 (percentage starting slot)
                 setWandPos(prev => ({
                     ...prev,
-                    x: prev.startX,
-                    y: prev.startY
+                    x: 0,
+                    y: 0
                 }));
 
                 setTimeout(() => setWiggleId(null), 500);
             }
         } else {
-            // Drop in empty area, bounce back
+            // Snap back to starting slot
             setWandPos(prev => ({
                 ...prev,
-                x: prev.startX,
-                y: prev.startY
+                x: 0,
+                y: 0
             }));
         }
     };
 
+    // Stage 3 object click explanations
+    const handleObjectClick = (obj) => {
+        if (isWon) return;
+        playSfx('pop', 700);
+
+        const msg = `זה ${obj.label}. גרור לכאן את האות ${currentLetter.char} אם היא מתאימה!`;
+        setBubbleText(msg);
+        speak(msg);
+    };
+
     return (
-        <div className="view-container" id="literacy-stage-container">
+        <div className="view-container" ref={containerRef} id="literacy-stage-container">
             {/* Header */}
             <div className="header-bar">
                 <button className="btn-round" onClick={onBack}>
@@ -311,7 +347,12 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                 {/* STAGE 1: Drag letter to silhouette */}
                 {stage === 1 && currentLetter && (
                     <>
-                        <div className="silhouette-container" ref={silhouetteRef}>
+                        <div 
+                            className="silhouette-container" 
+                            ref={silhouetteRef}
+                            onClick={handleSilhouetteClick}
+                            style={{ cursor: 'pointer' }}
+                        >
                             {currentLetter.char}
                         </div>
                         
@@ -322,15 +363,20 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                             drag={!isWon}
                             dragMomentum={false}
                             dragElastic={0.4}
-                            onDragStart={handleDragStart}
+                            onDragStart={handleStage1DragStart}
                             onDragEnd={handleStage1DragEnd}
-                            animate={{
+                            animate={isWon ? {
                                 x: letterPos.x,
                                 y: letterPos.y,
+                            } : {
+                                x: 0,
+                                y: 0
                             }}
                             style={{
                                 touchAction: 'none',
                                 position: 'absolute',
+                                left: letterPos.startX,
+                                top: letterPos.startY,
                                 transform: 'translate(-50%, -50%)',
                             }}
                             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
@@ -371,6 +417,8 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                                         ${isWon && obj.isTarget ? 'success-bounce' : ''} 
                                         ${wiggleId === obj.label ? 'wiggle' : ''}
                                     `}
+                                    onClick={() => handleObjectClick(obj)}
+                                    style={{ cursor: 'pointer' }}
                                 >
                                     <div className="object-emoji">{obj.emoji}</div>
                                     <div className="object-label">{obj.label}</div>
@@ -387,16 +435,21 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                                 drag={!isWon}
                                 dragMomentum={false}
                                 dragElastic={0.4}
-                                onDragStart={handleDragStart}
+                                onDragStart={handleStage3DragStart}
                                 onDrag={handleWandDrag}
                                 onDragEnd={handleStage3DragEnd}
-                                animate={{
+                                animate={isWon ? {
                                     x: wandPos.x,
                                     y: wandPos.y,
+                                } : {
+                                    x: 0,
+                                    y: 0
                                 }}
                                 style={{
                                     touchAction: 'none',
                                     position: 'absolute',
+                                    left: wandPos.startX,
+                                    top: wandPos.startY,
                                     transform: 'translate(-50%, -50%)',
                                 }}
                                 transition={{ type: 'spring', stiffness: 300, damping: 25 }}

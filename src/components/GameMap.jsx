@@ -1,7 +1,10 @@
-import React from 'react';
-import { playSfx } from '../hooks/useAudio';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { playSfx, playSparkle } from '../hooks/useAudio';
 
 export default function GameMap({ type, onSelectLevel, onBack }) {
+    const [animatingNodeId, setAnimatingNodeId] = useState(null);
+
     // Get progress stars for a level
     const getStars = (levelId) => {
         const progressKey = type === 'sorting' ? 'sortingProgress' : 'literacyProgress';
@@ -18,38 +21,35 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
         return '';
     };
 
-    // Check if a level is locked
+    // User requested to keep all stages open (unlocked)
     const isLocked = (levelIndex) => {
-        if (levelIndex === 1) return false;
-        const progressKey = type === 'sorting' ? 'sortingProgress' : 'literacyProgress';
-        try {
-            const progress = JSON.parse(localStorage.getItem(progressKey) || '{}');
-            // Previous level must have at least 1 win
-            const prevLevelData = progress[levelIndex - 1];
-            return !prevLevelData || prevLevelData.wins < 1;
-        } catch (e) {
-            return true;
-        }
+        return false; // Always unlocked
     };
 
     const levels = type === 'sorting' ? [
-        { id: 1, label: 'צבעים', emoji: '🎨', description: 'מיון לפי צבעים' },
-        { id: 2, label: 'מספרים וצבעים', emoji: '🔢', description: 'מיון וספירת צעצועים' },
-        { id: 3, label: 'צורות', emoji: '📐', description: 'מיון לפי צורות הנדסיות' },
-        { id: 4, label: 'קטגוריות', emoji: '🦁', description: 'חיות, פירות, חללית ורכבים' }
+        { id: 1, label: 'צבעים', emoji: '🎨', position: { left: '15%', top: '50%' } },
+        { id: 2, label: 'מספרים וצבעים', emoji: '🔢', position: { left: '38%', top: '18%' } },
+        { id: 3, label: 'צורות', emoji: '📐', position: { left: '60%', top: '58%' } },
+        { id: 4, label: 'קטגוריות', emoji: '🦁', position: { left: '82%', top: '25%' } }
     ] : [
-        { id: 1, label: 'הכרת האותיות', emoji: 'א', description: 'גרירת אות לצללית שלה' },
-        { id: 2, label: 'חיפוש אותיות', emoji: '🔍', description: 'מצא את האות המבוקשת' },
-        { id: 3, label: 'שרביט קסמים', emoji: '🪄', description: 'התאמת אות ראשונה למילה' }
+        { id: 1, label: 'הכרת האותיות', emoji: 'א', position: { left: '18%', top: '48%' } },
+        { id: 2, label: 'חיפוש אותיות', emoji: '🔍', position: { left: '50%', top: '18%' } },
+        { id: 3, label: 'שרביט קסמים', emoji: '🪄', position: { left: '80%', top: '48%' } }
     ];
 
     const handleNodeClick = (lvl) => {
-        if (isLocked(lvl.id)) {
-            playSfx('boink');
-            return;
-        }
-        playSfx('pop', 800);
-        onSelectLevel(lvl.id);
+        if (animatingNodeId) return; // Prevent double clicks
+        
+        setAnimatingNodeId(lvl.id);
+        
+        // Play sparkly magic arpeggio sound effect
+        playSparkle();
+
+        // Delay opening the level so the child can see the magic animation
+        setTimeout(() => {
+            onSelectLevel(lvl.id);
+            setAnimatingNodeId(null);
+        }, 900);
     };
 
     return (
@@ -66,24 +66,35 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
 
             <div className="map-container">
                 <div className="map-path">
-                    {levels.map((lvl, index) => {
-                        const locked = isLocked(lvl.id);
+                    {levels.map((lvl) => {
                         const stars = getStars(lvl.id);
+                        const isAnimating = animatingNodeId === lvl.id;
+                        
                         return (
-                            <div
+                            <motion.div
                                 key={lvl.id}
-                                className={`map-node node-${lvl.id} ${locked ? 'locked' : ''}`}
+                                className={`map-node node-${lvl.id}`}
+                                style={{
+                                    position: 'absolute',
+                                    left: lvl.position.left,
+                                    top: lvl.position.top,
+                                    transform: 'translate(-50%, -50%)',
+                                    zIndex: isAnimating ? 300 : 50
+                                }}
                                 onClick={() => handleNodeClick(lvl)}
+                                animate={isAnimating ? {
+                                    scale: [1, 1.4, 1.25],
+                                    rotate: [0, 180, 360],
+                                    filter: ['drop-shadow(0px 0px 0px rgba(255,215,0,0))', 'drop-shadow(0px 0px 30px rgba(255,215,0,0.85))', 'drop-shadow(0px 0px 10px rgba(255,215,0,0.4))']
+                                } : { scale: 1, rotate: 0 }}
+                                transition={{ duration: 0.8, ease: 'easeInOut' }}
                             >
                                 <div className="node-stars">{stars}</div>
                                 <div className="node-bubble">
                                     {lvl.emoji}
-                                    {locked && (
-                                        <div className="node-lock-icon">🔒</div>
-                                    )}
                                 </div>
                                 <div className="node-label">{lvl.label}</div>
-                            </div>
+                            </motion.div>
                         );
                     })}
                 </div>

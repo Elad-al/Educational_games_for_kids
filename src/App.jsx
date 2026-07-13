@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { initAudioEngine, playSfx, speak } from './hooks/useAudio';
+import { initAudioEngine, playSfx, speak, playGiggle } from './hooks/useAudio';
 import GameMap from './components/GameMap';
 import SortingGame from './components/SortingGame';
 import LiteracyGame from './components/LiteracyGame';
@@ -83,7 +83,7 @@ export default function App() {
                 </div>
                 <div 
                     className="interactive-sun" 
-                    onClick={() => playSfx('pop', 900)}
+                    onClick={() => playGiggle()}
                 />
                 <div className="hills-layer">
                     <div className="hill hill-back" />

@@ -444,13 +444,13 @@ body {
 }
 
 .map-path {
-    display: flex;
-    gap: 40px;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
     position: relative;
-    max-width: 1000px;
+    width: 90%;
+    max-width: 900px;
+    height: 450px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='450' viewBox='0 0 900 450'><path d='M 100 225 Q 250 50 450 225 T 800 225' fill='none' stroke='%23ffffff' stroke-width='12' stroke-dasharray='16, 16' stroke-linecap='round' opacity='0.75'/></svg>");
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .map-node {

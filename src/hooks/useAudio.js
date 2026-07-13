@@ -3,6 +3,11 @@ import { getCharHex } from '../constants';
 let audioCtx = null;
 let currentVoiceAudio = null;
 let currentPhoneticAudio = null;
+let musicInterval = null;
+let noteIndex = 0;
+
+// Simple C-major arpeggio melody for gentle music-box background music
+const melody = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63]; // C4 - E4 - G4 - C5 - G4 - E4
 
 const feedbackMap = {
     'יפה': 'praise_1',
@@ -48,6 +53,49 @@ export function initAudioEngine() {
             preloadedAudio[fileKey] = audio;
         }
     });
+
+    // Start background music automatically on initialization
+    startBackgroundMusic();
+}
+
+export function startBackgroundMusic() {
+    if (musicInterval) return;
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    
+    // Play a gentle arpeggio arround 1.5 seconds intervals
+    musicInterval = setInterval(() => {
+        try {
+            if (audioCtx.state === 'suspended') return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.type = 'sine'; // very pure soft wave
+            osc.frequency.setValueAtTime(melody[noteIndex], audioCtx.currentTime);
+            
+            // Set extremely low background volume (toy-piano feel)
+            gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 1.2);
+            
+            noteIndex = (noteIndex + 1) % melody.length;
+        } catch (e) {
+            // handle silent fail
+        }
+    }, 1500);
+}
+
+export function stopBackgroundMusic() {
+    if (musicInterval) {
+        clearInterval(musicInterval);
+        musicInterval = null;
+    }
 }
 
 export function playSfx(type, freqOverride) {
@@ -124,10 +172,31 @@ export function playSfx(type, freqOverride) {
     }
 }
 
+// Sparkly magic arpeggio sound effect
+export function playSparkle() {
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            playSfx('ding', 523 + i * 150);
+        }, i * 80);
+    }
+}
+
+// Cheerful bubbly giggle sound effect
+export function playGiggle() {
+    for (let i = 0; i < 6; i++) {
+        setTimeout(() => {
+            playSfx('pop', 700 + Math.sin(i) * 200);
+        }, i * 60);
+    }
+}
+
 export function stopVoice() {
     if (currentVoiceAudio) {
         currentVoiceAudio.pause();
         currentVoiceAudio.currentTime = 0;
+    }
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
     }
 }
 
@@ -144,7 +213,6 @@ export function speak(text) {
 
     const fileKey = feedbackMap[text];
     if (fileKey) {
-        // Use preloaded element or load new
         let audio = preloadedAudio[fileKey];
         if (!audio) {
             audio = new Audio(`./assets/audio/feedback_${fileKey}.mp3`);
@@ -154,7 +222,17 @@ export function speak(text) {
         currentVoiceAudio = audio;
         audio.play().catch(e => console.log('Speech playback blocked', e));
     } else {
-        console.log('No speech audio found for phrase:', text);
+        // TTS Fallback
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'he-IL';
+            // Set rate slightly slower for clearer kid comprehension
+            utterance.rate = 0.85; 
+            window.speechSynthesis.speak(utterance);
+        } else {
+            console.log('Speech synthesis fallback failed:', text);
+        }
     }
 }
 
@@ -168,9 +246,8 @@ export function playLetterName(char) {
         audio.onended = () => resolve();
         audio.play().catch(err => {
             console.log('Letter name audio blocked', err);
-            resolve(); // Resolve immediately on block to let game proceed
+            resolve();
         });
-        // Safety timeout
         setTimeout(resolve, 1500);
     });
 }
@@ -189,10 +266,14 @@ export function useAudio() {
     return {
         initAudioEngine,
         playSfx,
+        playSparkle,
+        playGiggle,
         speak,
         playLetterName,
         playLetterPhonetic,
         stopVoice,
-        stopPhonetic
+        stopPhonetic,
+        startBackgroundMusic,
+        stopBackgroundMusic
     };
 }
