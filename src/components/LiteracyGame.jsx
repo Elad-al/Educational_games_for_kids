@@ -1,8 +1,57 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Stage, Container, Graphics, useTick } from '@pixi/react';
+import * as PIXI from 'pixi.js';
 import { hebrewLetters } from '../constants';
 import { playSfx, speak, playLetterName, playLetterPhonetic, stopPhonetic, stopVoice } from '../hooks/useAudio';
 import DobiNarrator from './DobiNarrator';
+
+function WebGLMagicDust({ dust }) {
+    const [age, setAge] = useState(0);
+    useTick((delta) => setAge(prev => prev + delta));
+    
+    const progress = Math.min(age / 40, 1);
+    const alpha = 1 - progress;
+    const yOffset = progress * -30;
+
+    return (
+        <Graphics 
+            x={dust.x} 
+            y={dust.y + yOffset} 
+            alpha={alpha}
+            blendMode={PIXI.BLEND_MODES.ADD}
+            draw={(g) => {
+                g.clear();
+                g.beginFill(0xffffff); // White hot core
+                g.drawCircle(0, 0, 3);
+                g.endFill();
+                
+                g.beginFill(0xff00ff, 0.5); // Magenta glow
+                g.drawCircle(0, 0, 8);
+                g.endFill();
+            }}
+        />
+    );
+}
+
+function MagicBackground({ width, height, dustArray }) {
+    return (
+        <Container>
+            {/* Draw a subtle magical gradient background */}
+            <Graphics 
+                draw={(g) => {
+                    g.clear();
+                    g.beginFill(0x2a0845, 0.4); // Dark purple magical background overlay
+                    g.drawRect(0, 0, width, height);
+                    g.endFill();
+                }}
+            />
+            {dustArray.map(d => (
+                <WebGLMagicDust key={d.id} dust={d} />
+            ))}
+        </Container>
+    );
+}
 
 const stage3Associations = [
     { char: 'מ', label: 'מיטה', emoji: '🛏️' },
@@ -368,8 +417,20 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
 
     return (
         <div className="view-container" ref={containerRef} id="literacy-stage-container">
+            {/* Background WebGL Magic Overlay (Only active on Stage 3) */}
+            {stage === 3 && (
+                <Stage
+                    width={window.innerWidth}
+                    height={window.innerHeight}
+                    options={{ backgroundAlpha: 0, antialias: true, resolution: window.devicePixelRatio || 1 }}
+                    style={{ position: 'absolute', top: 0, left: 0, zIndex: 0, pointerEvents: 'none' }}
+                >
+                    <MagicBackground width={window.innerWidth} height={window.innerHeight} dustArray={magicDust} />
+                </Stage>
+            )}
+
             {/* Header */}
-            <div className="header-bar">
+            <div className="header-bar" style={{ position: 'relative', zIndex: 10 }}>
                 <button className="btn-round" onClick={onBack}>
                     🏠
                 </button>
@@ -383,7 +444,7 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
             </div>
 
             {/* Stage Layout */}
-            <div className="literacy-layout" style={{ width: '100%' }}>
+            <div className="literacy-layout" style={{ width: '100%', position: 'relative', zIndex: 10 }}>
                 
                 {/* STAGE 1: Drag letter to silhouette */}
                 {stage === 1 && currentLetter && (
@@ -498,18 +559,7 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                                 {currentLetter.char}
                             </motion.div>
                         </div>
-
-                        {/* Particle dust trail */}
-                        {magicDust.map(d => (
-                            <div
-                                key={d.id}
-                                className="magic-dust-particle"
-                                style={{
-                                    left: d.x,
-                                    top: d.y
-                                }}
-                            />
-                        ))}
+                        {/* Note: WebGL dust particles are now rendered in the Stage background */}
                     </div>
                 )}
             </div>

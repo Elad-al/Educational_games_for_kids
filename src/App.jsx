@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { initAudioEngine, playSfx, speak, playGiggle } from './hooks/useAudio';
-import GameMap from './components/GameMap';
+import PixiMap from './components/PixiMap';
 import SortingGame from './components/SortingGame';
 import LiteracyGame from './components/LiteracyGame';
 import BalloonOverlay from './components/BalloonOverlay';
@@ -126,24 +126,24 @@ export default function App() {
                 )}
 
                 {view === 'map-sorting' && (
-                    <GameMap 
+                    <PixiMap 
                         type="sorting" 
-                        onSelectLevel={(lvl) => {
-                            setSelectedLevel(lvl);
-                            setView('game-sorting');
+                        onSelectLevel={(level) => {
+                            setSelectedLevel(level);
+                            handleSelectView('game-sorting');
                         }}
-                        onBack={() => setView('menu')}
+                        onBack={() => handleSelectView('menu')}
                     />
                 )}
 
                 {view === 'map-literacy' && (
-                    <GameMap 
+                    <PixiMap 
                         type="literacy" 
-                        onSelectLevel={(lvl) => {
-                            setSelectedLevel(lvl);
-                            setView('game-literacy');
+                        onSelectLevel={(level) => {
+                            setSelectedLevel(level);
+                            handleSelectView('game-literacy');
                         }}
-                        onBack={() => setView('menu')}
+                        onBack={() => handleSelectView('menu')}
                     />
                 )}
 
