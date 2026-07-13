@@ -1,65 +1,60 @@
 import os
-import time
+import subprocess
 
-try:
-    from gtts import gTTS
-except ImportError:
-    import subprocess
-    import sys
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "gTTS"])
-    from gtts import gTTS
+OUTPUT_DIR = "public/assets/audio/generated"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Target directory
-ASSETS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets', 'audio')
-os.makedirs(ASSETS_DIR, exist_ok=True)
-
-# Hebrew letters mapping
-# char: [name_with_niqqud, phonetic_string]
-letters = {
-    'א': ['אָלֶף', 'אאאא'],
-    'ב': ['בֵּית', 'בּבּבּבּ'],
-    'ג': ['גִּימֶל', 'גגגג'],
-    'ד': ['דָּלֶת', 'דדדד'],
-    'ה': ['הֵא', 'הההה'],
-    'ו': ['וָו', 'וווו'],
-    'ז': ['זַיִן', 'זזזז'],
-    'ח': ['חֵית', 'חחחח'],
-    'ט': ['טֵית', 'טטטט'],
-    'י': ['יוֹד', 'יייי'],
-    'כ': ['כַּף', 'כּכּכּכּ'],
-    'ל': ['לָמֶד', 'לללל'],
-    'מ': ['מֵם', 'ממממ'],
-    'נ': ['נוּן', 'ננננ'],
-    'ס': ['סָמֶךְ', 'סססס'],
-    'ע': ['עַיִן', 'עעעע'],
-    'פ': ['פֵּא', 'פּפּפּפּ'],
-    'צ': ['צָדִי', 'צצצצ'],
-    'ק': ['קוֹף', 'קקקק'],
-    'ר': ['רֵישׁ', 'רררר'],
-    'ש': ['שִׁין', 'שׁשׁשׁשׁ'],
-    'ת': ['תָּו', 'תּתּתּתּ']
+phrases = {
+    # Feedback
+    "try_again": "נסה שוב",
+    "oh_try_again": "אוי, נסה שוב",
+    "basket_full": "הסל מלא",
+    "not_here": "זה לא שייך לפה!",
+    "success": "כל הכבוד! הצלחת!",
+    
+    # Praises
+    "praise_1": "יפה!",
+    "praise_2": "מצוין!",
+    "praise_3": "נהדר!",
+    "praise_4": "כל הכבוד!",
+    
+    # Numbers
+    "num_1": "אחת",
+    "num_2": "שתיים",
+    "num_3": "שלוש",
+    "num_4": "ארבע",
+    "num_5": "חמש",
 }
 
-def generate_audio():
-    print(f"Generating audio in {ASSETS_DIR}...")
-    for char, (name, phonetic) in letters.items():
-        # Clean char for filename
-        char_hex = char.encode("utf-8").hex()
-        
-        name_path = os.path.join(ASSETS_DIR, f"name_{char_hex}.mp3")
-        phonetic_path = os.path.join(ASSETS_DIR, f"phonetic_{char_hex}.mp3")
-        
-        if not os.path.exists(name_path):
-            tts = gTTS(text=name, lang='iw') # iw is hebrew in gTTS
-            tts.save(name_path)
-            
-        if not os.path.exists(phonetic_path):
-            tts = gTTS(text=phonetic, lang='iw')
-            tts.save(phonetic_path)
-            
-        time.sleep(0.5) # prevent rate limiting
-        print(f"Generated {char} -> {name_path}, {phonetic_path}")
+# Sorting game categories
+categories = [
+    'פירות', 'חיות', 'כלי רכב', 'בגדים', 'צעצועים',
+    'רהיטים', 'אוכל', 'כלי עבודה', 'כלי נגינה', 'כלי כתיבה'
+]
+for cat in categories:
+    phrases[f"sort_{cat}"] = f"גרור את ה{cat} לסל!"
 
-if __name__ == "__main__":
-    generate_audio()
-    print("All audio files generated successfully.")
+# Alphabet
+hebrew_letters = "אבגדהוזחטיכלמנסעפצקרשת"
+for char in hebrew_letters:
+    phrases[f"lit_{char}"] = f"גרור את האות {char} למקום הנכון!"
+    
+# Final letters
+final_letters = "ץףןםך"
+for char in final_letters:
+    phrases[f"lit_{char}"] = f"גרור את האות סופית {char} למקום הנכון!"
+
+# Generate all
+for key, text in phrases.items():
+    output_path = os.path.join(OUTPUT_DIR, f"{key}.mp3")
+    if not os.path.exists(output_path):
+        print(f"Generating {key}: {text}")
+        cmd = [
+            "edge-tts",
+            "--voice", "he-IL-HilaNeural",
+            "--text", text,
+            "--write-media", output_path
+        ]
+        subprocess.run(cmd, check=True)
+
+print("Audio generation complete.")

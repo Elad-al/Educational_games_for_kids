@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { hebrewLetters } from '../constants';
 import { playSfx, speak, playLetterName, playLetterPhonetic, stopPhonetic, stopVoice } from '../hooks/useAudio';
-import DobiNarrator from './DobiNarrator';
+import UnicornNarrator from './UnicornNarrator';
 
 const stage3Associations = [
     { char: 'מ', label: 'מיטה', emoji: '🛏️' },
@@ -521,7 +521,7 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
             </div>
 
             {/* Guide Narrator */}
-            <DobiNarrator 
+            <UnicornNarrator 
                 bubbleText={bubbleText} 
                 onNarratorClick={() => speak(bubbleText)} 
             />

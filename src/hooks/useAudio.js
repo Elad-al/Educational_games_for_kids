@@ -10,28 +10,59 @@ let isSpeakingCallback = null;
 // Simple C-major arpeggio melody for gentle music-box background music
 const melody = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63]; // C4 - E4 - G4 - C5 - G4 - E4
 
-const feedbackMap = {
-    'יפה': 'praise_1',
-    'יפה!': 'praise_1',
-    'מצוין': 'praise_2',
-    'מצוין!': 'praise_2',
-    'נהדר': 'praise_3',
-    'נהדר!': 'praise_3',
-    'כל הכבוד': 'praise_4',
-    'כל הכבוד!': 'praise_4',
-    'כל הכבוד! הצלחת!': 'praise_win',
-    'נסה שוב': 'wrong_1',
-    'אוי, נסה שוב': 'wrong_1',
-    'אוי, לא פה': 'wrong_2',
-    'הסל מלא': 'wrong_full',
-    'זה לא שייך לפה!': 'wrong_not_here',
-    'זה לא שייך לפה': 'wrong_not_here',
-    'אחת': 'count_1',
-    'שתיים': 'count_2',
-    'שלוש': 'count_3',
-    'ארבע': 'count_4',
-    'חמש': 'count_5',
+const textToKey = {
+    "נסה שוב": "try_again",
+    "אוי, נסה שוב": "oh_try_again",
+    "הסל מלא": "basket_full",
+    "זה לא שייך לפה!": "not_here",
+    "זה לא שייך לפה": "not_here",
+    "כל הכבוד! הצלחת!": "success",
+    
+    "יפה!": "praise_1", "יפה": "praise_1",
+    "מצוין!": "praise_2", "מצוין": "praise_2",
+    "נהדר!": "praise_3", "נהדר": "praise_3",
+    "כל הכבוד!": "praise_4", "כל הכבוד": "praise_4",
+    
+    "אחת": "num_1", "שתיים": "num_2", "שלוש": "num_3", "ארבע": "num_4", "חמש": "num_5",
+    
+    // Additional feedback
+    "אוי, נסה לגרור אל צללית האות!": "lit_wrong_shadow",
+    "נסה לחפש אות אחרת!": "lit_wrong_find",
+    "אוי, החפץ הזה מתחיל באות אחרת!": "lit_wrong_wand",
+    
+    // Sorting Game Specific
+    "גרור כל צעצוע לסל בצבע המתאים! לחץ על הסל להסבר": "sort_intro_1",
+    "מיין את הצעצועים לפי מספרים וצבעים! לחץ על הסל להסבר": "sort_intro_2",
+    "מיין את הצורות לסלים המתאימים! לחץ על הסל להסבר": "sort_intro_3",
+    "מיין את הצעצועים! שים לב, חלק מהפריטים לא שייכים!": "sort_intro_4",
+    "הסל הזה כבר מלא!": "sort_full",
+    "אוי, נסה לגרור למקום אחר!": "sort_try_other"
 };
+
+const colors = ['אדום', 'כחול', 'ירוק', 'כתום', 'סגול', 'צהוב', 'ורוד'];
+colors.forEach(c => textToKey[`גרור לכאן את כל הצעצועים בצבע ${c}!`] = `sort_color_${c}`);
+
+const shapes = ['עיגולים', 'ריבועים', 'משולשים'];
+shapes.forEach(s => textToKey[`גרור לכאן את כל ה${s}!`] = `sort_shape_${s}`);
+
+const cats = ['חיות', 'כלי רכב', 'פירות', 'חלל', 'ים'];
+cats.forEach(c => textToKey[`גרור לכאן את כל ה${c}!`] = `sort_cat_${c}`);
+
+// Also keeping the old generic mapping just in case
+const categories = [
+    'פירות', 'חיות', 'כלי רכב', 'בגדים', 'צעצועים',
+    'רהיטים', 'אוכל', 'כלי עבודה', 'כלי נגינה', 'כלי כתיבה'
+];
+categories.forEach(cat => textToKey[`גרור את ה${cat} לסל!`] = `sort_${cat}`);
+
+const hebrew_letters = "אבגדהוזחטיכלמנסעפצקרשתץףןםך";
+for (let char of hebrew_letters) {
+    textToKey[`גרור את האות ${char} למקום הנכון!`] = `lit_${char}`;
+    textToKey[`גרור את האות סופית ${char} למקום הנכון!`] = `lit_${char}`; // aliases
+    textToKey[`גרור את האות ${char} אל הצללית שלה!`] = `lit_shadow_${char}`;
+    textToKey[`איפה האות ${char}?`] = `lit_find_${char}`;
+    textToKey[`גרור את השרביט אל החפץ שמתחיל באות ${char}!`] = `lit_wand_${char}`;
+}
 
 // Auto-preload audio elements
 const preloadedAudio = {};
@@ -43,19 +74,6 @@ export function initAudioEngine() {
     if (audioCtx.state === 'suspended') {
         audioCtx.resume();
     }
-
-    // Preload feedback voiceovers
-    Object.keys(feedbackMap).forEach(text => {
-        const fileKey = feedbackMap[text];
-        if (!preloadedAudio[fileKey]) {
-            const audio = new Audio(`./assets/audio/feedback_${fileKey}.mp3`);
-            audio.preload = 'auto';
-            audio.load();
-            preloadedAudio[fileKey] = audio;
-        }
-    });
-
-    // Start background music automatically on initialization
     startBackgroundMusic();
 }
 
@@ -213,14 +231,19 @@ export function speak(text) {
     if (!text) return;
     stopVoice();
 
-    const fileKey = feedbackMap[text];
+    const fileKey = textToKey[text];
     if (fileKey) {
         let audio = preloadedAudio[fileKey];
         if (!audio) {
-            audio = new Audio(`./assets/audio/feedback_${fileKey}.mp3`);
+            audio = new Audio(`./assets/audio/generated/${fileKey}.mp3`);
             preloadedAudio[fileKey] = audio;
         }
         audio.currentTime = 0;
+        
+        // Pitch shift up for a cute "baby" voice
+        audio.preservesPitch = false;
+        audio.playbackRate = 1.35;
+        
         currentVoiceAudio = audio;
         if (isSpeakingCallback) isSpeakingCallback(true);
         audio.onended = () => {
@@ -231,24 +254,23 @@ export function speak(text) {
             if (isSpeakingCallback) isSpeakingCallback(false);
         });
     } else {
-        // TTS Fallback
+        console.warn('Unmapped text, falling back to TTS without pitch control:', text);
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'he-IL';
-            utterance.rate = 0.85; 
+            
+            const voices = window.speechSynthesis.getVoices();
+            const femaleVoice = voices.find(v => v.lang.includes('he') && v.name.toLowerCase().includes('female'));
+            if (femaleVoice) utterance.voice = femaleVoice;
+            
             utterance.onstart = () => {
                 if (isSpeakingCallback) isSpeakingCallback(true);
             };
             utterance.onend = () => {
                 if (isSpeakingCallback) isSpeakingCallback(false);
             };
-            utterance.onerror = () => {
-                if (isSpeakingCallback) isSpeakingCallback(false);
-            };
             window.speechSynthesis.speak(utterance);
-        } else {
-            console.log('Speech synthesis fallback failed:', text);
         }
     }
 }
@@ -257,6 +279,10 @@ export function playLetterName(char) {
     stopVoice();
     const hex = getCharHex(char);
     const audio = new Audio(`./assets/audio/name_${hex}.mp3`);
+    
+    audio.preservesPitch = false;
+    audio.playbackRate = 1.35;
+    
     currentVoiceAudio = audio;
     
     return new Promise((resolve) => {
@@ -281,6 +307,10 @@ export function playLetterPhonetic(char) {
     stopPhonetic();
     const hex = getCharHex(char);
     const audio = new Audio(`./assets/audio/phonetic_${hex}.mp3?v=4`);
+    
+    audio.preservesPitch = false;
+    audio.playbackRate = 1.35;
+    
     currentPhoneticAudio = audio;
     audio.loop = true;
     audio.play().catch(e => console.log('Letter phonetic blocked', e));

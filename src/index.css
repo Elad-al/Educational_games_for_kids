@@ -274,50 +274,28 @@ body, html {
     pointer-events: auto;
 }
 
-.dobi-avatar-wrapper {
+.unicorn-avatar-wrapper {
     width: 140px;
     height: 140px;
     position: relative;
     cursor: pointer;
     filter: drop-shadow(0 8px 25px rgba(234, 128, 252, 0.4));
-    animation: bearFloat 4s ease-in-out infinite;
+    animation: unicornFloat 4s ease-in-out infinite;
 }
 
-@keyframes bearFloat {
+@keyframes unicornFloat {
     0%, 100% { transform: translateY(0) rotate(0deg); }
     50% { transform: translateY(-8px) rotate(2deg); }
 }
 
-.bear-ears {
-    transform-origin: 60px 65px;
-    animation: earsTwitch 6s ease-in-out infinite;
-}
 
-@keyframes earsTwitch {
-    0%, 92%, 100% { transform: scale(1); }
-    94%, 98% { transform: scale(1.08) rotate(3deg); }
-}
-
-.bear-eyes {
-    animation: bearBlink 4s infinite;
-}
-
-@keyframes bearBlink {
-    0%, 90%, 100% { transform: scaleY(1); }
-    95% { transform: scaleY(0.1); }
-}
-
-.bear-head-group {
-    transform-origin: 60px 65px;
-    animation: headNod 5s ease-in-out infinite alternate;
-}
 
 @keyframes headNod {
     0% { transform: rotate(-1deg); }
     100% { transform: rotate(1.5deg); }
 }
 
-.dobi-bubble {
+.unicorn-bubble {
     background: rgba(12, 5, 26, 0.75);
     border: 3.5px solid #ea80fc;
     backdrop-filter: blur(20px);
@@ -332,7 +310,7 @@ body, html {
     animation: bubblePopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     direction: rtl;
 }
-.dobi-bubble::after {
+.unicorn-bubble::after {
     content: '';
     position: absolute;
     left: -14px;
@@ -342,7 +320,7 @@ body, html {
     border-color: transparent rgba(12, 5, 26, 0.75) transparent transparent;
     z-index: 10;
 }
-.dobi-bubble::before {
+.unicorn-bubble::before {
     content: '';
     position: absolute;
     left: -19px;
@@ -351,6 +329,24 @@ body, html {
     border-style: solid;
     border-color: transparent #ea80fc transparent transparent;
     z-index: 5;
+}
+
+/* Mouth animation logic */
+.mouth-open { opacity: 0; }
+.unicorn-mouth-group.speaking .mouth-closed {
+    animation: mouthToggle 0.2s infinite alternate;
+}
+.unicorn-mouth-group.speaking .mouth-open {
+    animation: mouthToggleInvert 0.2s infinite alternate;
+}
+
+@keyframes mouthToggle {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+@keyframes mouthToggleInvert {
+    0%, 49% { opacity: 0; }
+    50%, 100% { opacity: 1; }
 }
 
 @keyframes dobiBreathe {

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { colorPool, shapesConfig, shapeBasketEmojis, categoryPool, distractors } from '../constants';
 import { playSfx, speak, stopVoice } from '../hooks/useAudio';
-import DobiNarrator from './DobiNarrator';
+import UnicornNarrator from './UnicornNarrator';
 
 export default function SortingGame({ level, onWin, onBack }) {
     const [items, setItems] = useState([]);
@@ -406,7 +406,7 @@ export default function SortingGame({ level, onWin, onBack }) {
             </div>
 
             {/* Guide Narrator */}
-            <DobiNarrator 
+            <UnicornNarrator 
                 bubbleText={bubbleText} 
                 onNarratorClick={() => speak(bubbleText)} 
             />
