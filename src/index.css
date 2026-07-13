@@ -262,93 +262,48 @@ body, html {
     pointer-events: auto;
 }
 
-.dobi-avatar {
-    width: 130px;
-    height: 130px;
+.dobi-avatar-wrapper {
+    width: 140px;
+    height: 140px;
     position: relative;
     cursor: pointer;
-    animation: dobiBreathe 3s ease-in-out infinite;
+    filter: drop-shadow(0 8px 25px rgba(234, 128, 252, 0.4));
+    animation: bearFloat 4s ease-in-out infinite;
 }
 
-.dobi-bear {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #ab47bc, #8e24aa); /* Holographic purple forest spirit */
-    border-radius: 50% 50% 45% 45%;
-    border: 4px solid #ea80fc;
-    position: relative;
-    box-shadow: 0 0 25px rgba(234, 128, 252, 0.6), inset 0 0 15px rgba(255,255,255,0.4);
+@keyframes bearFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
 }
 
-.dobi-ear-l, .dobi-ear-r {
-    position: absolute;
-    width: 38px;
-    height: 38px;
-    background: #ab47bc;
-    border: 4px solid #ea80fc;
-    border-radius: 50%;
-    top: -8px;
-}
-.dobi-ear-l { left: -5px; }
-.dobi-ear-r { right: -5px; }
-
-.dobi-ear-l::before, .dobi-ear-r::before {
-    content: '';
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    background-color: #ff80ab;
-    border-radius: 50%;
-    top: 6px;
-    left: 6px;
+.bear-ears {
+    transform-origin: 60px 65px;
+    animation: earsTwitch 6s ease-in-out infinite;
 }
 
-.dobi-eye-l, .dobi-eye-r {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    background-color: #00e5ff; /* glowing blue eyes */
-    border-radius: 50%;
-    top: 38px;
-    box-shadow: 0 0 8px #00e5ff;
-    animation: dobiBlink 4s infinite;
-}
-.dobi-eye-l { left: 32px; }
-.dobi-eye-r { right: 32px; }
-
-.dobi-snout {
-    position: absolute;
-    width: 44px;
-    height: 32px;
-    background-color: #f3e5f5;
-    border: 3px solid #ea80fc;
-    border-radius: 50%;
-    bottom: 25px;
-    left: 39px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+@keyframes earsTwitch {
+    0%, 92%, 100% { transform: scale(1); }
+    94%, 98% { transform: scale(1.08) rotate(3deg); }
 }
 
-.dobi-nose {
-    width: 14px;
-    height: 10px;
-    background-color: #4a148c;
-    border-radius: 50%;
-    position: absolute;
-    top: 4px;
+.bear-eyes {
+    animation: bearBlink 4s infinite;
 }
 
-.dobi-blush-l, .dobi-blush-r {
-    position: absolute;
-    width: 16px;
-    height: 10px;
-    background-color: rgba(255, 64, 129, 0.6);
-    border-radius: 50%;
-    top: 54px;
+@keyframes bearBlink {
+    0%, 90%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
 }
-.dobi-blush-l { left: 16px; }
-.dobi-blush-r { right: 16px; }
+
+.bear-head-group {
+    transform-origin: 60px 65px;
+    animation: headNod 5s ease-in-out infinite alternate;
+}
+
+@keyframes headNod {
+    0% { transform: rotate(-1deg); }
+    100% { transform: rotate(1.5deg); }
+}
 
 .dobi-bubble {
     background: rgba(12, 5, 26, 0.75);
@@ -1118,3 +1073,107 @@ body, html {
     border-right: 6px solid transparent;
     border-bottom: 8px solid currentColor;
 }
+
+/* --- SVG Princess Unicorn Character & Animations --- */
+.unicorn-character {
+    position: absolute;
+    width: 96px;
+    height: 96px;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    pointer-events: none;
+    transition: left 1.2s ease-in-out, top 1.2s ease-in-out;
+}
+
+.unicorn-body-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.unicorn-svg-char {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Idle motions */
+.unicorn-character.idle .unicorn-body-wrapper {
+    animation: uniIdle 2.5s ease-in-out infinite alternate;
+}
+
+.unicorn-character.idle .uni-tail-path {
+    transform-origin: 22px 55px;
+    animation: tailWiggle 1.8s ease-in-out infinite alternate;
+}
+
+.unicorn-character.idle .uni-mane-path {
+    transform-origin: 60px 30px;
+    animation: hairWave 2.2s ease-in-out infinite alternate;
+}
+
+/* Galloping motions */
+.unicorn-character.galloping .unicorn-body-wrapper {
+    animation: uniGallopBody 0.3s ease-in-out infinite alternate;
+}
+
+.unicorn-character.galloping .uni-leg-fl-path {
+    transform-origin: 63px 60px;
+    animation: legRunF 0.3s linear infinite alternate;
+}
+
+.unicorn-character.galloping .uni-leg-bl-path {
+    transform-origin: 33px 60px;
+    animation: legRunB 0.3s linear infinite alternate;
+}
+
+.unicorn-character.galloping .uni-leg-fr-path {
+    transform-origin: 68px 60px;
+    animation: legRunB 0.3s linear infinite alternate;
+}
+
+.unicorn-character.galloping .uni-leg-br-path {
+    transform-origin: 28px 60px;
+    animation: legRunF 0.3s linear infinite alternate;
+}
+
+.unicorn-character.galloping .uni-tail-path {
+    transform-origin: 22px 55px;
+    animation: tailWiggle 0.15s ease-in-out infinite alternate;
+}
+
+.unicorn-character.galloping .uni-mane-path {
+    transform-origin: 60px 30px;
+    animation: hairWave 0.15s ease-in-out infinite alternate;
+}
+
+@keyframes uniIdle {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-5px); }
+}
+
+@keyframes hairWave {
+    0% { transform: skewX(-5deg); }
+    100% { transform: skewX(5deg); }
+}
+
+@keyframes tailWiggle {
+    0% { transform: rotate(-8deg); }
+    100% { transform: rotate(12deg); }
+}
+
+@keyframes uniGallopBody {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-10px) rotate(-5deg); }
+}
+
+@keyframes legRunF {
+    0% { transform: rotate(-35deg); }
+    100% { transform: rotate(35deg); }
+}
+
+@keyframes legRunB {
+    0% { transform: rotate(35deg); }
+    100% { transform: rotate(-35deg); }
+}
+

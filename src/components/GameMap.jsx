@@ -185,25 +185,124 @@ export default function GameMap({ type, onSelectLevel, onBack }) {
                         transition={{ duration: 1.2, ease: 'easeInOut' }}
                     >
                         <div className="unicorn-body-wrapper">
-                            {/* Torso */}
-                            <div className="uni-torso" />
-                            {/* Neck */}
-                            <div className="uni-neck" />
-                            {/* Head */}
-                            <div className="uni-head">
-                                <div className="uni-eye" />
-                            </div>
-                            {/* Horn */}
-                            <div className="uni-horn" />
-                            {/* Mane */}
-                            <div className="uni-mane" />
-                            {/* Tail */}
-                            <div className="uni-tail" />
-                            {/* Legs */}
-                            <div className="uni-leg uni-leg-fl" />
-                            <div className="uni-leg uni-leg-fr" />
-                            <div className="uni-leg uni-leg-bl" />
-                            <div className="uni-leg uni-leg-br" />
+                            <svg className="unicorn-svg-char" viewBox="0 0 100 100" width="100%" height="100%">
+                                <defs>
+                                    <linearGradient id="uniBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#ffffff" />
+                                        <stop offset="40%" stopColor="#fce4ec" />
+                                        <stop offset="100%" stopColor="#f8bbd0" />
+                                    </linearGradient>
+                                    <linearGradient id="uniHairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stopColor="#ea80fc" />
+                                        <stop offset="50%" stopColor="#d500f9" />
+                                        <stop offset="100%" stopColor="#7c4dff" />
+                                    </linearGradient>
+                                    <linearGradient id="uniHornGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stopColor="#ffee58" />
+                                        <stop offset="100%" stopColor="#ffb300" />
+                                    </linearGradient>
+                                </defs>
+
+                                {/* Tail */}
+                                <path 
+                                    className="uni-tail-path" 
+                                    d="M 22 55 Q 5 60 10 75 Q 18 78 24 63 Z" 
+                                    fill="url(#uniHairGrad)" 
+                                    stroke="#4a148c" 
+                                    strokeWidth="1.5" 
+                                />
+                                
+                                {/* Right Back Leg */}
+                                <path 
+                                    className="uni-leg-br-path" 
+                                    d="M 28 60 C 26 75, 23 85, 25 90 C 28 90, 31 82, 33 60 Z" 
+                                    fill="#fce4ec" 
+                                    stroke="#c2185b" 
+                                    strokeWidth="1.5" 
+                                />
+                                
+                                {/* Right Front Leg */}
+                                <path 
+                                    className="uni-leg-fr-path" 
+                                    d="M 68 60 C 69 75, 71 85, 73 90 C 76 90, 75 82, 72 60 Z" 
+                                    fill="#fce4ec" 
+                                    stroke="#c2185b" 
+                                    strokeWidth="1.5" 
+                                />
+                                
+                                {/* Torso Body */}
+                                <path 
+                                    d="M 26 44 C 18 44, 16 56, 22 66 C 26 72, 68 72, 72 64 C 77 54, 71 44, 65 44 Z" 
+                                    fill="url(#uniBodyGrad)" 
+                                    stroke="#c2185b" 
+                                    strokeWidth="1.8" 
+                                />
+                                
+                                {/* Left Back Leg */}
+                                <path 
+                                    className="uni-leg-bl-path" 
+                                    d="M 33 60 C 33 75, 31 85, 33 90 C 36 90, 38 82, 38 60 Z" 
+                                    fill="#f8bbd0" 
+                                    stroke="#c2185b" 
+                                    strokeWidth="1.5" 
+                                />
+                                
+                                {/* Left Front Leg */}
+                                <path 
+                                    className="uni-leg-fl-path" 
+                                    d="M 63 60 C 62 75, 59 85, 61 90 C 64 90, 67 82, 67 60 Z" 
+                                    fill="#f8bbd0" 
+                                    stroke="#c2185b" 
+                                    strokeWidth="1.5" 
+                                />
+
+                                {/* Neck */}
+                                <path 
+                                    d="M 62 48 C 65 40, 71 28, 73 22 C 76 25, 74 38, 70 48 Z" 
+                                    fill="url(#uniBodyGrad)" 
+                                    stroke="#c2185b" 
+                                    strokeWidth="1.8" 
+                                />
+                                
+                                {/* Head */}
+                                <path 
+                                    d="M 68 22 C 64 20, 68 8, 76 8 C 84 8, 86 16, 82 26 C 78 30, 72 28, 68 22 Z" 
+                                    fill="url(#uniBodyGrad)" 
+                                    stroke="#c2185b" 
+                                    strokeWidth="1.8" 
+                                />
+                                
+                                {/* Eye with Shiny Highlight */}
+                                <circle cx="76" cy="14" r="2.5" fill="#2d3748" />
+                                <circle cx="75.2" cy="13" r="0.9" fill="#fff" />
+                                
+                                {/* Cute smiling mouth */}
+                                <path d="M 79 21 Q 81 23 83 20" fill="none" stroke="#c2185b" strokeWidth="1.2" strokeLinecap="round" />
+                                
+                                {/* Blush cheek */}
+                                <circle cx="73" cy="18" r="3" fill="#ff4081" opacity="0.5" />
+                                
+                                {/* Golden horn */}
+                                <path 
+                                    className="uni-horn-path" 
+                                    d="M 72 6 L 68 -10 L 76 4 Z" 
+                                    fill="url(#uniHornGrad)" 
+                                    stroke="#e65100" 
+                                    strokeWidth="1.2" 
+                                />
+                                
+                                {/* Mane (Hair) */}
+                                <path 
+                                    className="uni-mane-path" 
+                                    d="M 60 30 Q 52 20 62 12 Q 54 8 68 6 Q 66 18 60 30 Z" 
+                                    fill="url(#uniHairGrad)" 
+                                    stroke="#4a148c" 
+                                    strokeWidth="1.2" 
+                                />
+                                
+                                {/* Ear */}
+                                <path d="M 66 10 Q 62 0 68 4 Z" fill="#ff80ab" stroke="#c2185b" strokeWidth="1.2" />
+                            </svg>
                         </div>
                     </motion.div>
 
