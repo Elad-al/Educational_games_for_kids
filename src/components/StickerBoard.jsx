@@ -25,9 +25,9 @@ export default function StickerBoard({ onBack }) {
     };
 
     return (
-        <div className="sticker-board-overlay">
+            <div className="sticker-board-overlay">
             <div className="sticker-container">
-                <div className="sticker-header">
+                <div className="sticker-header cartoon-text-title" style={{ fontSize: '2.5rem', marginBottom: '20px' }}>
                     🎨 לוח המדבקות הקסום שלי 🎨
                 </div>
 
@@ -58,12 +58,13 @@ export default function StickerBoard({ onBack }) {
 
                     {/* Side panel drawer */}
                     <div className="sticker-drawer">
-                        <h3>בחר רקע:</h3>
+                        <h3 style={{ color: '#fff', textShadow: '1px 1px 0 rgba(0,0,0,0.5)' }}>בחר רקע:</h3>
                         <div className="scene-select-row">
                             {stickerScenes.map(sc => (
                                 <button
                                     key={sc.id}
                                     className={`scene-select-btn ${selectedScene.id === sc.id ? 'active' : ''}`}
+                                    style={{ borderRadius: '12px', border: '2px solid white' }}
                                     onClick={() => {
                                         playSfx('pop', 700);
                                         setSelectedScene(sc);
@@ -74,7 +75,7 @@ export default function StickerBoard({ onBack }) {
                             ))}
                         </div>
 
-                        <h3>מדבקות:</h3>
+                        <h3 style={{ color: '#fff', textShadow: '1px 1px 0 rgba(0,0,0,0.5)' }}>מדבקות:</h3>
                         <div className="sticker-list">
                             {stickerPool.map(st => (
                                 <button
@@ -90,10 +91,10 @@ export default function StickerBoard({ onBack }) {
                 </div>
 
                 <div className="sticker-footer">
-                    <button className="btn-primary" onClick={handleClear} style={{ backgroundColor: '#e53935', marginLeft: 'auto' }}>
+                    <button className="cartoon-button btn-red" onClick={handleClear} style={{ marginLeft: 'auto' }}>
                         מחק הכל 🗑️
                     </button>
-                    <button className="btn-primary" onClick={onBack}>
+                    <button className="cartoon-button btn-yellow" onClick={onBack}>
                         סיום ושמירה 💾
                     </button>
                 </div>

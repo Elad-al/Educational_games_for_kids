@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { initAudioEngine, playSfx, speak, playGiggle } from './hooks/useAudio';
-import PixiMap from './components/PixiMap';
+import AdventureMap from './components/AdventureMap';
 import SortingGame from './components/SortingGame';
 import LiteracyGame from './components/LiteracyGame';
 import BalloonOverlay from './components/BalloonOverlay';
 import StickerBoard from './components/StickerBoard';
+import MagicWorldLayout from './components/MagicWorldLayout';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function App() {
     const [view, setView] = useState('menu'); // 'menu', 'map-sorting', 'map-literacy', 'game-sorting', 'game-literacy'
@@ -71,107 +73,94 @@ export default function App() {
     };
 
     return (
-        <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-            
-            {/* Interactive Background */}
-            <div className="game-background">
-                <div className="sky-gradient" />
-                <div className="clouds-layer">
-                    <div className="cloud cloud-1" />
-                    <div className="cloud cloud-2" />
-                    <div className="cloud cloud-3" />
-                </div>
-                
-                {/* Drifting Leaves */}
-                <div className="leaf-particle leaf-1">🍃</div>
-                <div className="leaf-particle leaf-2">🍃</div>
-                <div className="leaf-particle leaf-3">🍂</div>
-
-                {/* Fluttering Butterflies */}
-                <div className="butterfly-particle bf-1">🦋</div>
-                <div className="butterfly-particle bf-2">🦋</div>
-
-                <div 
-                    className="interactive-sun" 
-                    onClick={() => playGiggle()}
-                />
-                <div className="hills-layer">
-                    <div className="hill hill-back" />
-                    <div className="hill hill-front" onClick={() => playSfx('pop', 300)} />
-                </div>
-            </div>
-
-            {/* View State Machine Router */}
-            <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%' }}>
+        <MagicWorldLayout>
+            <AnimatePresence mode="wait">
                 {view === 'menu' && (
-                    <div className="main-menu">
-                        <h1 className="menu-title">עולם המשחקים הקסום</h1>
-                        <div className="menu-buttons">
+                    <motion.div 
+                        key="menu"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.1 }}
+                        className="main-menu"
+                    >
+                        <h1 className="cartoon-text-title" style={{ fontSize: '4rem', marginBottom: '40px' }}>עולם המשחקים הקסום</h1>
+                        <div className="menu-buttons" style={{ display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
                             <button 
-                                className="menu-btn btn-sorting"
+                                className="cartoon-button btn-yellow"
+                                style={{ width: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px' }}
                                 onClick={() => handleSelectView('map-sorting')}
                             >
-                                <span className="icon">🦁🎨</span>
+                                <span className="icon" style={{ fontSize: '2.5rem' }}>🦁</span>
                                 <span>משחקי מיון</span>
                             </button>
                             <button 
-                                className="menu-btn btn-literacy"
+                                className="cartoon-button btn-red"
+                                style={{ width: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px' }}
                                 onClick={() => handleSelectView('map-literacy')}
                             >
-                                <span className="icon">א ב ג</span>
+                                <span className="icon" style={{ fontSize: '2.5rem' }}>א ב</span>
                                 <span>לימוד אותיות</span>
                             </button>
                         </div>
-                    </div>
+                    </motion.div>
                 )}
 
                 {view === 'map-sorting' && (
-                    <PixiMap 
-                        type="sorting" 
-                        onSelectLevel={(level) => {
-                            setSelectedLevel(level);
-                            handleSelectView('game-sorting');
-                        }}
-                        onBack={() => handleSelectView('menu')}
-                    />
+                    <motion.div key="map-sorting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ width: '100%', height: '100%' }}>
+                        <AdventureMap 
+                            type="sorting" 
+                            onSelectLevel={(level) => {
+                                setSelectedLevel(level);
+                                handleSelectView('game-sorting');
+                            }}
+                            onBack={() => handleSelectView('menu')}
+                        />
+                    </motion.div>
                 )}
 
                 {view === 'map-literacy' && (
-                    <PixiMap 
-                        type="literacy" 
-                        onSelectLevel={(level) => {
-                            setSelectedLevel(level);
-                            handleSelectView('game-literacy');
-                        }}
-                        onBack={() => handleSelectView('menu')}
-                    />
+                    <motion.div key="map-literacy" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ width: '100%', height: '100%' }}>
+                        <AdventureMap 
+                            type="literacy" 
+                            onSelectLevel={(level) => {
+                                setSelectedLevel(level);
+                                handleSelectView('game-literacy');
+                            }}
+                            onBack={() => handleSelectView('menu')}
+                        />
+                    </motion.div>
                 )}
 
                 {view === 'game-sorting' && (
-                    <SortingGame 
-                        level={selectedLevel}
-                        onWin={handleGameWin}
-                        onBack={() => setView('map-sorting')}
-                    />
+                    <motion.div key="game-sorting" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }} style={{ width: '100%', height: '100%' }}>
+                        <SortingGame 
+                            level={selectedLevel}
+                            onWin={handleGameWin}
+                            onBack={() => setView('map-sorting')}
+                        />
+                    </motion.div>
                 )}
 
                 {view === 'game-literacy' && (
-                    <LiteracyGame 
-                        stage={selectedLevel}
-                        onWin={handleGameWin}
-                        onBack={() => setView('map-literacy')}
-                    />
+                    <motion.div key="game-literacy" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.1 }} style={{ width: '100%', height: '100%' }}>
+                        <LiteracyGame 
+                            stage={selectedLevel}
+                            onWin={handleGameWin}
+                            onBack={() => setView('map-literacy')}
+                        />
+                    </motion.div>
                 )}
-            </div>
+            </AnimatePresence>
 
-            {/* Overlays */}
-            {showWin && (
-                <BalloonOverlay onContinue={handleWinOverlayContinue} />
-            )}
+            <AnimatePresence>
+                {showWin && (
+                    <BalloonOverlay onContinue={handleWinOverlayContinue} />
+                )}
 
-            {showSticker && (
-                <StickerBoard onBack={handleStickerBoardDone} />
-            )}
-        </div>
+                {showSticker && (
+                    <StickerBoard onBack={handleStickerBoardDone} />
+                )}
+            </AnimatePresence>
+        </MagicWorldLayout>
     );
 }

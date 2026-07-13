@@ -1,55 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Stage, Container, Graphics, Sprite, useTick, withFilters } from '@pixi/react';
-import * as PIXI from 'pixi.js';
 import { colorPool, shapesConfig, shapeBasketEmojis, categoryPool, distractors } from '../constants';
 import { playSfx, speak, stopVoice } from '../hooks/useAudio';
 import DobiNarrator from './DobiNarrator';
-
-// Create a water ripple displacement texture
-const waterCanvas = document.createElement('canvas');
-waterCanvas.width = 128;
-waterCanvas.height = 128;
-const wctx = waterCanvas.getContext('2d');
-for (let i = 0; i < 128*128; i++) {
-    const v = Math.floor(Math.random() * 255);
-    wctx.fillStyle = `rgb(${v},${v},${v})`;
-    wctx.fillRect(i % 128, Math.floor(i / 128), 1, 1);
-}
-const waterNoiseTexture = PIXI.Texture.from(waterCanvas);
-const waterDisplacementSprite = new PIXI.Sprite(waterNoiseTexture);
-waterDisplacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
-const waterDisplacementFilter = new PIXI.filters.DisplacementFilter(waterDisplacementSprite);
-waterDisplacementFilter.scale.x = 20;
-waterDisplacementFilter.scale.y = 5;
-
-const WaterFilters = withFilters(Container, { displacement: waterDisplacementFilter });
-
-function RiverBackground({ width, height }) {
-    useTick((delta) => {
-        waterDisplacementSprite.x += 0.5 * delta;
-        waterDisplacementSprite.y += 0.5 * delta;
-    });
-
-    return (
-        <WaterFilters displacement={waterDisplacementFilter}>
-            {/* Draw the base river color */}
-            <Graphics 
-                draw={(g) => {
-                    g.clear();
-                    g.beginFill(0x81d4fa); // light blue river
-                    g.drawRect(0, height * 0.4, width, height * 0.6);
-                    g.endFill();
-                    
-                    // Add some magical river highlights
-                    g.beginFill(0xb3e5fc, 0.5);
-                    g.drawRect(0, height * 0.5, width, 50);
-                    g.endFill();
-                }}
-            />
-        </WaterFilters>
-    );
-}
 
 export default function SortingGame({ level, onWin, onBack }) {
     const [items, setItems] = useState([]);
@@ -370,25 +323,16 @@ export default function SortingGame({ level, onWin, onBack }) {
     };
 
     return (
-        <div className="view-container">
-            {/* Background WebGL River */}
-            <Stage
-                width={window.innerWidth}
-                height={window.innerHeight}
-                options={{ backgroundAlpha: 0, antialias: true, resolution: window.devicePixelRatio || 1 }}
-                style={{ position: 'absolute', top: 0, left: 0, zIndex: 0, pointerEvents: 'none' }}
-            >
-                <RiverBackground width={window.innerWidth} height={window.innerHeight} />
-            </Stage>
+        <div className="game-screen" style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
 
             {/* Header */}
-            <div className="header-bar" style={{ position: 'relative', zIndex: 10 }}>
-                <button className="btn-round" onClick={onBack}>
-                    🏠
+            <div className="header-bar" style={{ position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'space-between', padding: '10px 20px', alignItems: 'center' }}>
+                <button className="cartoon-button btn-yellow" onClick={onBack}>
+                    🏠 חזור
                 </button>
-                <h1 className="header-title">משחק מיון - שלב {level}</h1>
-                <button className="btn-round" onClick={setupGame}>
-                    🔄
+                <h1 className="cartoon-text-title">משחק מיון - שלב {level}</h1>
+                <button className="cartoon-button btn-red" onClick={setupGame}>
+                    🔄 שוב
                 </button>
             </div>
 
