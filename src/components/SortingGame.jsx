@@ -275,8 +275,8 @@ export default function SortingGame({ level, onWin, onBack }) {
                     setIsWon(true);
                     playSfx('ding', 1200);
                     setTimeout(() => playSfx('ding', 1600), 200);
-                    speak("כל הכבוד! הצלחת!");
-                    setBubbleText("כל הכבוד! הצלחת!");
+                    speak("כל הכבוד! את אלופה!");
+                    setBubbleText("כל הכבוד! את אלופה!");
                     onWin(level);
                 } else {
                     if (level === 2) {

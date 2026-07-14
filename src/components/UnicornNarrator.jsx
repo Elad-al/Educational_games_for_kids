@@ -8,7 +8,6 @@ import unicornHalfOpen from '../assets/unicorn_half_open.png';
 import unicornSpeaking from '../assets/unicorn_speaking.png';
 
 export default function UnicornNarrator({ bubbleText, onNarratorClick }) {
-    const [tapCount, setTapCount] = useState(0);
     const [isSpeaking, setIsSpeaking] = useState(false);
 
     useEffect(() => {
@@ -22,8 +21,6 @@ export default function UnicornNarrator({ bubbleText, onNarratorClick }) {
 
     const handleTap = () => {
         playSfx('pop', 700 + Math.random() * 300);
-        setTapCount(prev => prev + 1);
-
         if (onNarratorClick) {
             onNarratorClick();
         }
@@ -31,7 +28,6 @@ export default function UnicornNarrator({ bubbleText, onNarratorClick }) {
 
     return (
         <div className="narrator-container">
-            {/* The Floating Image Avatar - Seamlessly Integrated */}
             <style>{`
                 .breathe-anim {
                     animation: breathe 4s ease-in-out infinite;
@@ -40,24 +36,24 @@ export default function UnicornNarrator({ bubbleText, onNarratorClick }) {
                     0%, 100% { transform: scale(1) translateY(0); }
                     50% { transform: scale(1.02) translateY(-4px); }
                 }
-                
+
                 /* Advanced Lip Sync & Blinking */
                 .frame-base { opacity: 1; z-index: 1; }
                 .frame-half { opacity: 0; z-index: 2; }
                 .frame-wide { opacity: 0; z-index: 3; }
                 .frame-blink { opacity: 0; z-index: 4; }
-                
+
                 .frame-blink {
                     animation: blinkAnim 4s infinite;
                 }
-                
+
                 .is-speaking .frame-half {
                     animation: talkHalf 0.4s infinite;
                 }
                 .is-speaking .frame-wide {
                     animation: talkWide 0.4s infinite;
                 }
-                
+
                 @keyframes blinkAnim {
                     0%, 92%, 100% { opacity: 0; }
                     94%, 98% { opacity: 1; }
@@ -70,7 +66,7 @@ export default function UnicornNarrator({ bubbleText, onNarratorClick }) {
                     0%, 35%, 65%, 100% { opacity: 0; }
                     45%, 55% { opacity: 1; }
                 }
-                
+
                 .anim-img {
                     width: 100%;
                     height: 100%;
@@ -81,23 +77,26 @@ export default function UnicornNarrator({ bubbleText, onNarratorClick }) {
                     left: 0;
                 }
             `}</style>
-            
-            <div className={`unicorn-avatar-wrapper breathe-anim ${isSpeaking ? 'is-speaking' : ''}`} onClick={handleTap}>
+
+            <div
+                className={`unicorn-avatar-wrapper breathe-anim ${isSpeaking ? 'is-speaking' : ''}`}
+                onClick={handleTap}
+            >
                 <img className="anim-img frame-base" src={unicornBase} alt="Base" />
                 <img className="anim-img frame-half" src={unicornHalfOpen} alt="Half Open" />
                 <img className="anim-img frame-wide" src={unicornSpeaking} alt="Wide Open" />
                 <img className="anim-img frame-blink" src={unicornBlink} alt="Blink" />
             </div>
 
-            {/* Speech Bubble */}
+            {/* Speech Bubble – only visible WHILE speaking */}
             <AnimatePresence>
-                {bubbleText && (
-                    <motion.div 
+                {isSpeaking && bubbleText && (
+                    <motion.div
                         className="unicorn-bubble"
-                        initial={{ scale: 0, opacity: 0, x: 20 }}
+                        initial={{ scale: 0, opacity: 0, x: -10 }}
                         animate={{ scale: 1, opacity: 1, x: 0 }}
-                        exit={{ scale: 0, opacity: 0, x: 20 }}
-                        style={{ marginLeft: '10px', marginBottom: '60px' }}
+                        exit={{ scale: 0, opacity: 0, x: -10 }}
+                        style={{ marginLeft: '10px', marginBottom: '0px' }}
                     >
                         {bubbleText}
                     </motion.div>

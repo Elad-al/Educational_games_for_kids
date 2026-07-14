@@ -16,21 +16,38 @@ const textToKey = {
     "הסל מלא": "basket_full",
     "זה לא שייך לפה!": "not_here",
     "זה לא שייך לפה": "not_here",
-    "כל הכבוד! הצלחת!": "success",
-    
+
+    // Fix 2: feminine win phrase
+    "כל הכבוד! הצלחת!": "success",   // keep old key mapping to new file
+    "כל הכבוד! את אלופה!": "success", // new feminine phrase → same file
+
     "יפה!": "praise_1", "יפה": "praise_1",
     "מצוין!": "praise_2", "מצוין": "praise_2",
     "נהדר!": "praise_3", "נהדר": "praise_3",
     "כל הכבוד!": "praise_4", "כל הכבוד": "praise_4",
-    
+
     "אחת": "num_1", "שתיים": "num_2", "שלוש": "num_3", "ארבע": "num_4", "חמש": "num_5",
-    
-    // Additional feedback
+
+    // Literacy feedback
     "אוי, נסה לגרור אל צללית האות!": "lit_wrong_shadow",
     "נסה לחפש אות אחרת!": "lit_wrong_find",
     "אוי, החפץ הזה מתחיל באות אחרת!": "lit_wrong_wand",
-    
-    // Sorting Game Specific
+
+    // Fix 3: Stage 3 object descriptions (click on magic object)
+    "זה מיטה! מיטה מתחילה באות מ!": "obj_desc_מיטה",
+    "זה כדור! כדור מתחיל באות כ!": "obj_desc_כדור",
+    "זה בית! בית מתחיל באות ב!": "obj_desc_בית",
+    "זה שמש! שמש מתחילה באות ש!": "obj_desc_שמש",
+    "זה פרח! פרח מתחיל באות פ!": "obj_desc_פרח",
+    "זה ספר! ספר מתחיל באות ס!": "obj_desc_ספר",
+
+    // Fix 4: Stage 1 multi-target
+    "גרור כל אות אל הצללית המתאימה!": "s1_multi_instr",
+    "יופי! עכשיו שתי אותיות בבת אחת!": "s1_phase2",
+    "מדהים! עכשיו שלוש אותיות!": "s1_phase3",
+    "וואו! עכשיו קשה יותר, שימי לב!": "s1_phase4",
+
+    // Sorting Game
     "גרור כל צעצוע לסל בצבע המתאים! לחץ על הסל להסבר": "sort_intro_1",
     "מיין את הצעצועים לפי מספרים וצבעים! לחץ על הסל להסבר": "sort_intro_2",
     "מיין את הצורות לסלים המתאימים! לחץ על הסל להסבר": "sort_intro_3",
