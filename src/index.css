@@ -317,21 +317,21 @@ body, html {
 .unicorn-bubble::after {
     content: '';
     position: absolute;
-    left: -14px;
+    right: -14px;
     bottom: 20px;
-    border-width: 8px 14px 8px 0;
+    border-width: 8px 0 8px 14px;
     border-style: solid;
-    border-color: transparent rgba(12, 5, 26, 0.75) transparent transparent;
+    border-color: transparent transparent transparent rgba(12, 5, 26, 0.75);
     z-index: 10;
 }
 .unicorn-bubble::before {
     content: '';
     position: absolute;
-    left: -19px;
+    right: -19px;
     bottom: 18px;
-    border-width: 10px 16px 10px 0;
+    border-width: 10px 0 10px 16px;
     border-style: solid;
-    border-color: transparent #ea80fc transparent transparent;
+    border-color: transparent transparent transparent #ea80fc;
     z-index: 5;
 }
 
