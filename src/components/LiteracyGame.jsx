@@ -371,7 +371,7 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
             <div className="game-screen" style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
 
             {/* Header */}
-            <div className="header-bar" style={{ position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'space-between', padding: '10px 20px', alignItems: 'center' }}>
+            <div className="header-bar">
                 <button className="cartoon-button btn-yellow" onClick={onBack}>
                     🏠 חזור
                 </button>
@@ -385,7 +385,7 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
             </div>
 
             {/* Stage Layout */}
-            <div className="literacy-layout" style={{ width: '100%', position: 'relative', zIndex: 10 }}>
+            <div className="literacy-layout">
                 
                 {/* STAGE 1: Drag letter to silhouette */}
                 {stage === 1 && currentLetter && (

@@ -30,7 +30,7 @@ export default function UnicornNarrator({ bubbleText, onNarratorClick }) {
     };
 
     return (
-        <div className="narrator-container" style={{ position: 'absolute', bottom: '10px', left: '20px', display: 'flex', alignItems: 'flex-end', zIndex: 150 }}>
+        <div className="narrator-container">
             {/* The Floating Image Avatar - Seamlessly Integrated */}
             <style>{`
                 .breathe-anim {
@@ -82,7 +82,7 @@ export default function UnicornNarrator({ bubbleText, onNarratorClick }) {
                 }
             `}</style>
             
-            <div className={`unicorn-avatar-wrapper breathe-anim ${isSpeaking ? 'is-speaking' : ''}`} onClick={handleTap} style={{ cursor: 'pointer', width: '220px', height: '220px', position: 'relative' }}>
+            <div className={`unicorn-avatar-wrapper breathe-anim ${isSpeaking ? 'is-speaking' : ''}`} onClick={handleTap}>
                 <img className="anim-img frame-base" src={unicornBase} alt="Base" />
                 <img className="anim-img frame-half" src={unicornHalfOpen} alt="Half Open" />
                 <img className="anim-img frame-wide" src={unicornSpeaking} alt="Wide Open" />
@@ -97,7 +97,7 @@ export default function UnicornNarrator({ bubbleText, onNarratorClick }) {
                         initial={{ scale: 0, opacity: 0, x: 20 }}
                         animate={{ scale: 1, opacity: 1, x: 0 }}
                         exit={{ scale: 0, opacity: 0, x: 20 }}
-                        style={{ marginLeft: '10px', marginBottom: '80px' }}
+                        style={{ marginLeft: '10px', marginBottom: '60px' }}
                     >
                         {bubbleText}
                     </motion.div>

@@ -223,11 +223,14 @@ body, html {
 
 .header-bar {
     width: 100%;
-    padding: 24px 32px;
+    padding: 16px 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     pointer-events: auto;
+    position: relative;
+    z-index: 10;
+    flex-shrink: 0;
 }
 
 .header-title {
@@ -275,8 +278,8 @@ body, html {
 }
 
 .unicorn-avatar-wrapper {
-    width: 140px;
-    height: 140px;
+    width: 200px;
+    height: 200px;
     position: relative;
     cursor: pointer;
     filter: drop-shadow(0 8px 25px rgba(234, 128, 252, 0.4));
@@ -532,7 +535,7 @@ body, html {
 .sorting-layout {
     display: grid;
     grid-template-rows: 1fr 1fr;
-    height: calc(100vh - 100px);
+    height: calc(100dvh - 100px);
     width: 100%;
     position: relative;
     z-index: 10;
@@ -674,7 +677,8 @@ body, html {
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    height: calc(100vh - 100px);
+    height: calc(100dvh - 100px);
+    width: 100%;
     position: relative;
     z-index: 10;
 }
@@ -1209,3 +1213,165 @@ body, html {
 }
 
 
+/* ==========================================================================
+   RESPONSIVE DESIGN – Tablet (max-width: 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+
+    /* Typography */
+    .cartoon-text-title { font-size: 2rem; }
+    .menu-title { font-size: 3.2rem; }
+    .header-title { font-size: 2rem; }
+
+    /* Buttons */
+    .cartoon-button { font-size: 1.3rem; padding: 8px 20px; }
+    .menu-btn { min-width: 240px; padding: 22px 36px; font-size: 1.8rem; }
+    .menu-btn .icon { font-size: 3.5rem; }
+
+    /* Unicorn Avatar */
+    .unicorn-avatar-wrapper { width: 160px !important; height: 160px !important; }
+    .narrator-container { bottom: 20px; left: 20px; }
+    .unicorn-bubble { font-size: 1.2rem; max-width: 220px; }
+
+    /* Header */
+    .header-bar { padding: 12px 20px !important; }
+
+    /* Sorting Game */
+    .sorting-layout { height: calc(100vh - 80px); }
+    .drop-basket { width: 150px; height: 100px; }
+    .basket-icon { font-size: 3.5rem; }
+    .basket-title { font-size: 1.2rem; }
+    .drop-zones-area { gap: 16px; padding: 8px 20px; }
+    .draggable-item { width: 76px; height: 76px; font-size: 3.5rem; }
+
+    /* Literacy Game */
+    .literacy-layout { height: calc(100vh - 80px); }
+    .silhouette-container { width: 190px; height: 190px; font-size: 8rem; }
+    .draggable-letter { width: 110px; height: 110px; font-size: 5.5rem; }
+    .seek-item { width: 130px; height: 130px; font-size: 6.5rem; }
+    .seek-container { gap: 24px; }
+    .magic-object { width: 150px; height: 150px; }
+    .object-emoji { font-size: 4.5rem; }
+    .object-label { font-size: 1.3rem; }
+
+    /* Map nodes */
+    .node-bubble { width: 100px; height: 100px; font-size: 3rem; }
+
+    /* Win card */
+    .win-title { font-size: 2.5rem; }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN – Mobile (max-width: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+
+    /* Prevent any horizontal scroll */
+    body, html { overflow: hidden; }
+
+    /* Typography */
+    .cartoon-text-title { font-size: 1.3rem; letter-spacing: 0; }
+    .menu-title { font-size: 2.2rem; letter-spacing: 0; }
+    .header-title { font-size: 1.5rem; }
+    .lit-progress-bar { font-size: 1rem; }
+
+    /* Main Menu */
+    .main-menu { gap: 24px; padding: 16px; }
+    .menu-buttons { flex-direction: column; gap: 16px; }
+    .menu-btn { min-width: 0; width: 85vw; max-width: 340px; padding: 16px 24px; font-size: 1.5rem; gap: 8px; }
+    .menu-btn .icon { font-size: 3rem; }
+
+    /* Buttons */
+    .cartoon-button { font-size: 1rem; padding: 6px 14px; border-radius: 24px; border-width: 2px; }
+    .cartoon-button::before { display: none; }
+
+    /* Header – reduce height on mobile */
+    .header-bar { padding: 6px 10px !important; }
+
+    /* Unicorn Avatar – scaled down so she doesn't block the game */
+    .unicorn-avatar-wrapper { width: 100px !important; height: 100px !important; }
+    .narrator-container { bottom: 6px !important; left: 6px !important; gap: 8px !important; }
+    .unicorn-bubble {
+        font-size: 0.95rem;
+        max-width: 180px;
+        padding: 10px 14px;
+    }
+
+    /* ── Sorting Game ── */
+    .sorting-layout {
+        height: calc(100dvh - 60px);
+        grid-template-rows: 55% 45%;
+    }
+    .spawning-area { padding: 0 10px; border-top-width: 4px; }
+    .drop-zones-area { gap: 10px; padding: 6px 10px; }
+
+    .drop-basket { width: 28vw; max-width: 130px; height: 80px; border-radius: 12px 12px 40px 40px; }
+    .basket-icon { font-size: 2.8rem; }
+    .basket-title { font-size: 1rem; }
+    .basket-count-badge { font-size: 0.85rem; padding: 2px 8px; bottom: -14px; }
+
+    .draggable-item { width: 64px; height: 64px; font-size: 2.8rem; border-width: 1px; }
+
+    /* ── Literacy Game ── */
+    .literacy-layout {
+        height: calc(100dvh - 60px);
+        justify-content: space-evenly;
+        padding-bottom: 100px; /* room for unicorn at bottom */
+    }
+    .silhouette-container { width: 30vw; height: 30vw; min-width: 120px; min-height: 120px; font-size: clamp(4rem, 15vw, 8rem); }
+    .draggable-letter { width: 22vw; height: 22vw; min-width: 80px; min-height: 80px; font-size: clamp(3rem, 10vw, 6rem); border-width: 3px; }
+
+    .seek-container { gap: 12px; margin-top: 16px; flex-wrap: wrap; justify-content: center; }
+    .seek-item { width: 26vw; height: 26vw; max-width: 120px; max-height: 120px; font-size: clamp(3.5rem, 12vw, 6rem); border-radius: 16px; }
+
+    .magic-stage { padding: 0 12px; }
+    .magic-objects { gap: 12px; }
+    .magic-object { width: 26vw; height: 26vw; max-width: 130px; max-height: 130px; border-radius: 16px; }
+    .object-emoji { font-size: clamp(2.5rem, 10vw, 4.5rem); }
+    .object-label { font-size: clamp(0.85rem, 3vw, 1.3rem); margin-top: 4px; }
+    .wand-spawner { height: 110px; }
+
+    /* ── Level Map ── */
+    .map-container { padding: 16px; }
+    .node-bubble { width: 72px; height: 72px; font-size: 2.2rem; }
+    .node-label { font-size: 1rem; padding: 4px 12px; }
+    .node-stars { font-size: 1.3rem; top: -18px; }
+
+    /* ── Sticker Board ── */
+    .sticker-container { height: 90vh; }
+    .sticker-header { font-size: 1.6rem; padding: 14px; }
+    .sticker-content-split { flex-direction: column-reverse; }
+    .sticker-scene-canvas { flex: 1.2; border-left: none; border-top: 4px solid rgba(255,255,255,0.1); }
+    .sticker-drawer { flex: none; max-height: 200px; }
+    .sticker-list { grid-template-columns: repeat(4, 1fr); }
+    .sticker-item { font-size: 2.5rem; }
+
+    /* ── Win popup ── */
+    .win-title { font-size: 2rem; }
+    .win-stars { font-size: 2.8rem; }
+    .win-card { padding: 24px; gap: 16px; }
+
+    /* ── Particles – hide on mobile to save performance ── */
+    .leaf-particle, .butterfly-particle { display: none; }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN – Small Mobile (max-width: 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+    .cartoon-text-title { font-size: 1.1rem; }
+    .unicorn-avatar-wrapper { width: 80px !important; height: 80px !important; }
+    .unicorn-bubble { max-width: 150px; font-size: 0.85rem; padding: 8px 10px; }
+
+    .drop-basket { height: 70px; }
+    .basket-icon { font-size: 2.2rem; }
+    .basket-title { font-size: 0.85rem; }
+
+    .draggable-item { width: 54px; height: 54px; font-size: 2.2rem; }
+
+    .seek-item { width: 28vw; height: 28vw; }
+    .magic-object { width: 28vw; height: 28vw; }
+
+    /* On very small screens, limit bubble width further */
+    .unicorn-bubble { max-width: 130px; }
+}

@@ -326,7 +326,7 @@ export default function SortingGame({ level, onWin, onBack }) {
         <div className="game-screen" style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
 
             {/* Header */}
-            <div className="header-bar" style={{ position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'space-between', padding: '10px 20px', alignItems: 'center' }}>
+            <div className="header-bar">
                 <button className="cartoon-button btn-yellow" onClick={onBack}>
                     🏠 חזור
                 </button>
@@ -337,7 +337,7 @@ export default function SortingGame({ level, onWin, onBack }) {
             </div>
 
             {/* Game Panel */}
-            <div className="sorting-layout" style={{ position: 'relative', zIndex: 10 }}>
+            <div className="sorting-layout">
                 {/* Spawning Area (top half) */}
                 <div className="spawning-area" ref={spawningAreaRef}>
                     {items.map(item => (
