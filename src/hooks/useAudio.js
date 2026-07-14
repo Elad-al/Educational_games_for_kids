@@ -6,9 +6,11 @@ let currentPhoneticAudio = null;
 let musicInterval = null;
 let noteIndex = 0;
 let isSpeakingCallback = null;
+let laughInterval = null;
+const laughAudio = new Audio('/assets/audio/generated/kids_laughing.mp3');
 
-// Simple C-major arpeggio melody for gentle music-box background music
-const melody = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63]; // C4 - E4 - G4 - C5 - G4 - E4
+// Upbeat bouncy pentatonic melody for background music
+const melody = [261.63, 329.63, 392.00, 523.25, 659.25, 523.25, 392.00, 329.63]; // C4 - E4 - G4 - C5 - E5 - C5 - G4 - E4
 
 const textToKey = {
     "נסה שוב": "try_again",
@@ -104,7 +106,7 @@ export function startBackgroundMusic() {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
     
-    // Play a gentle arpeggio arround 1.5 seconds intervals
+    // Play a happy bouncy melody
     musicInterval = setInterval(() => {
         try {
             if (audioCtx.state === 'suspended') return;
@@ -114,27 +116,40 @@ export function startBackgroundMusic() {
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             
-            osc.type = 'sine'; // very pure soft wave
+            osc.type = 'triangle'; // more bouncy and distinct than sine
             osc.frequency.setValueAtTime(melody[noteIndex], audioCtx.currentTime);
             
-            // Set extremely low background volume (toy-piano feel)
-            gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+            // Set upbeat envelope
+            gain.gain.setValueAtTime(0.0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.015, audioCtx.currentTime + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
             
             osc.start();
-            osc.stop(audioCtx.currentTime + 1.2);
+            osc.stop(audioCtx.currentTime + 0.3);
             
             noteIndex = (noteIndex + 1) % melody.length;
         } catch (e) {
             // handle silent fail
         }
-    }, 1500);
+    }, 400);
+
+    // Play kids laughing every 30 seconds
+    if (!laughInterval) {
+        laughInterval = setInterval(() => {
+            laughAudio.volume = 0.4;
+            laughAudio.play().catch(() => {});
+        }, 30000);
+    }
 }
 
 export function stopBackgroundMusic() {
     if (musicInterval) {
         clearInterval(musicInterval);
         musicInterval = null;
+    }
+    if (laughInterval) {
+        clearInterval(laughInterval);
+        laughInterval = null;
     }
 }
 

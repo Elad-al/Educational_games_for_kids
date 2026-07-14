@@ -19,21 +19,22 @@ function shuffle(arr) {
     return [...arr].sort(() => Math.random() - 0.5);
 }
 
-// Returns start positions for N letters in the bottom area (as CSS percentages)
+// Returns start positions for N letters in the bottom area
 function getLetterPositions(n) {
-    if (n === 1) return [{ startX: '50%', startY: '78%' }];
-    if (n === 2) return [{ startX: '33%', startY: '78%' }, { startX: '67%', startY: '78%' }];
+    const safeY = 'calc(100% - 100px)'; // Fixed distance from bottom to prevent clipping
+    if (n === 1) return [{ startX: '50%', startY: safeY }];
+    if (n === 2) return [{ startX: '33%', startY: safeY }, { startX: '67%', startY: safeY }];
     if (n === 3) return [
-        { startX: '20%', startY: '78%' },
-        { startX: '50%', startY: '78%' },
-        { startX: '80%', startY: '78%' }
+        { startX: '20%', startY: safeY },
+        { startX: '50%', startY: safeY },
+        { startX: '80%', startY: safeY }
     ];
     // n === 4
     return [
-        { startX: '14%', startY: '78%' },
-        { startX: '38%', startY: '78%' },
-        { startX: '62%', startY: '78%' },
-        { startX: '86%', startY: '78%' }
+        { startX: '14%', startY: safeY },
+        { startX: '38%', startY: safeY },
+        { startX: '62%', startY: safeY },
+        { startX: '86%', startY: safeY }
     ];
 }
 
