@@ -320,8 +320,12 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
         } else {
             setWiggleId(opt.char);
             playSfx('boink');
-            speak('נסה שוב');
-            setBubbleText('נסה לחפש אות אחרת!');
+            
+            // Fix: Add specific wrong letter feedback
+            const feedback = `זאת האות ${opt.char}, נסה שוב!`;
+            speak(feedback);
+            setBubbleText(feedback);
+            
             setTimeout(() => setWiggleId(null), 500);
         }
     };
@@ -389,8 +393,11 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
             } else {
                 setWiggleId(hitObject.label);
                 playSfx('boink');
-                speak('נסה שוב');
-                setBubbleText('אוי, החפץ הזה מתחיל באות אחרת!');
+                
+                const feedback = `זה ${hitObject.label}, זה מתחיל באות ${hitObject.char}. נסה שוב!`;
+                speak(feedback);
+                setBubbleText(feedback);
+                
                 setWandPos(prev => ({ ...prev, x: 0, y: 0 }));
                 setTimeout(() => setWiggleId(null), 500);
             }

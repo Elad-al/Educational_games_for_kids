@@ -71,6 +71,7 @@ for (let char of hebrew_letters) {
     textToKey[`גרור את האות ${char} אל הצללית שלה!`] = `lit_shadow_${char}`;
     textToKey[`איפה האות ${char}?`] = `lit_find_${char}`;
     textToKey[`גרור את השרביט אל החפץ שמתחיל באות ${char}!`] = `lit_wand_${char}`;
+    textToKey[`זאת האות ${char}, נסה שוב!`] = `wrong_letter_${char}`;
 }
 
 const objects = ['מיטה', 'כדור', 'בית', 'שמש', 'פרח', 'ספר'];
@@ -79,6 +80,9 @@ for (let obj of objects) {
     for (let letter of letters) {
         textToKey[`זה ${obj}, אם זה מתחיל באות ${letter} הזז את השרביט לכאן`] = `obj_desc_${obj}_${letter}`;
     }
+}
+for (let i = 0; i < objects.length; i++) {
+    textToKey[`זה ${objects[i]}, זה מתחיל באות ${letters[i]}. נסה שוב!`] = `wrong_wand_${objects[i]}`;
 }
 
 // Auto-preload audio elements
