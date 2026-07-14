@@ -265,13 +265,13 @@ body, html {
     transform: scale(0.9) translateY(4px);
 }
 
-/* --- Holographic Narrator --- */
 .narrator-container {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    bottom: 10px;
+    right: 10px;
     display: flex;
-    align-items: flex-start;
+    flex-direction: row-reverse;
+    align-items: flex-end;
     gap: 12px;
     z-index: 150;
     pointer-events: auto;
@@ -316,21 +316,21 @@ body, html {
 .unicorn-bubble::after {
     content: '';
     position: absolute;
-    left: 20px;
-    top: -14px;
-    border-width: 0 8px 14px 8px;
+    right: -14px;
+    bottom: 20px;
+    border-width: 8px 0 8px 14px;
     border-style: solid;
-    border-color: transparent transparent rgba(12, 5, 26, 0.75) transparent;
+    border-color: transparent transparent transparent rgba(12, 5, 26, 0.75);
     z-index: 10;
 }
 .unicorn-bubble::before {
     content: '';
     position: absolute;
-    left: 18px;
-    top: -19px;
-    border-width: 0 10px 16px 10px;
+    right: -19px;
+    bottom: 18px;
+    border-width: 10px 0 10px 16px;
     border-style: solid;
-    border-color: transparent transparent #ea80fc transparent;
+    border-color: transparent transparent transparent #ea80fc;
     z-index: 5;
 }
 
