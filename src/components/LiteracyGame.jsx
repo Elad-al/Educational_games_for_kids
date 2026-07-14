@@ -437,7 +437,7 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
 
     return (
         <div className="view-container" ref={containerRef} id="literacy-stage-container">
-            <div className="game-screen" style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
+            <div className="game-screen" style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
             {/* Header */}
             <div className="header-bar">

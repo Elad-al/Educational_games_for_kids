@@ -323,7 +323,8 @@ export default function SortingGame({ level, onWin, onBack }) {
     };
 
     return (
-        <div className="game-screen" style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
+        <div className="view-container" id="sorting-stage-container">
+            <div className="game-screen" style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
             {/* Header */}
             <div className="header-bar">
@@ -410,6 +411,7 @@ export default function SortingGame({ level, onWin, onBack }) {
                 bubbleText={bubbleText} 
                 onNarratorClick={() => speak(bubbleText)} 
             />
+            </div>
         </div>
     );
 }
