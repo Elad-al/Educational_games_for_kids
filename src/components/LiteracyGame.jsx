@@ -13,15 +13,7 @@ const stage3Associations = [
     { char: 'ס', label: 'ספר', emoji: '📖' }
 ];
 
-// Object description phrases for Fix 3
-const objDescPhrases = {
-    'מיטה': 'זה מיטה! מיטה מתחילה באות מ!',
-    'כדור': 'זה כדור! כדור מתחיל באות כ!',
-    'בית':  'זה בית! בית מתחיל באות ב!',
-    'שמש':  'זה שמש! שמש מתחילה באות ש!',
-    'פרח':  'זה פרח! פרח מתחיל באות פ!',
-    'ספר':  'זה ספר! ספר מתחיל באות ס!',
-};
+// We'll generate combinations dynamically now
 
 function shuffle(arr) {
     return [...arr].sort(() => Math.random() - 0.5);
@@ -407,11 +399,10 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
         }
     };
 
-    // Fix 3: describe object using pre-generated audio
     const handleObjectClick = (obj) => {
         if (isWon) return;
         playSfx('pop', 700);
-        const phrase = objDescPhrases[obj.label] || `זה ${obj.label}!`;
+        const phrase = `זה ${obj.label}, אם זה מתחיל באות ${currentLetter.char} הזז את השרביט לכאן`;
         setBubbleText(phrase);
         speak(phrase);
     };
@@ -533,7 +524,6 @@ export default function LiteracyGame({ stage, onWin, onBack }) {
                                     style={{ cursor: 'pointer' }}
                                 >
                                     <div className="object-emoji">{obj.emoji}</div>
-                                    <div className="object-label">{obj.label}</div>
                                 </div>
                             ))}
                         </div>

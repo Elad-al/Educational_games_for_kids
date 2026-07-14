@@ -33,14 +33,6 @@ const textToKey = {
     "נסה לחפש אות אחרת!": "lit_wrong_find",
     "אוי, החפץ הזה מתחיל באות אחרת!": "lit_wrong_wand",
 
-    // Fix 3: Stage 3 object descriptions (click on magic object)
-    "זה מיטה! מיטה מתחילה באות מ!": "obj_desc_מיטה",
-    "זה כדור! כדור מתחיל באות כ!": "obj_desc_כדור",
-    "זה בית! בית מתחיל באות ב!": "obj_desc_בית",
-    "זה שמש! שמש מתחילה באות ש!": "obj_desc_שמש",
-    "זה פרח! פרח מתחיל באות פ!": "obj_desc_פרח",
-    "זה ספר! ספר מתחיל באות ס!": "obj_desc_ספר",
-
     // Fix 4: Stage 1 multi-target
     "גרור כל אות אל הצללית המתאימה!": "s1_multi_instr",
     "יופי! עכשיו שתי אותיות בבת אחת!": "s1_phase2",
@@ -79,6 +71,14 @@ for (let char of hebrew_letters) {
     textToKey[`גרור את האות ${char} אל הצללית שלה!`] = `lit_shadow_${char}`;
     textToKey[`איפה האות ${char}?`] = `lit_find_${char}`;
     textToKey[`גרור את השרביט אל החפץ שמתחיל באות ${char}!`] = `lit_wand_${char}`;
+}
+
+const objects = ['מיטה', 'כדור', 'בית', 'שמש', 'פרח', 'ספר'];
+const letters = ['מ', 'כ', 'ב', 'ש', 'פ', 'ס'];
+for (let obj of objects) {
+    for (let letter of letters) {
+        textToKey[`זה ${obj}, אם זה מתחיל באות ${letter} הזז את השרביט לכאן`] = `obj_desc_${obj}_${letter}`;
+    }
 }
 
 // Auto-preload audio elements
