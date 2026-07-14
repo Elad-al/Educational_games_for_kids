@@ -9,8 +9,13 @@ let isSpeakingCallback = null;
 let laughInterval = null;
 const laughAudio = new Audio('/assets/audio/generated/kids_laughing.mp3');
 
-// Upbeat bouncy pentatonic melody for background music
-const melody = [261.63, 329.63, 392.00, 523.25, 659.25, 523.25, 392.00, 329.63]; // C4 - E4 - G4 - C5 - E5 - C5 - G4 - E4
+// Fast, energetic 8-bit style bouncy melody
+const melody = [
+    523.25, 659.25, 783.99, 659.25,
+    523.25, 659.25, 783.99, 1046.50,
+    880.00, 698.46, 523.25, 698.46,
+    783.99, 587.33, 392.00, 587.33
+];
 
 const textToKey = {
     "נסה שוב": "try_again",
@@ -106,7 +111,7 @@ export function startBackgroundMusic() {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
     
-    // Play a happy bouncy melody
+    // Play a fast, punchy bouncy melody (Xylophone/8-bit feel)
     musicInterval = setInterval(() => {
         try {
             if (audioCtx.state === 'suspended') return;
@@ -116,29 +121,28 @@ export function startBackgroundMusic() {
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             
-            osc.type = 'triangle'; // more bouncy and distinct than sine
+            osc.type = 'triangle'; 
             osc.frequency.setValueAtTime(melody[noteIndex], audioCtx.currentTime);
             
-            // Set upbeat envelope
+            // Fast, punchy envelope
             gain.gain.setValueAtTime(0.0, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.015, audioCtx.currentTime + 0.05);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+            gain.gain.linearRampToValueAtTime(0.02, audioCtx.currentTime + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
             
             osc.start();
-            osc.stop(audioCtx.currentTime + 0.3);
+            osc.stop(audioCtx.currentTime + 0.1);
             
             noteIndex = (noteIndex + 1) % melody.length;
         } catch (e) {
             // handle silent fail
         }
-    }, 400);
+    }, 150); // Fast 150ms interval
 
-    // Play kids laughing every 30 seconds
+    // Play cartoon giggle every 15 seconds instead of creepy TTS
     if (!laughInterval) {
         laughInterval = setInterval(() => {
-            laughAudio.volume = 0.4;
-            laughAudio.play().catch(() => {});
-        }, 30000);
+            playGiggle();
+        }, 15000);
     }
 }
 
